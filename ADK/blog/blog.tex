@@ -1,0 +1,178 @@
+\documentclass[7px]{article}
+
+\usepackage{preamble}
+\usepackage{adkore}
+
+\begin{document}
+\frontmatter
+{Feature}
+{Blog}
+{ON}
+{In conception of an evolving multifaceted company of contingent services, a blogpost is imperative to structure pending goals, solidify rationale and give heuristics or sentience to both current and future problems.}
+
+\strategy
+% Core Decision
+{Implement a blog site with style-filtering a user interface}
+% Prospects
+{
+  \begin{enumerate}
+    \item Blog frontpage with category, search, and tag filtering
+    \item Compact, detailed, and normal view
+    \item Dynamic date rendering for post submissions
+    \item Multi-author
+      \small{
+        \begin{itemize}[label=$\multimapdotinv$, leftmargin=1.7mm]
+          \item Personal access for blog submission
+          \item Revision handling
+          \item Author page
+          \item Personal page themes based on primary author
+        \end{itemize}
+      }
+      \normalsize
+    \item Custom layout partials/components
+      \small{
+        \begin{itemize}[label=$\multimapdotinv$, leftmargin=1.7mm]
+          \item Custom symbols indicative of blog type, difficulty, etc.
+        \end{itemize}
+      }
+      \normalsize
+    \item Modularized loading
+    \item Newsletter, blog-focused
+    \item Navbar
+      \small{
+        \begin{itemize}[label=$\multimapdotinv$, leftmargin=1.7mm]
+          \item Default\: Latest, Posts(Selection)
+        \end{itemize}
+      }
+      \normalsize
+    \item[$\lJoin$] \textcolor[HTML]{B58B00}{Linked journal entries}
+    \item[$\Diamonddot$] \textcolor[HTML]{9457EB}{User Data Analytics}
+  \end{enumerate}
+}
+% Decision Parameters
+{
+  \begin{itemize}[label=\textsection]
+    \item {\textbf{Filtering:}}
+      \small
+      \begin{itemize}[label=$\multimapdotinv$, leftmargin=3mm]
+        \item Tag stack; emit and omit
+          \begin{itemize}[label=\wr, leftmargin=1.7mm]
+            \footnotesize{
+              \item Emit and omit process through toggle after click-to-display
+              \item Upon closing, it either shows <\textsl{First Tag}>, <\textsl{First Tag}> and <\textsl{Second Tag}>, or <\textsl{First Tag}>, <\textsl{Second Tag}>\textellipsis
+              }
+          \end{itemize}
+        \item Category; dropdown selection, more general than tags
+        \item Search; narrows search based on title, author, tag, category, and keywords
+          \begin{itemize}[label=\wr, leftmargin=1.7mm]
+            \footnotesize{
+              \item Author selects keywords, or automate
+              }
+          \end{itemize}
+      \end{itemize}
+      \normalsize
+    \item \textbf{Viewmode:}
+      \small 
+      \begin{itemize}[label=$\multimapdotinv$, leftmargin=3mm]
+        \item Create view modes with persisting states, default is normal 
+        \item This only should affect homepage
+        \item On article page, create a focused viewmode
+          \begin{itemize}[label=\wr, leftmargin=1.7mm]
+            \footnotesize{
+              \item Dims everything else, adds light to text, centers page
+              \item Add as preference(?)
+              }
+          \end{itemize}
+      \end{itemize}
+      \normalsize
+    \item \textbf{Layouts: }
+      \small
+      \begin{itemize}[label=$\multimapdotinv$, leftmargin=3mm]
+        \item Use Date class for creation/edited time
+          \begin{itemize}[label=\wr, leftmargin=1.7mm]
+            \footnotesize{
+              \item May use to obscure articles and release on specific time
+              }
+          \end{itemize}
+        \item[$\dag$] Create custom theme for blog, include post count and views
+        \item Custom symbols(?)
+        \item Load limiting via summary size and article count
+        \item Distinct navbar from regular site
+          \begin{itemize}[label=\wr, leftmargin=1.7mm]
+            \footnotesize{
+              \item Logo inseparable, when clicked: show \textcolor{orange}{cylinder} leading to several services
+              }
+          \end{itemize}
+      \end{itemize}
+      \normalsize
+    \item[$\lJoin$] \textbf{\textcolor[HTML]{B58B00}{Entries:} }
+      \small
+      \begin{itemize}[label=$\multimapdotinv$]
+        \item[$\strictif$] Along with tags, link posts to entries
+        \item Categorize by entry group, entry id, and or entry+id
+        \item Has own layout
+          \begin{itemize}[label=$\multimapbothvert$]
+            \footnotesize{
+              \item[$\multimapdotbothBvert$] Minimalistic oldschool design
+              \item For the probing few
+              \item[$\multimapdotbothAvert$] Theme indicative of compiled [into a post]
+              }
+          \end{itemize}
+          \vspace{0.5mm}\item[$\strictfi$] \textcolor[HTML]{E60000}{References to an external app to reduce used data from\\ \{ hoster: Render \}}
+          \begin{itemize}[label=$\strictiff$]
+            \footnotesize{
+              \item Use Netlify edge functions
+              \item Employ Nextjs middleware
+              }
+          \end{itemize}
+      \end{itemize}
+      \normalsize
+  \end{itemize}
+}
+% Zero Technical Debt Concerns
+{
+  \raggedright
+  \begin{itemize}[label=\blitzb]
+    \small
+    \item \textcolor{orange}{Cylinder} design on logo click\:
+      \begin{itemize}[label=$\multimapinv$]
+        \item Fixed or dynamic when triggering routes?
+      \end{itemize}
+      \normalsize
+    \item Post count truncation / route param handling
+    \item Selecting data for memory freeze, e.g., dates
+    \item Limit DB requests via local storage
+      \small
+      \begin{itemize}[label=$\multimapinv$]
+        \item Request to DB only if local storage values are outdated
+      \end{itemize}
+      \normalsize
+    \item Configure CNAME of domain to handle "blog.karnovah.\textasteriskcentered"
+    \item Reduce unwanted and static assets sent to \textcolor{red}{hoster}
+      \small
+      \begin{itemize}[label=$\multimapinv$]
+        \item Host entries, images, and videos elsewhere
+        \item As blog is part, reduce data population by handling prerenders/on-mount
+        \item[$\multimapdotbothBvert$] Interfuse local storage and database 
+      \end{itemize}
+      \normalsize
+  \end{itemize}
+}
+
+\deploy
+% Decision Process
+{
+
+}
+% Results and Conflicts
+{
+
+}
+
+\report
+% Experience Report
+{
+
+}
+
+\end{document}
