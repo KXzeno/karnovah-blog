@@ -1,4 +1,5 @@
 import React from 'react';
+// Toggle Components should be export-wrapped with `React.memo()`
 
 /**
  * A hook for toggle functionality
@@ -17,8 +18,18 @@ export default function useToggle(initialValue = false) {
     initialValue
   );
 
-  function toggleValue() {
-    setValue((currentValue) => !currentValue);
-  }
+  /**
+   * Memoize toggle function for memory efficiency
+   * @returns {function} Toggles the value
+   */
+  const toggleValue = React.useMemo(() => {
+   /**
+   * @augments value
+   */
+    return function toggleValue() {
+      setValue((currentValue) => !currentValue);
+    };
+  }, []);
+
   return [value, toggleValue];
 }
