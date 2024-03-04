@@ -16,14 +16,14 @@ export default function Nav() {
         Recent
       </button>
       <button type="button" onClick={() => router.push('/posts')}>
-        Posts
+        Posts<span className="text-[0.7rem] ml-[0.1rem]">▼</span>
       </button>
       <button type="button" onClick={() => router.push('/about')}>
         About
       </button>
       <div className={`${dollarSigns != 0 ? 'visible' : 'hidden'} absolute right-8 h-16 w-16`}>
         <button 
-          className="absolute inset-0 text-center"
+          className="absolute inset-0 text-center text-inherit"
           onClick={(event) => {
           setDollarSigns(dollarSigns.slice(1))
           }}
