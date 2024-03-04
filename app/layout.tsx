@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 import { Urbanist, Inter, Cinzel, Diphylleia, Roboto, Merriweather, Spectral, DM_Sans, Quicksand, Dosis, Sono} from "next/font/google";
 import "./globals.css";
 
@@ -66,7 +66,6 @@ const sono = Sono({
 
 export const metadata: Metadata = {
   title: 'Karnovah',
-  description: 'My blogsite',
   openGraph: {
     url: 'https://blog.karnovah.com',
     type: 'website',
@@ -82,10 +81,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-        <meta property="og:url" content="https://blog.karnovah.com" />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content={metadata.title} />
-        <meta property="og:description" content={metadata.description} />
       <body className={`${diphylleia.variable} ${cinzel.variable} ${inter.variable} ${urbanist.variable} ${roboto.variable} ${merriweather.variable} ${spectral.variable} ${dm_sans.variable} ${quicksand.variable} ${dosis.variable} ${sono.variable} font-sono`}>{children}
       </body>
     </html>
