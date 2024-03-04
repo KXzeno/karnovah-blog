@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  #nav-box {
+    @apply flex flex-auto flex-row min-w-max h-[5.3rem] text-center justify-center gap-16 place-items-center;
+  }
+}
