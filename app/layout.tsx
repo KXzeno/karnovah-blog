@@ -66,13 +66,12 @@ const sono = Sono({
 
 export const metadata: Metadata = {
   title: 'Karnovah',
-  description: 'Personal Business & Blog Site Under Development',
+  description: 'My blogsite',
   openGraph: {
-    url: 'https://karnovah.netlify.app',
+    url: 'https://blog.karnovah.com',
     type: 'website',
     title: 'Karnovah',
-    description: 'Personal Business & Blog Site Under Development', 
-    images: 'https://i.postimg.cc/bwm0ZQJb/kx.png'
+    description: 'My blogsite', 
   },
 };
 
@@ -83,11 +82,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-        <meta property="og:url" content="https://karnovah.netlify.app" />
+        <meta property="og:url" content="https://blog.karnovah.com" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={metadata.title} />
         <meta property="og:description" content={metadata.description} />
-        <meta property="og:image" content={metadata.openGraph.images} />
       <body className={`${diphylleia.variable} ${cinzel.variable} ${inter.variable} ${urbanist.variable} ${roboto.variable} ${merriweather.variable} ${spectral.variable} ${dm_sans.variable} ${quicksand.variable} ${dosis.variable} ${sono.variable} font-sono`}>{children}
       </body>
     </html>
