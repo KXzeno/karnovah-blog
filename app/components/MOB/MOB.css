@@ -6,4 +6,8 @@
   #nav-box {
     @apply flex flex-auto flex-row min-w-max h-[5.3rem] text-center justify-center gap-16 place-items-center;
   }
+
+  div button {
+    @apply text-[#44D7A8] hover:text-inherit;
+  }
 }
