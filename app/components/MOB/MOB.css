@@ -4,10 +4,18 @@
 
 @layer components {
   #nav-box {
-    @apply flex flex-auto flex-row min-w-max h-[5.3rem] text-center justify-center gap-16 place-items-center;
+    @apply flex flex-auto flex-row min-w-max h-[5.3rem] text-center justify-center gap-16 place-items-center bg-[#18122B];
   }
 
-  div button {
+  div#nav-box .nav-btn {
+    @apply text-[#44D7A8] hover:text-inherit shadow-lg hover:shadow-green-500/50 rounded-lg border-8 border-transparent;
+  }
+
+  div#nav-box .nav-btn-posts {
     @apply text-[#44D7A8] hover:text-inherit;
+  }
+
+  div#nav-box #sub-menu {
+    @apply text-[0.7rem] ml-[0.1rem] shadow-inner hover:shadow-green-500/50 hover:animate-bounce rounded-lg border-4 border-transparent absolute inset-y-[0.07rem] left-[3.3rem];
   }
 }
