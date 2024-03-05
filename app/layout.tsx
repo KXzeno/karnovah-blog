@@ -69,7 +69,7 @@ export const metadata: Metadata = {
   openGraph: {
     url: 'https://blog.karnovah.com',
     type: 'website',
-    title: 'Karnovah',
+    title: '%s | Karnovah',
     description: 'My blogsite', 
   },
 };
