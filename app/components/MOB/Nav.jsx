@@ -2,6 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import './MOB.css';
 import useToggle from '@H/use-toggle';
+import SubMenu from '@F/SubMenu';
 
 export default function Nav() {
   const router = useRouter();
@@ -56,41 +57,28 @@ export default function Nav() {
           </button>
         </div>
       </div>
-      { showSubMenu && <SubMenu /> }
+      { showSubMenu && 
+      <SubMenu>
+        <div>
+          <p>Test</p>
+        </div>
+        <div>
+          <p>Test</p>
+        </div>
+        <div>
+          <p>Test</p>
+        </div>
+        <div>
+          <p>Test</p>
+        </div>
+        <div>
+          <p>Test</p>
+        </div>
+        <div>
+          <p>Test</p>
+        </div>
+      </SubMenu>
+      }
     </>
-  );
-}
-
-function SubMenu() {
-  return (
-    <div className="grid grid-cols-2 absolute bg-white text-black w-48 h-64 top-16 justify-self-center inset-0 left-[4rem] text-center text-sm">
-      <div>
-        <p>Test</p>
-      </div>
-      <div>
-        <p>Test</p>
-      </div>
-      <div>
-        <p>Test</p>
-      </div>
-      <div>
-        <p>Test</p>
-      </div>
-      <div>
-        <p>Test</p>
-      </div>
-      <div>
-        <p>Test</p>
-      </div>
-      <div>
-        <p>Test</p>
-      </div>
-      <div>
-        <p>Test</p>
-      </div>
-      <div>
-        <p>Test</p>
-      </div>
-    </div>
   );
 }
