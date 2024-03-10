@@ -6,6 +6,9 @@ import SubMenu from '@F/SubMenu';
 
 export default function Nav() {
   const router = useRouter();
+  //TODO:
+  // 1. Decide creation of dollarSigns on render instead of conditional display
+  // 2. Design pattern for recent posts
   let [dollarSigns, setDollarSigns] = React.useState([
     '$',
     '$',
@@ -59,24 +62,10 @@ export default function Nav() {
       </div>
       { showSubMenu && 
       <SubMenu>
-        <div>
           <p>Test</p>
-        </div>
-        <div>
           <p>Test</p>
-        </div>
-        <div>
           <p>Test</p>
-        </div>
-        <div>
           <p>Test</p>
-        </div>
-        <div>
-          <p>Test</p>
-        </div>
-        <div>
-          <p>Test</p>
-        </div>
       </SubMenu>
       }
     </>
