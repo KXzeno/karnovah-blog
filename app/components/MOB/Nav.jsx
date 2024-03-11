@@ -4,11 +4,8 @@ import './MOB.css';
 import useToggle from '@H/use-toggle';
 import SubMenu from '@F/SubMenu';
 
-export default function Nav() {
+export default React.forwardRef(function Nav(props, ref) {
   const router = useRouter();
-  //TODO:
-  // 1. Decide creation of dollarSigns on render instead of conditional display
-  // 2. Design pattern for recent posts
   let [dollarSigns, setDollarSigns] = React.useState([
     '$',
     '$',
@@ -24,6 +21,8 @@ export default function Nav() {
     // return value !== '▼' && router.push(`${value.toLowerCase()}`)
     return value === '▼' ? toggleSubMenu() : router.push(`${value.toLowerCase()}`);
   }
+
+  let subMenuElementRef = React.useRef();
 
   return (
     <>
@@ -42,7 +41,6 @@ export default function Nav() {
             dir="rtl"
             // ref={subMenuRef}
             id="sub-menu"
-
           >
             ▼
           </span>
@@ -63,12 +61,13 @@ export default function Nav() {
       </div>
       { showSubMenu && 
       <SubMenu toggleSubMenu={toggleSubMenu}>
-          <p>Test</p>
-          <p>Test</p>
-          <p>Test</p>
-          <p>Test</p>
+        <p>Test</p>
+        <p>Test</p>
+        <p>Test</p>
+        <p>Test</p>
       </SubMenu>
       }
     </>
   );
-}
+});
+
