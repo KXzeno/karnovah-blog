@@ -6,14 +6,14 @@ export default function useClickListener() {
   React.useEffect(() =>
     function handleMouseClick() {
       setMouseClick((isClick) => !isClick);
-   
 
-    window.addEventListener('click', handleMouseClick);
 
-    return () => {
-      window.removeEventListener('click', handleMouseClick);
-    };
-  }, []);
+      window.addEventListener('click', handleMouseClick);
+
+      return () => {
+        window.removeEventListener('click', handleMouseClick);
+      };
+    }, []);
 
   return mouseClick;
 }

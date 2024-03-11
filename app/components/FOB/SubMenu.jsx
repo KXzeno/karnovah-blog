@@ -10,7 +10,6 @@ export default function SubMenu({ children, toggleSubMenu }) {
     setClicked(true);
   }
 
-  //TODO: Avoid close when "misclicking" within element
   React.useEffect(() => {
     console.log(!!toggleSubMenu, clickListener);
     (!!toggleSubMenu === true && clickListener === true && clicked !== true) ? toggleSubMenu() : undefined;
@@ -19,7 +18,7 @@ export default function SubMenu({ children, toggleSubMenu }) {
   }, [clickListener]);
 
   return (
-    <div ref={subRef} onPointerLeave={toggleSubMenu} onClick={reserveState}>
+    <div ref={subRef} onPointerLeave={() => !toggleSubMenu} onClick={reserveState}>
       <div className="grid grid-cols-2 absolute bg-white text-black w-48 h-min max-h-80 top-16 justify-self-center inset-0 left-[4rem] text-center text-sm place-items-center rounded-[0.7rem] p-2">
         {children}
         <div className="absolute">
