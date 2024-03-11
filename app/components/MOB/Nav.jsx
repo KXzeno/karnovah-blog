@@ -42,6 +42,7 @@ export default function Nav() {
             dir="rtl"
             // ref={subMenuRef}
             id="sub-menu"
+
           >
             ▼
           </span>
@@ -61,7 +62,7 @@ export default function Nav() {
         </div>
       </div>
       { showSubMenu && 
-      <SubMenu showSubMenu={showSubMenu}>
+      <SubMenu toggleSubMenu={toggleSubMenu}>
           <p>Test</p>
           <p>Test</p>
           <p>Test</p>
