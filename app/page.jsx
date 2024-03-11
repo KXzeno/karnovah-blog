@@ -11,9 +11,6 @@ export default function Blog() {
   return(
     <>
       <Home />
-      <div className="mt-[400rem] text-center">
-        Inserted for scroll testing
-      </div>
     </>
   );
 }
