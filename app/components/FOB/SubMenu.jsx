@@ -1,28 +1,15 @@
 import React from 'react';
 import useClickListener from '@H/use-click-listener';
 
-export default function SubMenu({ children, showSubMenu }) {
-  let [isClicked, setIsClicked] = React.useState(false);
-  let promptHook = useClickListener();
+export default function SubMenu({ children, toggleSubMenu}) {
+  let subRef = React.useRef();
 
-  // TODO: Unmount hook after clicked out from SubMenu
-  React.useEffect(() => {
-    if (showSubMenu) {
-      promptHook;
-    }
-
-    if (promptHook === true) {
-      setIsClicked((prev) => !prev);
-    }
-
-    return () => {
-      promptHook = undefined;
-    }
-  }, [promptHook]);
+  let handlePointerLeave = () => {
+    subRef.current = toggleSubMenu();
+  }
 
   return (
-    !!isClicked == false
-    ? <>
+    <div ref={subRef} onPointerLeave={handlePointerLeave}>
       <div className="grid grid-cols-2 absolute bg-white text-black w-48 h-min max-h-80 top-16 justify-self-center inset-0 left-[4rem] text-center text-sm place-items-center rounded-[0.7rem] p-2">
         {children}
         <div className="absolute">
@@ -30,7 +17,6 @@ export default function SubMenu({ children, showSubMenu }) {
           </div>
         </div>
       </div>
-    </>
-    : undefined
+    </div>
   );
 }
