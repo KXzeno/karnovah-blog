@@ -61,7 +61,7 @@ export default function Nav() {
         </div>
       </div>
       { showSubMenu && 
-      <SubMenu>
+      <SubMenu showSubMenu={showSubMenu}>
           <p>Test</p>
           <p>Test</p>
           <p>Test</p>
