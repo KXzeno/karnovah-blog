@@ -19,7 +19,7 @@
     @apply text-[0.7rem] ml-[0.1rem] hover:shadow-green-500/50 hover:animate-bounce rounded-lg border-4 border-transparent absolute inset-y-[0.07rem] left-[3.3rem];
   }
 
-  Link.absolute.inset-0.text-center.text-inherit {
+  button.absolute.inset-0.text-center.text-inherit {
     @apply min-[0px]:max-md:invisible;
   }
 }
