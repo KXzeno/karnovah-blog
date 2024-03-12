@@ -17,5 +17,5 @@ export default function useClickListener() {
     };
   }, []);
 
-  return mouseClick;
+  return [mouseClick, setMouseClick];
 }
