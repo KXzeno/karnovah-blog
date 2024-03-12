@@ -9,7 +9,7 @@ export default function SubMenu({ children, showSubMenu, toggleSubMenu }) {
       toggleSubMenu();
     }
     console.log(showSubMenu, clickListener);
-  }, [clickListener]);
+  }, [clickListener, showSubMenu, toggleSubMenu]);
 
   return (
     <div>
