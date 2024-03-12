@@ -1,7 +1,12 @@
 import React from 'react';
 import useClickListener from '@H/use-click-listener';
 
-export default function SubMenu({ children, showSubMenu, toggleSubMenu }) {
+export default function SubMenu({ 
+  children, 
+  showSubMenu, 
+  toggleSubMenu, 
+  ...delegated
+}) {
 
   let clickListener = useClickListener();
   React.useEffect(() => {
