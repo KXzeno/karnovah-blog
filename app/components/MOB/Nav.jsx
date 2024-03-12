@@ -3,8 +3,9 @@ import { useRouter } from 'next/navigation';
 import './MOB.css';
 import useToggle from '@H/use-toggle';
 import SubMenu from '@F/SubMenu';
+import Link from 'next/link';
 
-export default React.forwardRef(function Nav(props, ref) {
+export default function Nav() {
   const router = useRouter();
   let [dollarSigns, setDollarSigns] = React.useState([
     '$',
@@ -19,33 +20,39 @@ export default React.forwardRef(function Nav(props, ref) {
     return value === '▼' ? toggleSubMenu() : router.push(`${value.toLowerCase()}`);
   }
 
+  let handleDefault = (e) => e.preventDefault();
+
+  let subMenuRef = React.useRef(null);
+
   return (
     <>
       <div id="nav-box">
-        <button type="button" onClick={handleRoute} className="nav-btn">
+        <Link href="/recent" onClick={handleRoute} className="nav-btn">
           Recent
-        </button>
-        <button 
+        </Link>
+        <Link 
+          href="/posts"
           type="button" 
           onClick={handleRoute} 
-          className="relative nav-btn-posts">
+          className="relative nav-btn-posts pointer-events-auto">
           <p className="nav-btn inline">
             Posts
           </p>
           <span 
+            onClick={handleDefault}
             dir="rtl"
             id="sub-menu"
           >
             ▼
           </span>
-        </button>
-        <button type="button" onClick={handleRoute} className="nav-btn">
+        </Link>
+        <Link href="/about" type="button" onClick={handleRoute} className="nav-btn">
           About
-        </button>
+        </Link>
         <div className={`${dollarSigns != 0 ? 'visible' : 'hidden'} absolute right-8 h-16 w-16`}>
           <button 
             className="absolute inset-0 text-center text-inherit"
-            onClick={(event) => {
+            onClick={() => {
               setDollarSigns(dollarSigns.slice(1))
             }}
           >
@@ -54,7 +61,7 @@ export default React.forwardRef(function Nav(props, ref) {
         </div>
       </div>
       { showSubMenu && 
-      <SubMenu showSubMenu={showSubMenu} toggleSubMenu={toggleSubMenu}>
+      <SubMenu showSubMenu={showSubMenu} toggleSubMenu={toggleSubMenu} ref={subMenuRef}>
         <p>Test</p>
         <p>Test</p>
         <p>Test</p>
@@ -63,5 +70,5 @@ export default React.forwardRef(function Nav(props, ref) {
       }
     </>
   );
-});
+}
 
