@@ -3,11 +3,12 @@ import Nav from '@M/Nav';
 import Footer from '@M/Footer';
 
 export default function Home() {
+
   return (
-    <>
+    <React.Fragment>
       <Nav />
 
       <Footer />
-    </>
+    </React.Fragment>
   );
 }
