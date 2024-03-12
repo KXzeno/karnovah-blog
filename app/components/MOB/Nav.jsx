@@ -34,7 +34,6 @@ export default React.forwardRef(function Nav(props, ref) {
           </p>
           <span 
             dir="rtl"
-            // ref={subMenuRef}
             id="sub-menu"
           >
             ▼
