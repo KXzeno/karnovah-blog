@@ -14,15 +14,10 @@ export default React.forwardRef(function Nav(props, ref) {
 
   let [showSubMenu, toggleSubMenu] = useToggle(false);
 
-  // const subMenuRef = React.useRef();
-
   let handleRoute = (e) => {
     let { target: { outerText: value } } = e;
-    // return value !== '▼' && router.push(`${value.toLowerCase()}`)
     return value === '▼' ? toggleSubMenu() : router.push(`${value.toLowerCase()}`);
   }
-
-  let subMenuElementRef = React.useRef();
 
   return (
     <>
@@ -60,7 +55,7 @@ export default React.forwardRef(function Nav(props, ref) {
         </div>
       </div>
       { showSubMenu && 
-      <SubMenu toggleSubMenu={toggleSubMenu}>
+      <SubMenu showSubMenu={showSubMenu} toggleSubMenu={toggleSubMenu}>
         <p>Test</p>
         <p>Test</p>
         <p>Test</p>
