@@ -15,11 +15,23 @@ export default function Nav() {
 
   let [showSubMenu, toggleSubMenu] = useToggle(false);
 
+  /**
+   * Manual routers which otherwise toggles a sub menu
+   * @param {object} e - event to access innerHTML or 'outerText'
+   * @returns {function} Either triggers a toggler or reroute function
+   * @author Kx
+   */
   let handleRoute = (e) => {
     let { target: { outerText: value } } = e;
     return value === '▼' ? toggleSubMenu() : router.push(`${value.toLowerCase()}`);
   }
 
+  /**
+   * Prevent default event responses
+   * @param {object} e - event triggered
+   * @returns {function} method to prevent default revent responses
+   * @author Kx
+   */  
   let handleDefault = (e) => e.preventDefault();
 
   let subMenuRef = React.useRef(null);

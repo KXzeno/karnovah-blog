@@ -1,18 +1,45 @@
 import React from 'react';
 import useClickListener from '@H/use-click-listener';
 
+/**
+ * Self-serving sub menu component
+ * @param {<>} children - HTML to be extraneously inputted
+ * @param {boolean} showSubMenu - represents truthiness on DOM node existence
+ * @param {function} toggleSubMenu - setter function for showSubMenu
+ * @param {object} delegated - Delegated props
+ * @returns {HTML} DOM node representing sub menu
+ * @author Kx
+ */
 export default React.forwardRef(function SubMenu({ 
   children, 
   showSubMenu, 
   toggleSubMenu, 
   ...delegated
 }, subMenuRef) {
+  /**
+   * Represents condition for toggle state
+   * State behaving as either > 0 or === 0
+   * Defaults to '1' to avoid premature resolution
+   */
   let [checkChange, setCheckChange] = React.useState(1);
 
-  function toggleEnter(e) {
+  /**
+   * Callback event handler to retain SubMenu state
+   * @returns {function} perennially sets checkChange
+   * @author Kx
+   */
+  function toggleEnter() {
     setCheckChange((prev) => prev + 1);
   }
 
+  /**
+   * Callback event handler to remove SubMenu toggle state
+   * @param {object} e - event used for comparison
+   * @returns {} Optionally resolves to N/A when state reaches SubMenu
+   * @return {function} Optionally remove SubMenu toggle state if on mobile
+   * @return {function} Sets checkChange to 0
+   * @author Kx
+   */
   function toggleLeave(e) {
     if (e.target === subMenuRef.current.firstChild) {
       return;
@@ -25,14 +52,26 @@ export default React.forwardRef(function SubMenu({
     setCheckChange(0);
   }
 
+  // Represents custom hook that fires a click event listener
   let [pointer, setPointer] = useClickListener();
 
+  // Represents current screen width
   let [width, setWidth] = React.useState(window.innerWidth);
 
+  /**
+   * Callback event handler to read current window size
+   * @returns {function} 'width' setter function
+   * @author Kx
+   */
   function handleWindowSizeChange() {
     setWidth(window.innerWidth);
   }
 
+  /**
+   * Onmount hook to identify window size
+   * @param {function} () - Handles resize events and updates 'width'
+   * @author Kx
+   */
   React.useEffect(() => {
     window.addEventListener('resize', handleWindowSizeChange);
     return () => {
@@ -40,11 +79,15 @@ export default React.forwardRef(function SubMenu({
     }
   }, []);
 
+  // Custom breakpoint variable using 'width' state
   let isMobile = width <= 768;
 
+  /**
+   * Hook to conditionally display SubMenu
+   * @param {function} () - Conditionally applies specific event handlers based on breakpoint
+   * @author Kx
+   */
   React.useEffect(() => {
-    console.log(showSubMenu, pointer);
-
     if (!isMobile) {
       subMenuRef.current.addEventListener('pointermove', toggleEnter);
       subMenuRef.current.addEventListener('pointerleave', toggleLeave);
