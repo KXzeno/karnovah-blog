@@ -1,0 +1,79 @@
+\documentclass[7px]{article}
+
+\usepackage{preamble}
+\usepackage{adkore}
+
+\begin{document}
+\frontmatter
+{Component}
+{Feed}
+{ON}
+{Navbar complete. Footer complete. Minimal theme complete. All that is left for the Home page is a Feed component that renders sorted \{works: blog posts\}.}
+
+\strategy
+% Core Decision
+{
+  Create an intuitive design accomodating recency, author's picks, and "popularity"
+}
+% Prospects
+{
+  \begin{enumerate}
+    \item Date separators to the top
+    \item Share post title strictly in card
+    \item Share post intro dynamically in card 
+      \small
+      \begin{itemize}[label=$\multimapdotinv$, leftmargin=1.7mm]
+      \item Can change through Feed component if needed
+      \item Custom msg prioritized, if none then truncated summary
+    \end{itemize}
+      \normalsize
+    \item Truncated posts will appear as navigator near footer
+    \item Unintrusively allow image in card
+    \item On right margin add popular picks, followed by author's picks
+  \end{enumerate}
+}
+% Decision Parameters
+{
+  \small
+  \begin{itemize}[label=$\multimapdotinv$]
+    \item Use intersection observer to collapse date separators
+    \item On mobile, don't collapse seps
+    \item Create test article on route /posts/ to test with
+    \item Use router hook for redirects
+    \item As of now, only render popularity if rating exists
+    \item Use pseudo-class group modifier for the card states
+  \end{itemize}
+  \normalsize
+}
+% Zero Technical Debt Concerns
+{
+  \small
+  \begin{itemize}[label=\blitzb]
+    \item Scrapeable
+    \item Overall card and card content dimensions when inserting images
+  \end{itemize}
+  \normalsize
+}
+
+\deploy
+% Decision Process
+{
+  \small
+  \begin{enumerate}[label=$\multimapinv$]
+    \item Test
+  \end{itemize}
+  \normalsize
+}
+% Results and Conflicts
+{
+
+}
+
+\report
+% Experience Report
+{
+
+}
+
+\end{document}
+
