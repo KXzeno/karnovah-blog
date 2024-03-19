@@ -40,7 +40,7 @@ export default function Nav() {
 
   return (
     <>
-      <div id="nav-box">
+      <nav id="nav-box">
         <Link href="/recent" onClick={handleRoute} className="nav-btn">
           Recent
         </Link>
@@ -73,7 +73,7 @@ export default function Nav() {
             { dollarSigns }
           </button>
         </div>
-      </div>
+      </nav>
       { showSubMenu && 
       <SubMenu showSubMenu={showSubMenu} toggleSubMenu={toggleSubMenu} ref={subMenuRef}>
         <p>Test</p>
