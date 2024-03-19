@@ -128,12 +128,12 @@ export default React.forwardRef(function SubMenu({
   return (
     <div className="min-w-full absolute">
       <div ref={subMenuRef} className="pointer-events-auto w-16 h-16 mx-auto">
-        <div className="grid grid-cols-2 mx-auto absolute bg-white text-black w-48 h-min max-h-80 top-16 justify-self-center inset-0 left-[4rem] text-center text-sm place-items-center rounded-[0.7rem] p-2 -translate-y-[5.3rem]">
+        <nav className="grid grid-cols-2 mx-auto absolute bg-white text-black w-48 h-min max-h-80 top-16 justify-self-center inset-0 left-[4rem] text-center text-sm place-items-center rounded-[0.7rem] p-2 -translate-y-[5.3rem] z-[1]">
           {children}
-        </div>
+        </nav>
       </div>
       <div className="grid grid-cols-1 justify-items-center">
-        <div className="z-2 bg-white h-4 w-4 origin-center rotate-45 rounded-tl-[0.1rem] -translate-y-[5.7rem] translate-x-[2.23rem]">
+        <div className="z-10 bg-white h-4 w-4 origin-center rotate-45 rounded-tl-[0.1rem] -translate-y-[5.7rem] translate-x-[2.23rem]">
         </div>
       </div>
     </div>
