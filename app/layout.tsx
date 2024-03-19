@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 import { Urbanist, Inter, Cinzel, Diphylleia, Roboto, Merriweather, Spectral, DM_Sans, Quicksand, Dosis, Sono} from "next/font/google";
 import "./globals.css";
 
@@ -65,7 +65,10 @@ const sono = Sono({
 });
 
 export const metadata: Metadata = {
-  title: 'Karnovah',
+  title: {
+    default: 'Karnovah',
+    template: '%s | Karnovah',
+  },
   openGraph: {
     url: 'https://blog.karnovah.com',
     type: 'website',
@@ -76,7 +79,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+  params,
+  searchParams
+}: Props<{
   children: React.ReactNode;
 }>) {
   return (
