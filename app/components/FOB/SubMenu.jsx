@@ -126,9 +126,9 @@ export default React.forwardRef(function SubMenu({
   }, [pointer, showSubMenu, toggleSubMenu]);
 
   return (
-    <div className="min-w-full">
+    <div className="min-w-full absolute">
       <div ref={subMenuRef} className="pointer-events-auto w-16 h-16 mx-auto">
-        <div className="grid grid-cols-2 mx-auto absolute bg-white text-black w-48 h-min max-h-80 top-16 justify-self-center inset-0 left-[4rem] text-center text-sm place-items-center rounded-[0.7rem] p-2">
+        <div className="grid grid-cols-2 mx-auto absolute bg-white text-black w-48 h-min max-h-80 top-16 justify-self-center inset-0 left-[4rem] text-center text-sm place-items-center rounded-[0.7rem] p-2 -translate-y-[5.3rem]">
           {children}
         </div>
       </div>
