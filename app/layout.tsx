@@ -79,8 +79,6 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  params,
-  searchParams
 }: Readonly<{
   children: React.ReactNode;
 }>) {
