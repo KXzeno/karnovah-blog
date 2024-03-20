@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
+
+@layer base {
+  h1 {
+    @apply text-2xl
+  }
+
+  h2 {
+    @apply text-xl;
+  }
+
+  h3 {
+    @apply text-base;
+  }
+
+  h4 {
+    @apply text-inherit;
+  }
+}
+
+@layer utilities {
+  div.body-layout {
+    @apply grid relative grid-cols-[minmax(79%,95%),minmax(5%,21%)] text-[11px] mt-[3rem] place-items-center gap-[3rem] w-max mx-auto;
+  }
+
+  .body-layout > *:nth-child(1) {
+    @apply w-[43rem];
+  }
+
+  .body-layout > *:nth-child(2) {
+    @apply grow w-full;
+  }
+
+  .sub-heading {
+    @apply text-[#FC6736];
+  }
+
+  article.post {
+    @apply relative flex flex-col;
+  }
+
+  .sub-heading div h2 {
+    @apply text-balance px-8;
+  }
+
+
+  article.post h1 {
+    @apply max-w-max translate-x-[73px];
+  }
+
+  hgroup {
+  }
+
+  article aside h4 {
+  }
+
+}
+
+@layer components {
+  .right-margin {
+    @apply grid sticky justify-self-center self-start top-0 w-max grid-cols-1 place-items-center;
+  }
+}
