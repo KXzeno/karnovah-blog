@@ -66,6 +66,8 @@ const sono = Sono({
 
 export const metadata: Metadata = {
   title: {
+    default: 'Karnovah',
+    template: '%s | Karnovah'
   },
   openGraph: {
     url: 'https://blog.karnovah.com',
