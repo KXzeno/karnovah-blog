@@ -66,8 +66,6 @@ const sono = Sono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Karnovah',
-    template: '%s | Karnovah',
   },
   openGraph: {
     url: 'https://blog.karnovah.com',
@@ -81,7 +79,7 @@ export default function RootLayout({
   children,
   params,
   searchParams
-}: Props<{
+}: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
