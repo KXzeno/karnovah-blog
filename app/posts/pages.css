@@ -13,14 +13,14 @@
   }
 
   h3 {
-    @apply text-base max-sm:text-[11px];
+    @apply text-base max-sm:text-[11px] sm:max-md:text-[13px];
   }
 
   h4 {
     @apply text-inherit;
   }
   body {
-    @apply bg-gradient-to-b from-black from-20% via-[#0F0F0F] via-85% to-[#222831] to-90% max-sm:w-screen;
+    @apply bg-gradient-to-b from-black from-20% via-[#0F0F0F] via-85% to-[#222831] to-90% max-md:w-screen max-[368px]:w-max;
   }
 }
 
@@ -30,7 +30,7 @@
   }
 
   .body-layout > *:nth-child(1) {
-    @apply w-[43rem] max-sm:w-[23rem];
+    @apply w-[43rem] max-sm:w-[23rem] sm:max-md:w-[31rem] md:max-lg:w-[33rem];
   }
 
   .body-layout > *:nth-child(2) {
