@@ -9,6 +9,8 @@ export const metadata = {
   title: "Akhundelar",
 };
 
+//TODO: Refactor
+
 export default function Akhundelar() {
 
   return (
@@ -21,11 +23,11 @@ export default function Akhundelar() {
             <div>
               <h2>We are all born with spears, but most are lead to think it is only gratifying when thrown.</h2>  
             </div>
-            <aside className="relative bg-[#232D3F] rounded-[2px] p-4 m-2 rounded-tl-[11px] border-l-2 border-yellow-500">
+            <aside className="add-header">
               <h4>
                 This post is primarily made to find my way of dealing with <abbr title="Search Engine Optimization">SEO</abbr> and understanding my design system plus content flow.
               </h4>
-              <div className="w-8 h-8 z-10 bg-black absolute inline-flex top-0 left-0 absolute -translate-x-[0.8rem] -translate-y-[0.8rem] rounded-br-[1.3rem]">
+              <div className="header-note">
                 <svg
                   className="h-6 w-6 text-yellow-500 -translate-y-[3px]"
                   xmlns="http://www.w3.org/2000/svg"

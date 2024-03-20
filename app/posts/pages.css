@@ -53,13 +53,12 @@
     @apply max-w-max md:translate-x-[73px] max-sm:mx-auto;
   }
 
-  section.primary-content {
+  .add-header {
+    @apply relative bg-[#232D3F] rounded-[2px] p-4 m-2 rounded-tl-[11px] border-l-2 border-yellow-500
   }
 
-  hgroup {
-  }
-
-  article aside h4 {
+  .header-note {
+    @apply w-8 h-8 z-10 bg-black absolute inline-flex top-0 left-0 absolute -translate-x-[0.8rem] -translate-y-[0.8rem] rounded-br-[1.3rem]
   }
 
 }
