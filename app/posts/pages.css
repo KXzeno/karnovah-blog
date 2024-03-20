@@ -13,21 +13,24 @@
   }
 
   h3 {
-    @apply text-base;
+    @apply text-base max-sm:text-[11px];
   }
 
   h4 {
     @apply text-inherit;
   }
+  body {
+    @apply bg-gradient-to-b from-black from-20% via-[#0F0F0F] via-85% to-[#222831] to-90% max-sm:w-screen;
+  }
 }
 
 @layer utilities {
   div.body-layout {
-    @apply grid relative grid-cols-[minmax(79%,95%),minmax(5%,21%)] text-[11px] mt-[3rem] place-items-center gap-[3rem] w-max mx-auto;
+    @apply md:grid relative grid-cols-[minmax(79%,95%),minmax(5%,21%)] text-[11px] mt-[3rem] place-items-center gap-[3rem] w-max mx-auto;
   }
 
   .body-layout > *:nth-child(1) {
-    @apply w-[43rem];
+    @apply w-[43rem] max-sm:w-[23rem];
   }
 
   .body-layout > *:nth-child(2) {
@@ -43,12 +46,14 @@
   }
 
   .sub-heading div h2 {
-    @apply text-balance px-8;
+    @apply text-balance px-8 max-sm:text-center;
   }
 
-
   article.post h1 {
-    @apply max-w-max translate-x-[73px];
+    @apply max-w-max md:translate-x-[73px] max-sm:mx-auto;
+  }
+
+  section.primary-content {
   }
 
   hgroup {
@@ -61,6 +66,6 @@
 
 @layer components {
   .right-margin {
-    @apply grid sticky justify-self-center self-start top-0 w-max grid-cols-1 place-items-center;
+    @apply max-sm:collapse grid sticky justify-self-center self-start top-0 w-max grid-cols-1 place-items-center;
   }
 }
