@@ -4,12 +4,16 @@
 
 
 @layer base {
+  body {
+    @apply bg-gradient-to-br from-[#1F2022] from-20% via-[#2E3033] via-[83.7%] to-[#1F2022] to-100% max-md:w-screen max-[368px]:w-max;
+  }
+
   h1 {
-    @apply text-2xl
+    @apply text-2xl text-[#E4E6E1];
   }
 
   h2 {
-    @apply text-xl;
+    @apply text-xl text-[#958799];
   }
 
   h3 {
@@ -17,10 +21,15 @@
   }
 
   h4 {
-    @apply text-inherit;
+    @apply pt-[1rem] pb-[0.2rem] font-spectral text-2xl text-[#E5E1E6] max-md:text-xl; 
   }
-  body {
-    @apply bg-gradient-to-b from-black from-20% via-[#0F0F0F] via-85% to-[#222831] to-90% max-md:w-screen max-[368px]:w-max;
+
+  h5 {
+    @apply font-quicksand text-xl text-[#E6E6E6] pt-[1rem] pb-[0.2rem] max-md:text-lg;
+  }
+
+  h6 {
+    @apply font-dosis py-[1rem];
   }
 }
 
@@ -34,11 +43,11 @@
   }
 
   .body-layout > *:nth-child(2) {
-    @apply grow w-full lg:text-[13px];
+    @apply grow w-full lg:text-[13px] text-[#53565A];
   }
 
   .sub-heading {
-    @apply text-[#FC6736];
+    @apply text-[#FF033E];
   }
 
   article.post {
@@ -54,17 +63,25 @@
   }
 
   .add-header {
-    @apply relative bg-[#232D3F] rounded-[2px] p-4 m-2 rounded-tl-[11px] border-l-2 border-yellow-500
+    @apply relative bg-[#232D3F] rounded-[2px] p-4 m-2 rounded-tl-[11px] border-l-2 border-[#E0E722] text-[#E0E722] lg:text-[13px];
   }
 
   .header-note {
-    @apply w-8 h-8 z-10 bg-black absolute inline-flex top-0 left-0 absolute -translate-x-[0.8rem] -translate-y-[0.8rem] rounded-br-[1.3rem]
+    @apply w-8 h-8 z-10 bg-[#1F2022] absolute inline-flex top-0 left-0 absolute -translate-x-[0.8rem] -translate-y-[0.8rem] rounded-br-[1.3rem]
   }
 
+  .primary-content {
+    @apply text-[#E5E1E6];
+  }
+
+  aside .p {
+    @apply text-inherit;
+  }
 }
 
 @layer components {
   .right-margin {
     @apply max-sm:collapse grid sticky justify-self-center self-start top-0 w-max grid-cols-1 place-items-center;
   }
+
 }
