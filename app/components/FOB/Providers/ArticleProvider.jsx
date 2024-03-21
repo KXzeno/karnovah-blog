@@ -1,0 +1,89 @@
+'use client';
+import React from 'react';
+
+import Nav from '@M/Nav';
+import Footer from '@M/Footer';
+import { Warning } from '@M/Icons';
+
+export const ArticleContext = React.createContext();
+
+export default function ArticleProvider({ 
+  children, 
+  RightMargin,
+}) {
+
+  return (
+    <>
+      <Nav />
+      <ArticleContext.Provider 
+        value={{
+          // Header, SubHeader, AddHeader, HeaderNote, PrimaryContent, RightMargin
+        }}
+      >
+        <div className="body-layout">
+          <article className="post">
+            {children}
+          </article>
+          <div className="right-margin">
+            {RightMargin}
+          </div>
+        </div>
+      </ArticleContext.Provider>
+      <Footer />
+    </>
+  );
+}
+
+export function Header({ children }) {
+  return <h1>{children}</h1>
+}
+
+export function RightMargin({ children }) {
+  return (
+    <div className="right-margin">
+      {children}
+    </div>
+  );
+}
+
+export function SubHeader({ children, AddHeader }) {
+  return (
+    <hgroup className="sub-heading">
+      <div>
+        <h2>{children}</h2>
+      </div>
+      {AddHeader}
+    </hgroup>
+  );
+}
+
+export function AddHeader({ children, HeaderNote }) {
+  return (
+    <aside className="add-header">
+      <h4>{children}</h4>
+      {HeaderNote}
+    </aside>
+  );
+}
+
+export function HeaderNote({ children }) {
+  return (
+    <div className="header-note">
+      {children}
+    </div>
+  );
+}
+
+export function PrimaryContent({ children }) {
+  return (
+    <div>
+      <section className="primary-content">
+        <div>
+          <h3>
+            {children}
+          </h3>
+        </div>
+      </section>
+    </div>
+  );
+}
