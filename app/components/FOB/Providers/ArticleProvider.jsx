@@ -60,7 +60,7 @@ export function SubHeader({ children, AddHeader }) {
 export function AddHeader({ children, HeaderNote }) {
   return (
     <aside className="add-header">
-      <h4>{children}</h4>
+      <p>{children}</p>
       {HeaderNote}
     </aside>
   );
