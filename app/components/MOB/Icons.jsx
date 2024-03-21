@@ -3,7 +3,7 @@ import React from 'react';
 export function Warning({ className }) {
   return (
     <svg
-      className={`h-6 w-6 text-yellow-500 -translate-y-[3px] ${className}`}
+      className={`h-6 w-6 -translate-y-[3px] ${className}`}
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
