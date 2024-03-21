@@ -34,7 +34,7 @@
   }
 
   .body-layout > *:nth-child(2) {
-    @apply grow w-full;
+    @apply grow w-full lg:text-[13px];
   }
 
   .sub-heading {
