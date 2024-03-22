@@ -1,0 +1,83 @@
+\documentclass[7px]{article}
+
+\usepackage{preamble}
+\usepackage{adkore}
+
+\begin{document}
+\frontmatter
+{Component}
+{ToC}
+{ON}
+{After creating the post page layout, the first state-demanding concern surfaced which is dynamic ToC rendering with interactable redirects.}
+
+\strategy
+% Core Decision
+{
+  Create auto-populating ToC which receives headers from page
+}
+% Prospects
+{
+  \begin{enumerate}
+      \small
+      \begin{itemize}[label=$\multimapdotinv$, leftmargin=1.7mm]
+        \item Sticky element aligned vertically on right
+        \item Populates itself based on page content
+        \item Handles subheaders
+        \item Interactive, goes to certain section
+        \item State-managed styling indicative of current section
+      \end{itemize}
+      \normalsize
+  \end{enumerate}
+}
+% Decision Parameters
+{
+  \small
+  \begin{itemize}[label=$\multimapdotinv$]
+    \item \hlc[red]{Tag-dependent automation}
+    \item \hlc[green]{Component-dependent automation}
+  \end{itemize}
+  \normalsize
+}
+% Zero Technical Debt Concerns
+{
+  \small
+  \begin{itemize}[label=\blitzb]
+    \item Exceeding minimalistic API will cause heavy technical debt when employing dynamic posts via database
+  \end{itemize}
+  \normalsize
+}
+
+\deploy
+% Decision Process
+{
+  \small
+  \begin{enumerate}[label=$\multimapinv$]
+    \item Transform manual h5-h6 markup to RFC
+      \begin{itemize}[label=$\multimapdot$, leftmargin=1.7mm]
+        \item Hook each header with an id
+        \item Automate anchors for each id received
+          \begin{itemize}
+            \item ToC RFC and Header RFC separated
+          \end{itemize}
+        \item Use string interpolation for anchor ID
+        \begin{itemize}
+          \item[ex.] -`\#\$\{headerId\}`-
+        \end{itemize}
+    \end{itemize}
+  \end{enumerate}
+  \normalsize
+}
+% Results and Conflicts
+{
+
+}
+
+%\report
+%% Experience Report
+%{
+%  k k
+%}
+
+\end{document}
+
+
