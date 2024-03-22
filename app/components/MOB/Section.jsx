@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 
 const h7 = Symbol.for('k');
@@ -27,9 +28,22 @@ export default function Section({
 
   Section = Object.getOwnPropertyDescriptor(VALID_SECTIONS, Section).value;
 
+  /**
+   * Handles optional id delivery to component
+   * @returns {string} header tags 5 or 6
+   * @author Kx
+   */
+  let idInserter = React.useCallback(() => {
+    if (Section === 'h6') {
+      return;
+    }
+
+    return id;
+  });
+
   return (
     <Section
-      id={id}
+      id={idInserter()}
       {...delegated}
     >
       {children}
