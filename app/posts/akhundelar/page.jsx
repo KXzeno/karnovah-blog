@@ -1,4 +1,3 @@
-import { Metadata } from 'next';
 import React from 'react';
 import Nav from '@M/Nav';
 import Footer from '@M/Footer';
@@ -13,6 +12,7 @@ import ArticleProvider, {
   RightMargin,
 } from '@P/ArticleProvider';
 import Section from '@M/Section';
+import ToC from '@M/ToC';
 
 export const metadata = {
   title: "Akhundelar",
@@ -31,6 +31,7 @@ export default function Akhundelar() {
       }
     >
       <Header>
+          <ToC />
         Akhundelar
       </Header>
       <SubHeader 
@@ -67,7 +68,6 @@ export default function Akhundelar() {
           Fusce volutpat consequat enim at consequat. Nam dui quam, condimentum sit amet consequat sed, fringilla et turpis. Praesent sed sagittis enim. Etiam vel nunc sem. Aenean massa velit, pulvinar ut ullamcorper nec, porttitor a dui. Ut varius blandit viverra. Etiam sodales sed mi vitae eleifend.
         </Section>
       </PrimaryContent>
-      {console.log(PrimaryContent, RightMargin)}
     </ArticleProvider>
   );
 }
