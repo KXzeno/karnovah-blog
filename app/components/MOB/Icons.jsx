@@ -1,5 +1,12 @@
 import React from 'react';
 
+export default function Icons({}) {
+  return (
+    <>
+    </>
+  );
+}
+
 export function Warning({ className }) {
   return (
     <svg
