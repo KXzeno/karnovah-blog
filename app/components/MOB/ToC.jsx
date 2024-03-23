@@ -62,6 +62,7 @@ export default function TableOfContents() {
 
   }, [tocList]);
 
+  let arr = [];
   +function showData(obj) {
     for (let entry of Object.entries(obj)) {
       arr.push(entry);
@@ -84,3 +85,4 @@ export default function TableOfContents() {
     </>
   );
 }
+
