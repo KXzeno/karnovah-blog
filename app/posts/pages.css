@@ -43,7 +43,7 @@
   }
 
   .body-layout > *:nth-child(2) {
-    @apply grow w-full lg:text-[13px] text-[#53565A];
+    @apply grow w-full text-[#53565A];
   }
 
   .sub-heading {
@@ -81,7 +81,7 @@
 
 @layer components {
   .right-margin {
-    @apply max-md:collapse grid sticky justify-self-center self-start top-0 w-max grid-cols-1 place-items-center;
+    @apply max-md:collapse grid sticky justify-self-center self-start top-0 w-max grid-cols-1 place-items-center md:max-lg:text-base lg:text-[1.07rem];
   }
 
 }
