@@ -4,12 +4,13 @@ import React from 'react';
 import Nav from '@M/Nav';
 import Footer from '@M/Footer';
 import { Warning } from '@M/Icons';
+import ToC from '@M/ToC';
 
 export const ArticleContext = React.createContext();
 
 export default function ArticleProvider({ 
   children, 
-  RightMargin,
+  ...delegated
 }) {
 
   return (
@@ -25,7 +26,7 @@ export default function ArticleProvider({
             {children}
           </article>
           <div className="right-margin">
-            {RightMargin}
+            <ToC />
           </div>
         </div>
       </ArticleContext.Provider>
