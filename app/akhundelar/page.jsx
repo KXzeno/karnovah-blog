@@ -2,7 +2,7 @@ import React from 'react';
 import Nav from '@M/Nav';
 import Footer from '@M/Footer';
 import { Warning } from '@M/Icons';
-import './pages.css';
+import '../posts/pages.css';
 import ArticleProvider, { 
   Header,
   SubHeader,
@@ -17,8 +17,6 @@ import ToC from '@M/ToC';
 export const metadata = {
   title: "Akhundelar",
 };
-
-//TODO: Refactor
 
 export default function Akhundelar() {
 
