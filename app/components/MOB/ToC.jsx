@@ -74,7 +74,7 @@ export default function TableOfContents() {
         arr.map((prop) => {
           return (
             <span>
-              <a href={`#${prop[0]}`}>
+              <a href={`#${prop[1]}-${prop[0]}`}>
                 {`${prop[1]}`}
               </a>
             </span>
