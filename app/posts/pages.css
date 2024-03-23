@@ -81,7 +81,7 @@
 
 @layer components {
   .right-margin {
-    @apply max-sm:collapse grid sticky justify-self-center self-start top-0 w-max grid-cols-1 place-items-center;
+    @apply max-md:collapse grid sticky justify-self-center self-start top-0 w-max grid-cols-1 place-items-center;
   }
 
 }
