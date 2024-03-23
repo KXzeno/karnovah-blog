@@ -7,7 +7,6 @@ import ArticleProvider, {
   AddHeader,
   HeaderNote,
   PrimaryContent,
-  RightMargin,
 } from '@P/ArticleProvider';
 import Section from '@M/Section';
 import ToC from '@M/ToC';
@@ -19,13 +18,7 @@ export const metadata = {
 export default function Akhundelar() {
 
   return (
-    <ArticleProvider
-      RightMargin={
-        <>
-          <ToC />
-        </>
-      }
-    >
+    <ArticleProvider>
       <Header>
         Akhundelar
       </Header>
