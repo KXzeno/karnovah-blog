@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function TableOfContents() {
   let [tocList, setTocList] = React.useState({});
-  let [elemNodes, setElemNodes] = React.useState(document.querySelectorAll("h4, h5"));
+  let [elemNodes, setElemNodes] = React.useState({});
   let [isProxy, setIsProxy] = React.useState(false);
 
   /**
@@ -29,42 +29,62 @@ export default function TableOfContents() {
     return tempObj;
   });
 
-  let elemNodesProxy = React.useMemo(() => {
-    return Object.values(document.querySelectorAll("h4, h5"));
-  }, [elemNodes]);
-
-//  let populateList = React.useCallback(() => {
-//
-//  });
-
   React.useEffect(() => {
-    /* Object vs NodeList Object --> !=
-     *console.log(Object.getOwnPropertyNames(elemNodesProxy) === Object.getOwnPropertyNames(elemNodes))
-     */
-    //TODO: Use array state and push in key/vals and compare those too.
-    // Abort on second render if state === tocList props
+    let elemNodesProxy = document.querySelectorAll("h4, h5");
+
     elemNodesProxy.forEach(({ id }) => {
-      if (Object.values(elemNodes).find(({ id: linkId }) => linkId === id) === undefined) {
-        setIsProxy(false);
-        return;
+      if (!!Object.values(elemNodes).find(({ id: linkId }) => linkId === id) === false) {
+        console.error('Proxy Dismissed.')
+      } else {
+        setIsProxy(true);
+        console.log('Proxy in Sync.');
       }
-      setIsProxy(true);
-      console.log('Proxy Nodes in Sync.');
     });
 
-    setElemNodes(erst => ({ ...erst, ...elemNodesProxy }));
-    let elems = elemNodesProxy.values();
-    for (const value of elems) {
-      let altered = newTocList(value);
-      console.log("Altered:", altered)
-      setTocList(erst => ({ ...erst, ...altered }));
-      console.log("tocList:", tocList);
+    if (isProxy === false) {
+      setElemNodes(erst => ({ ...erst, ...elemNodesProxy }));
+
+      let elems = elemNodesProxy.values();
+
+      for (const value of elems) {
+        let altered = newTocList(value);
+        // console.log("Altered:", altered)
+        setTocList(erst => ({ ...erst, ...altered }));
+        // console.log("tocList:", tocList);
+      }
+
     }
 
-  }, []);
+    return () => {
+      elemNodesProxy = null;
+      console.log('Cleanup Successful');
+    };
+
+  }, [tocList]);
+
+  let arr = [];
+
+  function showData(obj) {
+    for (let entry of Object.entries(obj)) {
+      arr.push(entry);
+    }
+  }
+
+  showData(tocList);
 
   return (
     <>
+      {
+        arr.map((prop) => {
+          return (
+            <span>
+              <a href={`#${prop[0]}`}>
+                {`${prop[1]}`}
+              </a>
+            </span>
+          );
+        })
+      }
     </>
-  )
+  );
 }
