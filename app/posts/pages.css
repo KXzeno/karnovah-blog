@@ -17,19 +17,18 @@
   }
 
   h3 {
-    @apply text-base max-sm:text-[11px] sm:max-md:text-[13px];
-  }
-
-  h4 {
     @apply pt-[1rem] pb-[0.2rem] font-spectral text-2xl text-[#E5E1E6] max-md:text-xl max-sm:text-2xl; 
   }
 
-  h5 {
+  h4 {
     @apply font-quicksand text-xl text-[#E6E6E6] pt-[1rem] pb-[0.2rem] max-md:text-lg max-sm:text-xl;
   }
 
-  h6 {
+  h5 {
     @apply font-dosis py-[1rem] max-sm:text-[15px];
+  }
+
+  h6 {
   }
 }
 
@@ -71,7 +70,7 @@
   }
 
   .primary-content {
-    @apply text-[#E5E1E6];
+    @apply text-[#E5E1E6] text-base max-sm:text-[11px] sm:max-md:text-[13px];
   }
 
   aside .p {

@@ -30,8 +30,7 @@ export default function TableOfContents() {
   });
 
   React.useEffect(() => {
-    let elemNodesProxy = document.querySelectorAll("h4, h5");
-
+    let elemNodesProxy = document.querySelectorAll("h3, h4");
     elemNodesProxy.forEach(({ id }) => {
       if (!!Object.values(elemNodes).find(({ id: linkId }) => linkId === id) === false) {
         console.error('Proxy Dismissed.')

@@ -1,25 +1,29 @@
 "use client";
 import React from 'react';
 
+import useOnscreen from '@H/useOnscreen';
+
 const h7 = Symbol.for('k');
 const h8 = Symbol('k');
 const h9 = Symbol('f');
 const h10 = Symbol.keyFor(h8);
 
 const VALID_SECTIONS = {
-  'sec': 'h4',
-  'subsec': 'h5', 
-  'body': 'h6',
+  'sec': 'h3',
+  'subsec': 'h4', 
+  'body': 'h5',
   [h7]: 'x',
 };
 
 VALID_SECTIONS[h8] = 'z';
 
-export default function Section({
+export default React.memo(React.forwardRef(function Section({
   children,
   as: Section = 'sec',
   ...delegated
-}) {
+}, ref) {
+
+  let [isCurrent, secRef] = useOnscreen();
   let id = React.useId();
 
   if (!Object.keys(VALID_SECTIONS).includes(Section)) {
@@ -34,20 +38,21 @@ export default function Section({
    * @author Kx
    */
   let idInserter = React.useCallback(() => {
-    if (Section === 'h6') {
+    if (Section === 'h5') {
       return;
     }
 
     return id;
   });
-
+  // TODO: Use ToC dynamic styling which intercepts other ToC items when in same view
   return (
     <Section
       id={idInserter()}
+      ref={secRef}
       {...delegated}
     >
       {children}
     </Section>
   );
-}
+}));
 

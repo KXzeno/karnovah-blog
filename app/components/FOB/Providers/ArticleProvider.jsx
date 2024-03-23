@@ -80,9 +80,7 @@ export function PrimaryContent({ children }) {
     <div>
       <section className="primary-content">
         <div>
-          <h3>
             {children}
-          </h3>
         </div>
       </section>
     </div>
