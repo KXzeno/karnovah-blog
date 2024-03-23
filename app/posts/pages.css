@@ -21,15 +21,15 @@
   }
 
   h4 {
-    @apply pt-[1rem] pb-[0.2rem] font-spectral text-2xl text-[#E5E1E6] max-md:text-xl; 
+    @apply pt-[1rem] pb-[0.2rem] font-spectral text-2xl text-[#E5E1E6] max-md:text-xl max-sm:text-2xl; 
   }
 
   h5 {
-    @apply font-quicksand text-xl text-[#E6E6E6] pt-[1rem] pb-[0.2rem] max-md:text-lg;
+    @apply font-quicksand text-xl text-[#E6E6E6] pt-[1rem] pb-[0.2rem] max-md:text-lg max-sm:text-xl;
   }
 
   h6 {
-    @apply font-dosis py-[1rem];
+    @apply font-dosis py-[1rem] max-sm:text-[15px];
   }
 }
 
