@@ -33,8 +33,7 @@ export default React.memo(React.forwardRef(function Section({
      * @returns {} cloned observer hooks
      */
     create() {
-      let [onScreen, secRef] = useOnscreen();
-      return { onScreen, secRef };
+      return {};
     },
   });
 
