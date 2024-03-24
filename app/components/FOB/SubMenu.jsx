@@ -89,8 +89,9 @@ export default React.forwardRef(function SubMenu({
    */
   React.useEffect(() => {
     if (!isMobile) {
-      subMenuRef.current.addEventListener('pointermove', toggleEnter);
-      subMenuRef.current.addEventListener('pointerleave', toggleLeave);
+      let smRef = subMenuRef.current;
+      smRef.addEventListener('pointermove', toggleEnter);
+      smRef.addEventListener('pointerleave', toggleLeave);
 
       showSubMenu === true && pointer === true && checkChange !== 0
         ? +(() => {
@@ -103,14 +104,14 @@ export default React.forwardRef(function SubMenu({
           }
         })();
       return () => {
-        subMenuRef.current?.removeEventListener('pointermove', toggleEnter);
-        subMenuRef.current?.removeEventListener('pointerleave', toggleLeave);
+        smRef?.removeEventListener('pointermove', toggleEnter);
+        smRef?.removeEventListener('pointerleave', toggleLeave);
       }
     }
 
     if (isMobile) {
       // showSubMenu === true && isMobile && checkChange !== 0
-      subMenuRef.current.addEventListener('touchend', toggleEnter);
+      smRef.addEventListener('touchend', toggleEnter);
       window.addEventListener('touchend', toggleLeave);
 
       showSubMenu === true && checkChange !== 0
@@ -118,12 +119,12 @@ export default React.forwardRef(function SubMenu({
         : toggleSubMenu();
 
       return () => {
-        subMenuRef.current?.removeEventListener('touchend', toggleEnter);
+        smRef?.removeEventListener('touchend', toggleEnter);
         window.removeEventListener('touchend', toggleLeave);
       }
     }
 
-  }, [pointer, showSubMenu, toggleSubMenu]);
+  }, [pointer, showSubMenu, toggleSubMenu, setPointer, subMenuRef, toggleLeave]);
 
   return (
     <div className="min-w-full absolute">
