@@ -17,7 +17,7 @@ const VALID_SECTIONS = {
 
 VALID_SECTIONS[h8] = 'z';
 
-export default function Section({
+export default React.memo(function Section({
   children,
   as: Section = 'sec',
   ...delegated
@@ -50,7 +50,8 @@ export default function Section({
     return (Section === 'h5') ? null : id;
   }, [id, Section]);
 
-  let { onScreen, secRef } = refs.create();
+  //let { onScreen, secRef } = refs.create();
+  let [onScreen, secRef ] = useOnscreen();
   let catchRef = React.useRef(null);
 
   let generateRef = () => {
@@ -95,9 +96,10 @@ let Overlord = {
   // TODO: Fix no attr when fast scroll up
   // Assign classes to the H4 anchors
   // Use ref instead of document
-  isolateClass(className) {
+  isolateClass(ref, className) {
     this.element = document.getElementsByClassName(className);
 
+    let elem = ref.current;
     console.log('test: ', ref.current?.id);
     let length = this.element.length;
 
@@ -131,7 +133,7 @@ function seekOnScreen(target) {
   return rank;
 }
 
-switch (seekOnScreen(selectorToggle)) {
+switch (seekOnScreen(secRef, selectorToggle)) {
   case 1:
     Overlord.getName(secRef.current?.id).setClass(selectorToggle);
     break;
@@ -139,7 +141,7 @@ switch (seekOnScreen(selectorToggle)) {
     Overlord.getName(secRef.current?.id).rmClass(selectorToggle);
     break;
   case 3:
-    Overlord.isolateClass(selectorToggle);
+    Overlord.isolateClass(secRef, selectorToggle);
     break;
   default:
     console.error(`Error, ref: ${secRef}`);
@@ -155,5 +157,5 @@ return (
       {children}
     </Section>
 );
-};
+});
 
