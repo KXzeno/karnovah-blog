@@ -17,8 +17,6 @@ const VALID_SECTIONS = {
 
 VALID_SECTIONS[h8] = 'z';
 
-export const SectionContext = React.createContext();
-
 export default React.memo(React.forwardRef(function Section({
   children,
   as: Section = 'sec',
@@ -101,7 +99,7 @@ let Overlord = {
   },
 
   setClass(className) {
-    this.element.setAttribute('class', className);
+    this.element?.setAttribute('class', className);
     return this;
   },
 
@@ -113,7 +111,7 @@ let Overlord = {
   // Assign classes to the H4 anchors
   isolateClass(className) {
     this.element = document.getElementsByClassName(className);
-    let length = document.getElementsByClassName(className).length;
+    let length = this.element.length;
     if (length > 1) {
       for (let i = 0; i < length - 1 ; i++) {
         let [curr, interceptor] = [Number(this.element.item(i).getAttribute('name').at(2)), 0];
@@ -128,6 +126,7 @@ let Overlord = {
           })();
       }
     }
+    return this.element;
   }
 }
 
@@ -151,7 +150,7 @@ switch (seekOnScreen(secRef, selectorToggle)) {
     Overlord.getName(secRef.current?.id).rmClass(selectorToggle);
     break;
   case 3:
-    Overlord.isolateClass(selectorToggle);
+    Overlord?.isolateClass(selectorToggle);
     break;
   default:
     console.error(`Error, ref: ${secRef}`);
@@ -167,9 +166,6 @@ switch (seekOnScreen(secRef, selectorToggle)) {
 
 // TODO: Use ToC dynamic styling which intercepts other ToC items when in same view
 return (
-  <SectionContext.Provider
-    value={{ refs, onScreen }}
-  >
     <Section
       id={idInserter()}
       // onLoad={() => console.log(generateRef)}
@@ -178,7 +174,6 @@ return (
     >
       {children}
     </Section>
-  </SectionContext.Provider>
 );
 }));
 

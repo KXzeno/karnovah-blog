@@ -1,6 +1,5 @@
 "use client";
 import React from 'react';
-import { SectionContext } from '@M/Section';
 
 export default function TableOfContents() {
   let [tocList, setTocList] = React.useState({});
