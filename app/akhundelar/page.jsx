@@ -24,11 +24,14 @@ export default function Akhundelar() {
       </Header>
       <SubHeader 
         AddHeader={
-          <AddHeader>
+          <AddHeader
+            HeaderNote={
+              <HeaderNote>
+                <Warning />
+              </HeaderNote>
+            }
+          >
             This post is primarily made to find my way of dealing with <abbr title="Search Engine Optimization">SEO</abbr> and understanding my design system plus content flow.
-            <HeaderNote>
-              <Warning />
-            </HeaderNote>
           </AddHeader>
         }
       >
@@ -48,8 +51,8 @@ export default function Akhundelar() {
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pellentesque adipiscing commodo elit at imperdiet dui. In metus vulputate eu scelerisque felis imperdiet proin. Orci ac auctor augue mauris augue neque gravida in fermentum. Scelerisque viverra mauris in aliquam sem fringilla ut morbi. Metus vulputate eu scelerisque felis imperdiet. Erat velit scelerisque in dictum non consectetur a. Velit egestas dui id ornare. Enim sed faucibus turpis in. Mauris in aliquam sem fringilla.
         </Section>
         <Section as="body">
-        Risus nec feugiat in fermentum posuere urna nec tincidunt. Sapien nec sagittis aliquam malesuada. Libero volutpat sed cras ornare arcu dui. Ultrices mi tempus imperdiet nulla malesuada. In est ante in nibh. Ultrices neque ornare aenean euismod elementum nisi quis eleifend. Interdum varius sit amet mattis vulputate enim nulla. Dui accumsan sit amet nulla facilisi morbi. Fermentum posuere urna nec tincidunt praesent semper feugiat nibh sed. Nisi vitae suscipit tellus mauris. Lectus nulla at volutpat diam. Urna porttitor rhoncus dolor purus.
-      </Section>
+          Risus nec feugiat in fermentum posuere urna nec tincidunt. Sapien nec sagittis aliquam malesuada. Libero volutpat sed cras ornare arcu dui. Ultrices mi tempus imperdiet nulla malesuada. In est ante in nibh. Ultrices neque ornare aenean euismod elementum nisi quis eleifend. Interdum varius sit amet mattis vulputate enim nulla. Dui accumsan sit amet nulla facilisi morbi. Fermentum posuere urna nec tincidunt praesent semper feugiat nibh sed. Nisi vitae suscipit tellus mauris. Lectus nulla at volutpat diam. Urna porttitor rhoncus dolor purus.
+        </Section>
         <Section> Second </Section>
         <Section as="body">
           Cras dictum, nisi at posuere finibus, nulla lacus sollicitudin erat, vel vulputate sapien purus ac lorem. Quisque ac elit mattis tellus pharetra viverra. Proin blandit turpis facilisis metus porttitor, vel suscipit ligula pellentesque. Quisque porttitor orci non ligula eleifend, vel lobortis enim faucibus. Praesent et metus sit amet massa varius volutpat. Nunc feugiat, risus et eleifend suscipit, odio nisl consectetur augue, nec iaculis metus tellus ac lacus. Donec nec arcu nisl. Aenean felis diam, sollicitudin non sem id, viverra tristique purus. Nulla sit amet lectus tempus, suscipit dolor at, finibus eros.
@@ -58,7 +61,7 @@ export default function Akhundelar() {
           Fusce volutpat consequat enim at consequat. Nam dui quam, condimentum sit amet consequat sed, fringilla et turpis. Praesent sed sagittis enim. Etiam vel nunc sem. Aenean massa velit, pulvinar ut ullamcorper nec, porttitor a dui. Ut varius blandit viverra. Etiam sodales sed mi vitae eleifend.
         </Section>
         <Section as="body">
-        Ac auctor augue mauris augue neque gravida. Cursus vitae congue mauris rhoncus. Hendrerit dolor magna eget est lorem ipsum. Est velit egestas dui id ornare arcu. Leo urna molestie at elementum eu facilisis sed odio. Tristique senectus et netus et. Porttitor lacus luctus accumsan tortor posuere ac ut consequat. Dictum at tempor commodo ullamcorper a lacus vestibulum. Aenean sed adipiscing diam donec adipiscing. Hac habitasse platea dictumst quisque sagittis purus sit amet volutpat. Elementum integer enim neque volutpat. At tellus at urna condimentum mattis pellentesque id nibh tortor. Ut diam quam nulla porttitor massa id neque aliquam. Dolor sit amet consectetur adipiscing elit. Volutpat est velit egestas dui. Placerat duis ultricies lacus sed turpis. Et tortor consequat id porta nibh venenatis. Tincidunt praesent semper feugiat nibh. Pharetra diam sit amet nisl suscipit adipiscing bibendum est ultricies. Scelerisque mauris pellentesque pulvinar pellentesque habitant.
+          Ac auctor augue mauris augue neque gravida. Cursus vitae congue mauris rhoncus. Hendrerit dolor magna eget est lorem ipsum. Est velit egestas dui id ornare arcu. Leo urna molestie at elementum eu facilisis sed odio. Tristique senectus et netus et. Porttitor lacus luctus accumsan tortor posuere ac ut consequat. Dictum at tempor commodo ullamcorper a lacus vestibulum. Aenean sed adipiscing diam donec adipiscing. Hac habitasse platea dictumst quisque sagittis purus sit amet volutpat. Elementum integer enim neque volutpat. At tellus at urna condimentum mattis pellentesque id nibh tortor. Ut diam quam nulla porttitor massa id neque aliquam. Dolor sit amet consectetur adipiscing elit. Volutpat est velit egestas dui. Placerat duis ultricies lacus sed turpis. Et tortor consequat id porta nibh venenatis. Tincidunt praesent semper feugiat nibh. Pharetra diam sit amet nisl suscipit adipiscing bibendum est ultricies. Scelerisque mauris pellentesque pulvinar pellentesque habitant.
         </Section>
         <Section as="body">
 
@@ -68,7 +71,7 @@ export default function Akhundelar() {
         <Section as="subsec">
           Third
         </Section>
-    </PrimaryContent>
+      </PrimaryContent>
     </ArticleProvider>
   );
 }
