@@ -17,7 +17,7 @@ const VALID_SECTIONS = {
 
 VALID_SECTIONS[h8] = 'z';
 
-export default React.memo(React.forwardRef(function Section({
+export default React.forwardRef(function Section({
   children,
   as: Section = 'sec',
   ...delegated
@@ -89,16 +89,22 @@ let Overlord = {
   },
 
   rmClass(className) {
-    this.element.removeAttribute('class', className);
+    this.element?.removeAttribute('class', className);
     return this;
   },
   // TODO: Fix no attr when fast scroll up
   // Assign classes to the H4 anchors
-  isolateClass(className) {
+  // Use ref instead of document
+  isolateClass(ref, className) {
     this.element = document.getElementsByClassName(className);
+
+    let elem = ref.current;
+    console.log('test: ', ref.current?.id);
     let length = this.element.length;
+
     if (length > 1) {
       for (let i = 0; i < length - 1 ; i++) {
+        // let [curr, interceptor] = [Number(this.element.item(i).getAttribute('name').at(2)), 0];
         let [curr, interceptor] = [Number(this.element.item(i).getAttribute('name').at(2)), 0];
         console.log(curr, this.element.item(i)?.getAttribute('class'), this.element.item(i+1)?.getAttribute('class'));
         (this.element.item(i).getAttribute('class') 
@@ -116,10 +122,10 @@ let Overlord = {
 
 let selectorToggle = 'curr-head';
 
-function seekOnScreen(ref, target) {
-  let rank = (onScreen && ref.current?.id) 
+function seekOnScreen(target) {
+  let rank = (onScreen && secRef.current?.id) 
     ? 1
-    : !!(onScreen === false && !!ref.current?.id === true) 
+    : !!(onScreen === false && !!secRef.current?.id === true) 
       ? 2 
       : 3;
 
@@ -134,7 +140,7 @@ switch (seekOnScreen(secRef, selectorToggle)) {
     Overlord.getName(secRef.current?.id).rmClass(selectorToggle);
     break;
   case 3:
-    Overlord?.isolateClass(selectorToggle);
+    Overlord.isolateClass(secRef, selectorToggle);
     break;
   default:
     console.error(`Error, ref: ${secRef}`);
@@ -150,5 +156,5 @@ return (
       {children}
     </Section>
 );
-}));
+});
 
