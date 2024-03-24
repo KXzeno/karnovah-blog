@@ -17,14 +17,26 @@ const VALID_SECTIONS = {
 
 VALID_SECTIONS[h8] = 'z';
 
+export const SectionContext = React.createContext();
+
 export default React.memo(React.forwardRef(function Section({
   children,
   as: Section = 'sec',
   ...delegated
 }, ref) {
 
-  let [isCurrent, secRef] = useOnscreen();
   let id = React.useId();
+  let [refIndex, setRefIndex] = React.useState(0);
+  let [refs, setRefs] = React.useState({
+    /** @function
+  @generator
+     * @returns {} cloned observer hooks
+     */
+    create() {
+      let [onScreen, secRef] = useOnscreen();
+      return { onScreen, secRef };
+    },
+  });
 
   if (!Object.keys(VALID_SECTIONS).includes(Section)) {
     throw new Error(`Unrecognized section: ${Section}. Expected: ${VALID_SECTIONS}`);
@@ -38,21 +50,61 @@ export default React.memo(React.forwardRef(function Section({
    * @author Kx
    */
   let idInserter = React.useCallback(() => {
-    if (Section === 'h5') {
-      return;
-    }
+    return (Section === 'h5') ? null : id;
+  }, [id]);
 
-    return id;
+  let { onScreen, secRef } = refs.create();
+  let catchRef = React.useRef(null);
+
+  let generateRef = () => {
+    if (Section !== 'h5' && Object.keys(refs).length  < 5 /* secRef.current?.tagName === 'H5' */) {
+      setRefs(erst => ({
+        ...erst, 
+        [refIndex]: {
+          'onScreen': onScreen,
+          'secRef': secRef,
+        },
+      }));
+      setRefIndex(erst => erst + 1);
+    }
+    console.log(refs);
+  };
+
+  let refCreate = React.useCallback(() => {
+    // setRefIndex(prev => prev + 1);
+    // console.log(refs);
+    // return setRefs(erst => ({
+    //   ...erst, 
+    //   [refIndex]: {
+    //     'onScreen': onScreen,
+    //     'secRef': secRef,
+    //   },
+    // }));
+    console.log(secRef.current);
   });
+
+  if (onScreen && secRef.current.id) {
+    console.log(secRef.current.id) 
+  }
+
   // TODO: Use ToC dynamic styling which intercepts other ToC items when in same view
   return (
-    <Section
-      id={idInserter()}
-      ref={secRef}
-      {...delegated}
+    <SectionContext.Provider
+      value={{ refs, setRefs }}
     >
-      {children}
-    </Section>
+      <Section
+        id={idInserter()}
+        //ref={() => refInserter()}
+        onLoad={() => console.log(generateRef)}
+        ref={secRef}
+        //ref={() => generateRef() ?? catchRef}
+        //ref={refs[refIndex]?.secRef ?? secRef}
+        className={onScreen && secRef.current.id && ''}
+        {...delegated}
+      >
+        {children}
+      </Section>
+    </SectionContext.Provider>
   );
 }));
 
