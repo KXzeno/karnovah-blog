@@ -15,7 +15,7 @@ export default function TableOfContents() {
    * @returns {Object} Parochial object used for hook setter functions
    * @author Kx
    */
-  let newTocList = React.useCallback(({ id, outerText } = prop) => {
+  let newTocList = ({ id, outerText } = prop) => {
     let tempObj = {};
 
     // Could also work with Object.assign()
@@ -29,7 +29,7 @@ export default function TableOfContents() {
     });
 
     return tempObj;
-  });
+  };
 
   React.useEffect(() => {
     let elemNodesProxy = document.querySelectorAll("h3, h4");
@@ -62,7 +62,7 @@ export default function TableOfContents() {
       console.log('Cleanup Successful');
     };
 
-  }, [tocList]);
+  }, [tocList, elemNodes, isProxy]);
 
   let arr = [];
   +((obj) => {
@@ -71,11 +71,11 @@ export default function TableOfContents() {
     }
   })(tocList);
 
- // +((obj) => {
- //   for (let prop in obj) {
- //     console.log('what: ', prop);
- //   }
- // })(tocList);
+  // +((obj) => {
+  //   for (let prop in obj) {
+  //     console.log('what: ', prop);
+  //   }
+  // })(tocList);
 
   console.log()
 

@@ -48,7 +48,7 @@ export default React.memo(React.forwardRef(function Section({
    */
   let idInserter = React.useCallback(() => {
     return (Section === 'h5') ? null : id;
-  }, [id]);
+  }, [id, Section]);
 
   let { onScreen, secRef } = refs.create();
   let catchRef = React.useRef(null);
@@ -67,21 +67,6 @@ export default React.memo(React.forwardRef(function Section({
     console.log(refs);
   };
 
-  let refCreate = React.useCallback(() => {
-    // setRefIndex(prev => prev + 1);
-    // console.log(refs);
-    // return setRefs(erst => ({
-    //   ...erst, 
-    //   [refIndex]: {
-    //     'onScreen': onScreen,
-    //     'secRef': secRef,
-    //   },
-    // }));
-    console.log(secRef.current);
-  });
-  //: +(() => {
-  //  console.log(document.getElementsByClassName('curr-head').length);
-  //})()
 let Overlord = {
   getName(name) {
     this.element = document.getElementsByName(name)[0];
@@ -126,7 +111,6 @@ let Overlord = {
           })();
       }
     }
-    return this.element;
   }
 }
 
@@ -156,19 +140,10 @@ switch (seekOnScreen(secRef, selectorToggle)) {
     console.error(`Error, ref: ${secRef}`);
 }
 
-// (onScreen && secRef.current.id)  
-// ? Overlord.isUnary('curr-head')
-//   ? Overlord.getName(secRef.current.id).setClass('curr-head underline underline-offset-[5px]')
-//   : !!(!!onScreen === false && !!secRef.current?.id === true)
-//   ? Overlord.getName(secRef.current?.id).rmClass('curr-head underline underline-offset-[5px]')
-//   : null;
-
-
 // TODO: Use ToC dynamic styling which intercepts other ToC items when in same view
 return (
     <Section
       id={idInserter()}
-      // onLoad={() => console.log(generateRef)}
       ref={secRef}
       {...delegated}
     >
