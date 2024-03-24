@@ -1,15 +1,18 @@
 "use client";
 import React from 'react';
+import { SectionContext } from '@M/Section';
 
 export default function TableOfContents() {
   let [tocList, setTocList] = React.useState({});
   let [elemNodes, setElemNodes] = React.useState({});
   let [isProxy, setIsProxy] = React.useState(false);
 
-  /**
+  /** @function
    * Callback hook which destructures DOM nodes
+   * @generator
    * @param {string} id - Identifiers to link mapped data
    * @param {string} outerText - innerHTML of extracted elements
+   * @fires tocList#set
    * @returns {Object} Parochial object used for hook setter functions
    * @author Kx
    */
@@ -68,13 +71,15 @@ export default function TableOfContents() {
     }
   })(tocList);
 
+  console.log()
+
   return (
     <>
       {
         arr.map((prop) => {
           return (
-            <span key={`#${prop[1]}-${prop[0]}`}>
-              <a href={`#${prop[0]}`}>
+            <span key={`#${prop[1]}-${prop[0]}`} name={`${prop[0]}`}>
+              <a href={`#${prop[0]}`} rel="noreferrer"> {/*target="_blank"*/}
                 {`${prop[1]}`}
               </a>
             </span>
