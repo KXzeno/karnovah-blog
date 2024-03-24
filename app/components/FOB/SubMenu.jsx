@@ -50,7 +50,7 @@ export default React.forwardRef(function SubMenu({
     }
 
     setCheckChange(0);
-  }, [isMobile, showSubMenu]);
+  }, [isMobile, showSubMenu, toggleSubMenu, subMenuRef]);
 
     // Represents custom hook that fires a click event listener
     let [pointer, setPointer] = useClickListener();
