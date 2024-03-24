@@ -39,6 +39,7 @@ export default function TableOfContents() {
         console.error('Proxy Dismissed.')
       } else {
         setIsProxy(true);
+        //console.log(elemNodesProxy);
         console.log('Proxy in Sync.');
       }
     });
@@ -70,6 +71,12 @@ export default function TableOfContents() {
       arr.push(entry);
     }
   })(tocList);
+
+ // +((obj) => {
+ //   for (let prop in obj) {
+ //     console.log('what: ', prop);
+ //   }
+ // })(tocList);
 
   console.log()
 
