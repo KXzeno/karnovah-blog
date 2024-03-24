@@ -40,44 +40,44 @@ export default React.forwardRef(function SubMenu({
    * @return {function} Sets checkChange to 0
    * @author Kx
    */
-  function toggleLeave(e) {
+  let toggleLeave = React.useCallback((e) => {
     if (e.target === subMenuRef.current.firstChild) {
       return;
-    }
+    };
 
     if (isMobile) {
       toggleSubMenu();
     }
 
     setCheckChange(0);
-  }
+  }, [isMobile, showSubMenu]);
 
-  // Represents custom hook that fires a click event listener
-  let [pointer, setPointer] = useClickListener();
+    // Represents custom hook that fires a click event listener
+    let [pointer, setPointer] = useClickListener();
 
-  // Represents current screen width
-  let [width, setWidth] = React.useState(window.innerWidth);
+    // Represents current screen width
+    let [width, setWidth] = React.useState(window.innerWidth);
 
-  /**
-   * Callback event handler to read current window size
-   * @returns {function} 'width' setter function
-   * @author Kx
-   */
-  function handleWindowSizeChange() {
-    setWidth(window.innerWidth);
-  }
-
-  /**
-   * Onmount hook to identify window size
-   * @param {function} () - Handles resize events and updates 'width'
-   * @author Kx
-   */
-  React.useEffect(() => {
-    window.addEventListener('resize', handleWindowSizeChange);
-    return () => {
-      window.removeEventListener('resize', handleWindowSizeChange);
+    /**
+     * Callback event handler to read current window size
+     * @returns {function} 'width' setter function
+     * @author Kx
+     */
+    function handleWindowSizeChange() {
+      setWidth(window.innerWidth);
     }
-  }, []);
+
+    /**
+     * Onmount hook to identify window size
+     * @param {function} () - Handles resize events and updates 'width'
+     * @author Kx
+     */
+    React.useEffect(() => {
+      window.addEventListener('resize', handleWindowSizeChange);
+      return () => {
+        window.removeEventListener('resize', handleWindowSizeChange);
+      }
+    }, []);
 
   // Custom breakpoint variable using 'width' state
   let isMobile = width <= 768;
