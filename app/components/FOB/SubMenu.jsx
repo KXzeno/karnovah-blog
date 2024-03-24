@@ -124,7 +124,7 @@ export default React.forwardRef(function SubMenu({
       }
     }
 
-  }, [pointer, showSubMenu, toggleSubMenu, setPointer, subMenuRef, toggleLeave]);
+  }, [pointer, showSubMenu, toggleSubMenu, setPointer, subMenuRef, toggleLeave, checkChange, isMobile]);
 
   return (
     <div className="min-w-full absolute">
