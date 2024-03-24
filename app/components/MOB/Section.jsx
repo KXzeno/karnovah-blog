@@ -96,11 +96,11 @@ let Overlord = {
   // TODO: Fix no attr when fast scroll up
   // Assign classes to the H4 anchors
   // Use ref instead of document
-  isolateClass(ref, className) {
+  isolateClass(className) {
     this.element = document.getElementsByClassName(className);
+    console.log(this.element, ' yep');
 
-    let elem = ref.current;
-    console.log('test: ', ref.current?.id);
+    console.log('test: ', secRef.current?.id);
     let length = this.element.length;
 
     if (length > 1) {
@@ -123,39 +123,40 @@ let Overlord = {
 
 let selectorToggle = 'curr-head';
 
-function seekOnScreen(target) {
-  let rank = (onScreen && secRef.current?.id) 
-    ? 1
-    : !!(onScreen === false && !!secRef.current?.id === true) 
+React.useEffect(() => {
+  function seekOnScreen(target) {
+    let rank = (onScreen && secRef.current?.id) 
+      ? 1
+      : !!(onScreen === false && !!secRef.current?.id === true) 
       ? 2 
       : 3;
 
-  return rank;
-}
+    return rank;
+  }
 
-switch (seekOnScreen(secRef, selectorToggle)) {
-  case 1:
-    Overlord.getName(secRef.current?.id).setClass(selectorToggle);
-    break;
-  case 2:
-    Overlord.getName(secRef.current?.id).rmClass(selectorToggle);
-    break;
-  case 3:
-    Overlord.isolateClass(secRef, selectorToggle);
-    break;
-  default:
-    console.error(`Error, ref: ${secRef}`);
-}
+  switch (seekOnScreen(selectorToggle)) {
+    case 1:
+      Overlord.getName(secRef.current?.id).setClass(selectorToggle);
+      break;
+    case 2:
+      Overlord.getName(secRef.current?.id).rmClass(selectorToggle);
+      break;
+    case 3:
+      Overlord.isolateClass(selectorToggle);
+      break;
+    default:
+      console.error(`Error, ref: ${secRef}`);
+  }
+});
 
-// TODO: Use ToC dynamic styling which intercepts other ToC items when in same view
 return (
-    <Section
-      id={idInserter()}
-      ref={secRef}
-      {...delegated}
-    >
-      {children}
-    </Section>
+  <Section
+    id={idInserter()}
+    ref={secRef}
+    {...delegated}
+  >
+    {children}
+  </Section>
 );
 });
 
