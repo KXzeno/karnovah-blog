@@ -93,20 +93,16 @@ let Overlord = {
     this.element?.removeAttribute('class', className);
     return this;
   },
-  // TODO: Fix no attr when fast scroll up
-  // Assign classes to the H4 anchors
-  // Use ref instead of document
   isolateClass(className) {
     this.element = document.getElementsByClassName(className);
-    console.log(this.element, ' yep');
+    //    console.log(this.element, ' yep');
 
-    console.log('test: ', secRef.current?.id);
+    //   console.log('test: ', secRef.current?.id);
     let length = this.element.length;
 
     if (length > 1) {
       for (let i = 0; i < length - 1 ; i++) {
-        // let [curr, interceptor] = [Number(this.element.item(i).getAttribute('name').at(2)), 0];
-        let [curr, interceptor] = [Number(this.element.item(i).getAttribute('name').at(2)), 0];
+        let curr = Number(this.element.item(i).getAttribute('name').at(2));
         console.log(curr, this.element.item(i)?.getAttribute('class'), this.element.item(i+1)?.getAttribute('class'));
         (this.element.item(i).getAttribute('class') 
           === undefined)
@@ -128,8 +124,8 @@ React.useEffect(() => {
     let rank = (onScreen && secRef.current?.id) 
       ? 1
       : !!(onScreen === false && !!secRef.current?.id === true) 
-      ? 2 
-      : 3;
+        ? 2 
+        : 3;
 
     return rank;
   }
