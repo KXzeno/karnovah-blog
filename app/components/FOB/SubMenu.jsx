@@ -23,6 +23,15 @@ export default React.forwardRef(function SubMenu({
    */
   let [checkChange, setCheckChange] = React.useState(1);
 
+  // Represents custom hook that fires a click event listener
+  let [pointer, setPointer] = useClickListener();
+
+  // Represents current screen width
+  let [width, setWidth] = React.useState(window.innerWidth);
+
+  // Custom breakpoint variable using 'width' state
+  let isMobile = width <= 768;
+
   /**
    * Callback event handler to retain SubMenu state
    * @returns {function} perennially sets checkChange
@@ -52,12 +61,6 @@ export default React.forwardRef(function SubMenu({
     setCheckChange(0);
   }, [isMobile, showSubMenu, toggleSubMenu, subMenuRef]);
 
-    // Represents custom hook that fires a click event listener
-    let [pointer, setPointer] = useClickListener();
-
-    // Represents current screen width
-    let [width, setWidth] = React.useState(window.innerWidth);
-
     /**
      * Callback event handler to read current window size
      * @returns {function} 'width' setter function
@@ -78,9 +81,6 @@ export default React.forwardRef(function SubMenu({
         window.removeEventListener('resize', handleWindowSizeChange);
       }
     }, []);
-
-  // Custom breakpoint variable using 'width' state
-  let isMobile = width <= 768;
 
   /**
    * Hook to conditionally display SubMenu
