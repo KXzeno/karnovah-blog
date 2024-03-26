@@ -3,6 +3,7 @@ import React from 'react';
 
 import useOnscreen from '@H/useOnscreen';
 
+// Make async component that toggles console methods
 const h7 = Symbol.for('k');
 const h8 = Symbol('k');
 const h9 = Symbol('f');
@@ -11,7 +12,7 @@ const h10 = Symbol.keyFor(h8);
 const VALID_SECTIONS = {
   'sec': 'h3',
   'subsec': 'h4', 
-  'body': 'h5',
+  'body': 'section',
   [h7]: 'x',
 };
 
@@ -47,7 +48,7 @@ export default React.memo(function Section({
    * @author Kx
    */
   let idInserter = React.useCallback(() => {
-    return (Section === 'h5') ? null : id;
+    return (Section === 'section') ? null : id;
   }, [id, Section]);
 
   //let { onScreen, secRef } = refs.create();
@@ -55,7 +56,7 @@ export default React.memo(function Section({
   let catchRef = React.useRef(null);
 
   let generateRef = () => {
-    if (Section !== 'h5' && Object.keys(refs).length  < 5 /* secRef.current?.tagName === 'H5' */) {
+    if (Section !== 'section' && Object.keys(refs).length  < 5 /* secRef.current?.tagName === 'H5' */) {
       setRefs(erst => ({
         ...erst, 
         [refIndex]: {
@@ -103,7 +104,7 @@ let Overlord = {
     if (length > 1) {
       for (let i = 0; i < length - 1 ; i++) {
         let curr = Number(this.element.item(i).getAttribute('name').at(2));
-        console.log(curr, this.element.item(i)?.getAttribute('class'), this.element.item(i+1)?.getAttribute('class'));
+        // console.log(curr, this.element.item(i)?.getAttribute('class'), this.element.item(i+1)?.getAttribute('class'));
         (this.element.item(i).getAttribute('class') 
           === undefined)
           ? (() => {
@@ -138,7 +139,7 @@ React.useEffect(() => {
       Overlord.getName(secRef.current?.id).rmClass(selectorToggle);
       break;
     case 3:
-      Overlord.isolateClass(selectorToggle);
+      //Overlord.isolateClass(selectorToggle);
       break;
     default:
       console.error(`Error, ref: ${secRef}`);
