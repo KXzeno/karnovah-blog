@@ -17,15 +17,15 @@
   }
 
   h3 {
-    @apply pt-[1rem] pb-[0.2rem] font-spectral text-2xl text-[#E5E1E6] max-md:text-xl max-sm:text-2xl; 
+    @apply group-[.curr-head]:curr-head pt-[1rem] pb-[0.2rem] font-spectral text-2xl text-[#E5E1E6] max-md:text-xl max-sm:text-2xl; 
   }
 
   h4 {
-    @apply font-quicksand text-xl text-[#E6E6E6] pt-[1rem] pb-[0.2rem] max-md:text-lg max-sm:text-xl;
+    @apply group-[.curr-head]:curr-head font-quicksand text-xl text-[#E6E6E6] pt-[1rem] pb-[0.2rem] max-md:text-lg max-sm:text-xl;
   }
 
   h5 {
-    @apply font-dosis py-[1rem] max-sm:text-[15px];
+    @apply group-[.curr-head]:curr-head font-dosis py-[1rem] max-sm:text-[15px];
   }
 
   h6 {
@@ -39,7 +39,7 @@
 }
 
 @layer utilities {
-  div.body-layout {
+  main.body-layout {
     @apply md:grid relative grid-cols-[minmax(79%,95%),minmax(5%,21%)] text-[11px] mt-[3rem] place-items-center gap-[3rem] w-max mx-auto;
   }
 
@@ -85,6 +85,10 @@
 
   .curr-head {
     @apply text-yellow-400 underline underline-offset-[5px];
+  }
+
+  section div section p {
+    @apply group-[.curr-head]:curr-head font-dosis py-[1rem] max-sm:text-[15px];
   }
 }
 
