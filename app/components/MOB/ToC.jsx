@@ -66,35 +66,46 @@ export default function TableOfContents() {
 
   }, [tocList, elemNodes, isProxy]);
 
-  React.useEffect(() => {
-   +((obj) => {
-     for (let entry of Object.entries(obj)) {
-       let index = (entry[1].indexOf('\n') === -1)
-         ? entry[1].length 
-         : entry[1].indexOf('\n');
+  let indexer = React.useCallback((o, prop) => {
+    prop[1] = `${prop[1]}\n${Object.keys(o).indexOf(prop[0])}`
+  });
 
-       entry[1] = `${entry[1].substring(0, index)}`;
-       //console.log(entry);
-       setArrData(erst => [...erst, entry]);
-       //arr.push(entry);
-     }
-   })(tocList);
+  React.useEffect(() => {
+    +((obj) => {
+      for (let entry of Object.entries(obj)) {
+        /* setArrData prev + 1 === length each render */
+        //entry[1] = `${entry[1].substring(0, index)}\n${Object.keys(obj).indexOf(entry[0])}`;
+        //entry[1] = `${entry[1]}\n${Object.keys(obj).indexOf(entry[0])}`;
+        indexer(obj, entry);
+        //console.log(entry);
+        setArrData(erst => [...erst, entry]);
+        //arr.push(entry);
+      }
+    })(tocList, tocIndex);
 
     return () => {
-        setArrData(erst => erst.splice(tocList.length));
+      setArrData(erst => erst.splice(tocList.length));
     };
 
   }, [tocList, setArrData]);
 
+  React.useEffect(() => {
+    console.log('tocList: ', tocList, 'arrData: ', arrData);
+  });
+
   return (
     <>
-      {console.log('tocList: ', tocList, 'arrData: ', arrData)}
       {
         arrData.map((prop) => {
           return (
-            <span key={`#${prop[1]}-${prop[0]}`} name={`${prop[0]}`}>
-              <a href={`#${prop[0]}`} rel="noreferrer"> {/*target="_blank"*/}
-                {`${prop[1]}`}
+            <span 
+              key={`#${prop[1]}-${prop[0]}`} 
+              data-index={prop[1].substring(prop[1].indexOf('\n')).trimStart()} 
+              name={`${prop[0]}`}>
+              <a 
+                href={`#${prop[0]}`} 
+                rel="noreferrer"> {/*target="_blank"*/}
+               {`${prop[1].substring(0, prop[1].indexOf('\n'))}`}
               </a>
             </span>
           );
