@@ -21,14 +21,14 @@ export default function ArticleProvider({
           // Header, SubHeader, AddHeader, HeaderNote, PrimaryContent, RightMargin
         }}
       >
-        <div className="body-layout">
+        <main className="body-layout">
           <article className="post">
             {children}
           </article>
           <div className="right-margin">
             <ToC />
           </div>
-        </div>
+        </main>
       </ArticleContext.Provider>
       <Footer />
     </>
