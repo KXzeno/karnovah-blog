@@ -68,7 +68,7 @@ export default function TableOfContents() {
 
   let indexer = React.useCallback((o, prop) => {
     prop[1] = `${prop[1]}\n${Object.keys(o).indexOf(prop[0])}`
-  });
+  }, []);
 
   React.useEffect(() => {
     +((obj) => {
@@ -87,7 +87,7 @@ export default function TableOfContents() {
       setArrData(erst => erst.splice(tocList.length));
     };
 
-  }, [tocList, setArrData]);
+  }, [tocList, setArrData, indexer]);
 
   React.useEffect(() => {
     //console.log('tocList: ', tocList, 'arrData: ', arrData);

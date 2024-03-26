@@ -59,7 +59,7 @@ export default React.forwardRef(function SubMenu({
     }
 
     setCheckChange(0);
-  }, [isMobile, showSubMenu, toggleSubMenu, subMenuRef]);
+  }, [isMobile, toggleSubMenu, subMenuRef]);
 
     /**
      * Callback event handler to read current window size
