@@ -35,6 +35,7 @@ export default React.memo(function Section({
       return {};
     },
   });
+  let [lastActiveIndex, setLastActiveindex] = React.useState(0);
 
   if (!Object.keys(VALID_SECTIONS).includes(Section)) {
     throw new Error(`Unrecognized section: ${Section}. Expected: ${VALID_SECTIONS}`);
@@ -66,7 +67,7 @@ export default React.memo(function Section({
       }));
       setRefIndex(erst => erst + 1);
     }
-    console.log(refs);
+    //console.log(refs);
   };
 
 let Overlord = {
@@ -77,6 +78,7 @@ let Overlord = {
 
   getClass(className) {
     this.element = document.getElementsByClassName(className); 
+    //console.log('when: ', this.element);
     return this.element;
   },
 
@@ -90,56 +92,68 @@ let Overlord = {
     return this;
   },
 
-  rmClass(className) {
-    this.element?.removeAttribute('class', className);
+  rmClass(className, target) {
+    this.element?.toggleAttribute('class');
+    let nodeList = document.getElementsByClassName(target).item(0);
+    let children = nodeList.children;
+    children[lastActiveIndex - 1]?.setAttribute('class', className);
     return this;
   },
-  isolateClass(className) {
-    this.element = document.getElementsByClassName(className);
-    //    console.log(this.element, ' yep');
 
-    //   console.log('test: ', secRef.current?.id);
-    let length = this.element.length;
+  isolateClass(className, target) {
+    this.element = document.getElementsByClassName(className).item(0);
+    this.activeElement = document.getElementsByClassName(target);
+    let checkSequestered = this.activeElement.length > 1;
+    let index = (this.activeElement.item(this.activeElement.length - 1)?.getAttribute('data-index'));
 
-    if (length > 1) {
-      for (let i = 0; i < length - 1 ; i++) {
-        let curr = Number(this.element.item(i).getAttribute('name').at(2));
-        // console.log(curr, this.element.item(i)?.getAttribute('class'), this.element.item(i+1)?.getAttribute('class'));
-        (this.element.item(i).getAttribute('class') 
-          === undefined)
-          ? (() => {
-            this.element.item(i + 1)?.removeAttribute('class', className);
-        })()
-          : (() => {
-            this.element.item(i)?.removeAttribute('class', className);;
-          })();
+    if (checkSequestered) {
+      for (let child of this.element.children) {
+        if (child.getAttribute('data-index') === lastActiveIndex) {
+          child.toggleAttribute('class');
+        }
       }
     }
+
+    return index || 0;
+  },
+  resuscitate(target, className) {
+    this.element = document.getElementsByClassName(target);
+    if (!!this.element.item(0).children[lastActiveIndex - 1]) {
+      (this.element.item(0).children[lastActiveIndex - 1])
+    }
+
+    //console.log(this.element.item(0).children[lastActiveIndex]?.setAttribute('class', className));
   }
+
 }
 
 let selectorToggle = 'curr-head';
 
 React.useEffect(() => {
   function seekOnScreen(target) {
+    !(!!(document.getElementsByClassName(target).length))
     let rank = (onScreen && secRef.current?.id) 
-      ? 1
-      : !!(onScreen === false && !!secRef.current?.id === true) 
-        ? 2 
-        : 3;
+        ? 1
+        : !!(!onScreen && secRef.current?.id) 
+          ? 2 
+          : 3;
 
+    setLastActiveindex((Overlord.isolateClass('right-margin', selectorToggle)));
     return rank;
   }
 
   switch (seekOnScreen(selectorToggle)) {
     case 1:
+      //console.log('1', lastActiveIndex);
       Overlord.getName(secRef.current?.id).setClass(selectorToggle);
       break;
     case 2:
-      Overlord.getName(secRef.current?.id).rmClass(selectorToggle);
+      //console.log('2', lastActiveIndex);
+      Overlord.getName(secRef.current?.id).rmClass(selectorToggle, 'right-margin');
       break;
     case 3:
-      //Overlord.isolateClass(selectorToggle);
+      //console.log('3', lastActiveIndex);
+      Overlord.resuscitate('right-margin', selectorToggle);
       break;
     default:
       console.error(`Error, ref: ${secRef}`);
