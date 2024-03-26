@@ -90,7 +90,7 @@ export default function TableOfContents() {
   }, [tocList, setArrData]);
 
   React.useEffect(() => {
-    console.log('tocList: ', tocList, 'arrData: ', arrData);
+    //console.log('tocList: ', tocList, 'arrData: ', arrData);
   });
 
   return (

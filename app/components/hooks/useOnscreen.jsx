@@ -33,7 +33,7 @@ export default function useOnscreen() { // Can instead use elementRef as prop an
     let nextElement = (sib && sib.tagName === 'SECTION') 
       ? sib : elementRef.current;
 
-    console.log(nextElement);
+    //console.log(nextElement);
     observer.observe(nextElement);
     return () => {
       observer.disconnect();
