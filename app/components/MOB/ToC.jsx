@@ -1,4 +1,3 @@
-"use client";
 import React from 'react';
 
 export default function TableOfContents() {
@@ -66,52 +65,57 @@ export default function TableOfContents() {
 
   }, [tocList, elemNodes, isProxy]);
 
-  let indexer = React.useCallback((o, prop) => {
-    prop[1] = `${prop[1]}\n${Object.keys(o).indexOf(prop[0])}`
+  let indexer = React.useCallback(async (o, prop) => {
+     prop[1] = await `${prop[1]}\n${Object.keys(o).indexOf(prop[0])}`
   }, []);
 
   React.useEffect(() => {
-    +((obj) => {
+    +(async (obj) => {
       for (let entry of Object.entries(obj)) {
         /* setArrData prev + 1 === length each render */
         //entry[1] = `${entry[1].substring(0, index)}\n${Object.keys(obj).indexOf(entry[0])}`;
         //entry[1] = `${entry[1]}\n${Object.keys(obj).indexOf(entry[0])}`;
         indexer(obj, entry);
         //console.log(entry);
-        setArrData(erst => [...erst, entry]);
+        await setArrData(erst => [...erst, entry]);
         //arr.push(entry);
       }
     })(tocList, tocIndex);
 
-    return () => {
-      setArrData(erst => erst.splice(tocList.length));
+    return async () => {
+      await setArrData(erst => erst.splice(tocList.length));
     };
-
   }, [tocList, setArrData, indexer]);
 
-  React.useEffect(() => {
-    //console.log('tocList: ', tocList, 'arrData: ', arrData);
-  });
+  let data = React.useMemo(() => {
+    if (arrData.length > Object.keys(tocList).length) {
+      arrData.splice(Object.keys(tocList).length);
+    }
+
+      //console.log(`tocList: ${Object.keys(tocList)}, arrData: ${arrData}`);
+
+    return (
+      //console.log(arrData),
+      arrData./*splice(Object.keys(tocList).length).*/map((prop) => {
+        return (
+        <span 
+          key={`#${prop[1]}-${prop[0]}`} 
+          data-index={prop[1].substring(prop[1].indexOf('\n')).trimStart()} 
+          name={`${prop[0]}`}>
+          <a 
+            href={`#${prop[0]}`} 
+            rel="noreferrer"> {/*target="_blank"*/}
+            {`${prop[1].substring(0, prop[1].indexOf('\n'))}`}
+          </a>
+        </span>
+        );
+      })
+    );
+  }, [arrData, tocList]);
 
   return (
     <>
-      {console.log(arrData, tocList)}
-      {
-      arrData.splice(Object.keys(tocList).length).map((prop) => {
-          return (
-            <span 
-              key={`#${prop[1]}-${prop[0]}`} 
-              data-index={prop[1].substring(prop[1].indexOf('\n')).trimStart()} 
-              name={`${prop[0]}`}>
-              <a 
-                href={`#${prop[0]}`} 
-                rel="noreferrer"> {/*target="_blank"*/}
-               {`${prop[1].substring(0, prop[1].indexOf('\n'))}`}
-              </a>
-            </span>
-          );
-        })
-      }
+      {data}
     </>
   );
 }
