@@ -67,6 +67,12 @@ export default function TableOfContents() {
   let arr = [];
   +((obj) => {
     for (let entry of Object.entries(obj)) {
+      let index = (entry[1].indexOf('\n') === -1)
+        ? entry[1].length 
+        : entry[1].indexOf('\n');
+
+      entry[1] = entry[1].substring(0, index);
+      //console.log(entry);
       arr.push(entry);
     }
   })(tocList);
