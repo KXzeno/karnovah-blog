@@ -5,6 +5,8 @@ export default function TableOfContents() {
   let [tocList, setTocList] = React.useState({});
   let [elemNodes, setElemNodes] = React.useState({});
   let [isProxy, setIsProxy] = React.useState(false);
+  let [arrData, setArrData] = React.useState([]);
+  let [tocIndex, setTocIndex] = React.useState(0);
 
   /** @function
    * Callback hook which destructures DOM nodes
@@ -64,31 +66,31 @@ export default function TableOfContents() {
 
   }, [tocList, elemNodes, isProxy]);
 
-  let arr = [];
-  +((obj) => {
-    for (let entry of Object.entries(obj)) {
-      let index = (entry[1].indexOf('\n') === -1)
-        ? entry[1].length 
-        : entry[1].indexOf('\n');
+  React.useEffect(() => {
+   +((obj) => {
+     for (let entry of Object.entries(obj)) {
+       let index = (entry[1].indexOf('\n') === -1)
+         ? entry[1].length 
+         : entry[1].indexOf('\n');
 
-      entry[1] = entry[1].substring(0, index);
-      //console.log(entry);
-      arr.push(entry);
-    }
-  })(tocList);
+       entry[1] = `${entry[1].substring(0, index)}`;
+       //console.log(entry);
+       setArrData(erst => [...erst, entry]);
+       //arr.push(entry);
+     }
+   })(tocList);
 
-  // +((obj) => {
-  //   for (let prop in obj) {
-  //     console.log('what: ', prop);
-  //   }
-  // })(tocList);
+    return () => {
+        setArrData(erst => erst.splice(tocList.length));
+    };
 
-  console.log()
+  }, [tocList, setArrData]);
 
   return (
     <>
+      {console.log('tocList: ', tocList, 'arrData: ', arrData)}
       {
-        arr.map((prop) => {
+        arrData.map((prop) => {
           return (
             <span key={`#${prop[1]}-${prop[0]}`} name={`${prop[0]}`}>
               <a href={`#${prop[0]}`} rel="noreferrer"> {/*target="_blank"*/}
