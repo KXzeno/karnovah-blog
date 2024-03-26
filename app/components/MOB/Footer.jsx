@@ -4,7 +4,7 @@ export default function Footer() {
   const currYear = new Date().getFullYear();
 
   return (
-    <div className="flex flex-row basis-1/6 relative place-items-center h-32 bg-gradient-to-b from-violet-950 to-indigo-900 basis mt-[2.3rem]">
+    <footer className="flex flex-row basis-1/6 relative place-items-center h-32 bg-gradient-to-b from-violet-950 to-indigo-900 basis mt-[2.3rem]">
       <div className="order-0 size-full text-center py-2 text-[0.77rem]">
         <div className="flex size-full place-items-center">
           <p className="inline-block grow">Copyright <span className="text-[1rem] align-middle">©</span> {currYear} Karnovah </p>
@@ -24,6 +24,6 @@ export default function Footer() {
           <p>55555</p>
         </div>
       </div>
-    </div>
+    </footer>
   );
 }
