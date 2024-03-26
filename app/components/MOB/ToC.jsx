@@ -96,6 +96,7 @@ export default function TableOfContents() {
   return (
     <>
       {
+      arrData.length === Object.keys(tocList).length &&
         arrData.map((prop) => {
           return (
             <span 
