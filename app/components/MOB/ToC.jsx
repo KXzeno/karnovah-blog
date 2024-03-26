@@ -95,9 +95,9 @@ export default function TableOfContents() {
 
   return (
     <>
+      {console.log(arrData, tocList)}
       {
-      arrData.length === Object.keys(tocList).length &&
-        arrData.map((prop) => {
+      arrData.splice(Object.keys(tocList).length).map((prop) => {
           return (
             <span 
               key={`#${prop[1]}-${prop[0]}`} 
