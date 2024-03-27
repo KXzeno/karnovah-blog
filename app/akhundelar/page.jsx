@@ -69,9 +69,14 @@ export default function Akhundelar() {
           <p> Ornare massa eget egestas purus viverra accumsan in nisl nisi. Fusce id velit ut tortor pretium viverra. Molestie at elementum eu facilisis sed. Sit amet facilisis magna etiam tempor orci eu lobortis elementum. Et netus et malesuada fames. Felis bibendum ut tristique et egestas quis ipsum. Duis at tellus at urna. Nisi quis eleifend quam adipiscing vitae proin sagittis nisl rhoncus. Parturient montes nascetur ridiculus mus mauris vitae ultricies. Adipiscing bibendum est ultricies integer quis. Morbi tempus iaculis urna id volutpat. Commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend.  </p>
 
       </Section>
-        <Section as="subsec">
-          Third
-        </Section>
+        <Section as="subsec"> Third </Section>
+          <Section as="body">
+          <p> Quisque ullamcorper enim in quam ullamcorper consectetur. Phasellus consequat nisl tortor, sit amet consectetur mi blandit tempor. Quisque aliquam nec lacus vel faucibus. In consequat, ante sit amet vulputate lobortis, lorem sapien suscipit mi, ut varius dolor mauris eu ante. Aliquam vel scelerisque ipsum. Nulla facilisi. Sed placerat ipsum tempus arcu sollicitudin, id aliquam ligula fringilla. Nam at dapibus urna, maximus feugiat urna. Donec sit amet odio quis nibh elementum lacinia. Donec ullamcorper volutpat erat, id consequat dui vulputate at. Praesent dolor nunc, egestas eu ex a, semper feugiat diam. Cras cursus ipsum massa, ut vehicula purus placerat quis.  </p>
+
+          <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pellentesque adipiscing commodo elit at imperdiet dui. In metus vulputate eu scelerisque felis imperdiet proin. Orci ac auctor augue mauris augue neque gravida in fermentum. Scelerisque viverra mauris in aliquam sem fringilla ut morbi. Metus vulputate eu scelerisque felis imperdiet. Erat velit scelerisque in dictum non consectetur a. Velit egestas dui id ornare. Enim sed faucibus turpis in. Mauris in aliquam sem fringilla.  </p>
+
+          <p> Risus nec feugiat in fermentum posuere urna nec tincidunt. Sapien nec sagittis aliquam malesuada. Libero volutpat sed cras ornare arcu dui. Ultrices mi tempus imperdiet nulla malesuada. In est ante in nibh. Ultrices neque ornare aenean euismod elementum nisi quis eleifend. Interdum varius sit amet mattis vulputate enim nulla. Dui accumsan sit amet nulla facilisi morbi. Fermentum posuere urna nec tincidunt praesent semper feugiat nibh sed. Nisi vitae suscipit tellus mauris. Lectus nulla at volutpat diam. Urna porttitor rhoncus dolor purus.  </p>
+          </Section>
     </PrimaryContent>
     </ArticleProvider>
   );
