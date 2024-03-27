@@ -80,6 +80,12 @@
         \item Must deal with upward scroll observation
         \item 'Overlord' object with methods requires modification
       \end{itemize}
+    \item Component refactor
+    \item For curr-head, have two edge cases:
+      \begin{itemize}
+        \item Length === 1, delete old node
+        \item Length > 1, recursive delete node till length index
+      \end{itemize}
   \end{enumerate}
 }
 
