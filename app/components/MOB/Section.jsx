@@ -70,6 +70,76 @@ export default React.memo(function Section({
     //console.log(refs);
   };
 
+  React.useEffect(() => {
+    // Can pass in prototype as an object to defineProps
+    // E.g., String.prototype
+    let NodesList = {}
+    if (!NodesList.collection) {
+      Object.defineProperties(NodesList, {
+        collection: {
+          value: document.querySelectorAll('[name$=":"]')
+        },
+        getList: {
+          get: function() {
+            return this.collection;
+          }
+        },
+        setList: {
+          set: function(collection) {
+            this.collection = collection;
+          }
+        },
+        smartObserve: {
+          value: function(nodes) {
+            nodes.forEach((node) => {
+              node.setAttribute('class', 'curr-head');
+            });
+          },
+          enumerable: true,
+        },
+      });
+    }
+
+    console.log(NodesList.smartObserve(NodesList.getList))
+  });
+
+React.useEffect(() => {
+  function seekOnScreen(target) {
+    !(!!(document.getElementsByClassName(target).length))
+    let rank = (onScreen && secRef.current?.id) 
+        ? 1
+        : !!(!onScreen && secRef.current?.id) 
+          ? 2 
+          : 3;
+
+    setLastActiveindex(Number(Overlord.isolateClass('right-margin', selectorToggle)));
+    return rank;
+  }
+
+//  switch (seekOnScreen(selectorToggle)) {
+//    case 1:
+//      break;
+//    case 2:
+//      break;
+//    default:
+//      console.error(`Error, ref: ${secRef}`);
+//  }
+});
+
+return (
+  <Section
+    id={idInserter()}
+    ref={secRef}
+    {...delegated}
+  >
+    {children}
+  </Section>
+)
+});
+
+
+
+/*
 let Overlord = {
   getName(name) {
     this.element = document.getElementsByName(name)[0];
@@ -169,15 +239,4 @@ React.useEffect(() => {
       console.error(`Error, ref: ${secRef}`);
   }
 });
-
-return (
-  <Section
-    id={idInserter()}
-    ref={secRef}
-    {...delegated}
-  >
-    {children}
-  </Section>
-);
-});
-
+*/
