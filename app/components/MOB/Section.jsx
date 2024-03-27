@@ -89,11 +89,13 @@ let Overlord = {
 
   setClass(className) {
     this.element?.setAttribute('class', className);
+    //console.log(this.element)
     return this;
   },
 
   rmClass(className, target) {
-    this.element?.toggleAttribute('class');
+    //this.element?.toggleAttribute('class');
+    this.element?.removeAttribute('class', className);
     let nodeList = document.getElementsByClassName(target).item(0);
     let children = nodeList.children;
     children[lastActiveIndex - 1]?.setAttribute('class', className);
@@ -108,8 +110,9 @@ let Overlord = {
 
     if (checkSequestered) {
       for (let child of this.element.children) {
-        if (child.getAttribute('data-index') === lastActiveIndex) {
-          child.toggleAttribute('class');
+        if (child.getAttribute('data-index') === String(lastActiveIndex)) {
+          //child.toggleAttribute('class');
+          child.removeAttribute('class', className);
         }
       }
     }
@@ -118,15 +121,20 @@ let Overlord = {
   },
   resuscitate(target, className) {
     this.element = document.getElementsByClassName(target);
+    if (lastActiveIndex === this.element.item(0).children.length - 1) {
+     //return console.log('GO GO GO');
+      console.log('RESUSCITATE!', (this.element.item(0).children[lastActiveIndex - 1]))
+   }
+
     if (!!this.element.item(0).children[lastActiveIndex - 1]) {
-      (this.element.item(0).children[lastActiveIndex - 1])
+      //console.log('RESUSCITATE!', (this.element.item(0).children[lastActiveIndex - 1]))
     }
 
     //console.log(this.element.item(0).children[lastActiveIndex]?.setAttribute('class', className));
   }
 
 }
-
+  // RM AND RESUSCITATE, DEAL WITH BACKWARDS INDEXING
 let selectorToggle = 'curr-head';
 
 React.useEffect(() => {
@@ -138,21 +146,23 @@ React.useEffect(() => {
           ? 2 
           : 3;
 
-    setLastActiveindex((Overlord.isolateClass('right-margin', selectorToggle)));
+    setLastActiveindex(Number(Overlord.isolateClass('right-margin', selectorToggle)));
     return rank;
   }
 
   switch (seekOnScreen(selectorToggle)) {
     case 1:
-      //console.log('1', lastActiveIndex);
-      Overlord.getName(secRef.current?.id).setClass(selectorToggle);
+      // console.log('1', lastActiveIndex, onScreen);
+      (1 < lastActiveIndex) 
+        ? console.log('Broke')
+        : Overlord.getName(secRef.current?.id).setClass(selectorToggle);
       break;
     case 2:
-      //console.log('2', lastActiveIndex);
+      // console.log('2', lastActiveIndex, onScreen);
       Overlord.getName(secRef.current?.id).rmClass(selectorToggle, 'right-margin');
       break;
     case 3:
-      //console.log('3', lastActiveIndex);
+      // console.log('3', lastActiveIndex, onScreen);
       Overlord.resuscitate('right-margin', selectorToggle);
       break;
     default:
