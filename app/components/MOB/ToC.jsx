@@ -114,9 +114,9 @@ export default function TableOfContents() {
   }, [arrData, tocList]);
 
   return (
-    <>
+    <nav>
       {data}
-    </>
+    </nav>
   );
 }
 
