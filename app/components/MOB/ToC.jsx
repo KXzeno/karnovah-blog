@@ -36,11 +36,11 @@ export default function TableOfContents() {
     let elemNodesProxy = document.querySelectorAll("h3, h4");
     elemNodesProxy.forEach(({ id }) => {
       if (!!Object.values(elemNodes).find(({ id: linkId }) => linkId === id) === false) {
-        console.error('Proxy Dismissed.')
+        //console.error('Proxy Dismissed.')
       } else {
         setIsProxy(true);
         //console.log(elemNodesProxy);
-        console.log('Proxy in Sync.');
+        //console.log('Proxy in Sync.');
       }
     });
 
@@ -60,7 +60,7 @@ export default function TableOfContents() {
 
     return () => {
       elemNodesProxy = null;
-      console.log('Cleanup Successful');
+      //console.log('Cleanup Successful');
     };
 
   }, [tocList, elemNodes, isProxy]);

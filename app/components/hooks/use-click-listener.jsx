@@ -9,11 +9,11 @@ export default function useClickListener() {
     }
 
     document.addEventListener('pointerdown', handlePointerDown);
-    console.log("Event fired");
+    //console.log("Event fired");
 
     return () => {
       document.removeEventListener('pointerdown', handlePointerDown);
-      console.log("Event closed");
+      //console.log("Event closed");
     };
   }, []);
 
