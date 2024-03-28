@@ -7,7 +7,7 @@
 \frontmatter
 {Component}
 {ToC}
-{ON}
+{X}
 {After creating the post page layout, the first state-demanding concern surfaced which is dynamic ToC rendering with interactable redirects.}
 
 \strategy
@@ -63,18 +63,12 @@
           \begin{itemize}
             \item[ex.] -`\#\$\{headerId\}`-
           \end{itemize}
-        \item Dynamic styling via intersection observer
-          \begin{itemize}[label=$\multimapdot$, leftmargin=1.7mm]
-            \item Handled by Section and onScreen component
-            \item Grouped body content into section tag and used nextElementChild to observe
-          \end{itemize}
       \end{itemize}
-  \end{enumerate}
-  \normalsize
-}
-% Results and Conflicts
-{
-  \begin{enumerate}
+    \item Dynamic styling via intersection observer
+      \begin{itemize}[label=$\multimapdot$, leftmargin=1.7mm]
+        \item Handled by Section and onScreen component
+        \item Grouped body content into section tag and used nextElementChild to observe
+      \end{itemize}
     \item Spanning observation complete
       \begin{itemize}
         \item Must deal with upward scroll observation
@@ -86,7 +80,30 @@
         \item Length === 1, delete old node
         \item Length > 1, recursive delete node till length index
       \end{itemize}
+    \item Overlord omitted, create pseudoclass NodesList object instead
+      \begin{itemize}[label=$\multimapdot$, leftmargin=1.7mm]
+        \item Contains methods for retrieving and manipulating specific nodes
+        \item Separation of concerns
+        \item Handles > 1, = 0, with highlight on observe as initial behavior 
+      \end{itemize}
   \end{enumerate}
+  \small
+}
+% Results and Conflicts
+{
+  \raggedright
+  \begin{tblr}{
+      colspec = {|X|X|X|}, width = \linewidth,
+      row{1-Z} = {font=\scriptsize}
+    }
+    Dynamic ToC rendering & {Rapid zooms can cause stale rendering which would otherwise be fixed on observer changes} & {
+      \begin{itemize}
+        \item May fix with event listeners
+        \item Does not include handling subheader tags
+      \end{itemize}
+    } \\
+  \end{tblr}
+  \noindent test
 }
 
 %\report
