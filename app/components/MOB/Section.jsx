@@ -93,7 +93,7 @@ export default React.memo(function Section({
         },
         /**
          * Mutates collection
-         * @deprecated
+         * @deprecated - HTML Collections / NodeLists allow for inline mutation
          * @param {NodeList | object} nodes - A collection of nodes to mutate object
          * @author Kx
          */
