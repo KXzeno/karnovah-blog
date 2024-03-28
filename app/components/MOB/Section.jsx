@@ -72,6 +72,21 @@ export default React.memo(function Section({
     // Can pass in prototype as an object to defineProps
     // E.g., String.prototype
     let NodesList = {}
+
+    /**
+     * Click handler for toc elements to properly display new highlight
+     * @param {object} target - Destructured element from event object
+     * @author Kx
+     */
+    let handleClick = ({ target: { parentElement: element } }) => {
+      let index = element.getAttribute('data-index');
+      NodesList.getList.forEach((e) => {
+        e === NodesList.getList[index] 
+          ? e.setAttribute('class', 'curr-head')
+          : e.toggleAttribute('class');
+      });
+    };
+
     if (!NodesList.collection) {
       Object.defineProperties(NodesList, {
         // HTML Collection of ToC items
@@ -122,10 +137,6 @@ export default React.memo(function Section({
           enumerable: false,
           configurable: false,
         },
-        /* TODO: Handle hyperzoom case
-         * When zooming out and in rapidly to a location the toc item isn't currently observing,
-         * the highlight will not self-adjust until the observer notices a change
-         */
         /**
          * Handles dynamic class toggling across multiple observed sections
          * @function
@@ -142,6 +153,7 @@ export default React.memo(function Section({
 
             if (/*onScreen && */secRef.current.id) {
               this.collection.forEach((node) => {
+                node.firstElementChild.addEventListener('click', handleClick);
                 node === target && node.setAttribute('class', 'curr-head');
                 !onScreen && target?.getAttribute('name') && target.toggleAttribute('class');
                 node.getAttribute('class') && this.activeStack.push(node); 
@@ -168,9 +180,11 @@ export default React.memo(function Section({
         },
       });
     }
-
     let [nodes, targetNode] = [NodesList.getList, NodesList.retrieve()];
     NodesList.smartObserve(targetNode);
+    return () => nodes.forEach((node) => {
+      node.removeEventListener('click', handleClick);
+    });
 
   });
 
