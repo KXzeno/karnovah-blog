@@ -111,6 +111,7 @@ export default React.forwardRef(function SubMenu({
 
     if (isMobile) {
       // showSubMenu === true && isMobile && checkChange !== 0
+      let smRef = subMenuRef.current;
       smRef.addEventListener('touchend', toggleEnter);
       window.addEventListener('touchend', toggleLeave);
 
