@@ -185,8 +185,30 @@ export default React.memo(function Section({
     return () => nodes.forEach((node) => {
       node.removeEventListener('click', handleClick);
     });
-
   });
+
+  React.useEffect(() => {
+    let getNodes = new Promise((resolve, reject) => {
+      let intervalId = setInterval(() => {
+        let nodes = document.querySelectorAll('[data-index]');
+        if (nodes.length > 0) {
+          clearInterval(intervalId);
+          resolve(nodes);
+        }
+      }, 100);
+    });
+
+    getNodes.then((nodes) => {
+        console.log(nodes);
+      }).catch((e) => {
+        console.error(e);
+      }).finally(() => {
+        document.querySelector('[data-index="0"]').setAttribute('class', 'curr-head');
+      });
+
+    return () => {
+    };
+  }, []);
 
   return (
     <Section
