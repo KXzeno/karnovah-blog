@@ -143,7 +143,7 @@ export default React.memo(function Section({
             if (/*onScreen && */secRef.current.id) {
               this.collection.forEach((node) => {
                 node === target && node.setAttribute('class', 'curr-head');
-                !onScreen && target.getAttribute('name') && target.toggleAttribute('class');
+                !onScreen && target?.getAttribute('name') && target.toggleAttribute('class');
                 node.getAttribute('class') && this.activeStack.push(node); 
               });
 
@@ -159,7 +159,7 @@ export default React.memo(function Section({
                 let index = this.activeStack.length === 0
                   && secRef.current.id === val.getAttribute('name')
                   && val.getAttribute('data-index');
-                index && NodesList.getList[index - 1].setAttribute('class', 'curr-head');
+                index && NodesList.getList[index - 1]?.setAttribute('class', 'curr-head');
 
               }
             }
