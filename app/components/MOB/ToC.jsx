@@ -19,6 +19,7 @@ export default function TableOfContents() {
   let newTocList = ({ id, outerText } = prop) => {
     let tempObj = {};
 
+    if (!id) { return };
     // Could also work with Object.assign()
     Object.defineProperties(tempObj, {
       [id]: { 
@@ -34,6 +35,7 @@ export default function TableOfContents() {
 
   React.useEffect(() => {
     let elemNodesProxy = document.querySelectorAll("h3, h4");
+    //console.log(elemNodesProxy);
     elemNodesProxy.forEach(({ id }) => {
       if (!!Object.values(elemNodes).find(({ id: linkId }) => linkId === id) === false) {
         //console.error('Proxy Dismissed.')
@@ -46,7 +48,7 @@ export default function TableOfContents() {
 
     if (isProxy === false) {
       setElemNodes(erst => ({ ...erst, ...elemNodesProxy }));
-
+      //console.log(elemNodes);
       let elems = elemNodesProxy.values();
 
       for (const value of elems) {
@@ -57,7 +59,6 @@ export default function TableOfContents() {
       }
 
     }
-
     return () => {
       elemNodesProxy = null;
       //console.log('Cleanup Successful');
@@ -78,6 +79,7 @@ export default function TableOfContents() {
         indexer(obj, entry);
         //console.log(entry);
         await setArrData(erst => [...erst, entry]);
+        //console.log(arrData);
         //arr.push(entry);
       }
     })(tocList, tocIndex);
@@ -88,14 +90,13 @@ export default function TableOfContents() {
   }, [tocList, setArrData, indexer]);
 
   let data = React.useMemo(() => {
-    if (arrData.length > Object.keys(tocList).length) {
-      arrData.splice(Object.keys(tocList).length);
-    }
+   // if (arrData.length > Object.keys(tocList).length) {
+   //   arrData.splice(Object.keys(tocList).length);
+   // }
 
       //console.log(`tocList: ${Object.keys(tocList)}, arrData: ${arrData}`);
-
     return (
-      //console.log(arrData),
+     //console.log(arrData),
       arrData./*splice(Object.keys(tocList).length).*/map((prop) => {
         return (
         <span 
