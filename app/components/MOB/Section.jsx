@@ -86,9 +86,8 @@ export default React.memo(function Section({
         e === NodesList.getList[index] 
           ? e.setAttribute('class', 'curr-head')
           : e.removeAttribute('class', 'curr-head');
-        //TODO: handle rightward observer skips
-        //console.log(NodesList.getList[1].getAttribute('class'))
       });
+      setIsListening(erst => !erst);
       console.log('Event executed');
     }
 
@@ -158,8 +157,7 @@ export default React.memo(function Section({
             console.log(`Render ran.`);
             if (/*onScreen && */secRef.current.id) {
               this.collection.forEach((node) => {
-                !isListening && node.firstElementChild.addEventListener('click', handleClick) && setIsListening(erst => true);
-                console.log(this.collection)
+                !isListening && node.firstElementChild.addEventListener('click', handleClick);
                 node === target && node.setAttribute('class', 'curr-head');
                 !onScreen && target?.getAttribute('name') && target.toggleAttribute('class');
                 node.getAttribute('class') && this.activeStack.push(node); 
@@ -189,7 +187,8 @@ export default React.memo(function Section({
     let [nodes, targetNode] = [NodesList.getList, NodesList.retrieve()];
     NodesList.smartObserve(targetNode);
     return () => nodes.forEach((node) => {
-      isListening && node.removeEventListener('click', handleClick);
+      console.log('Event dismissed');
+      isListening && node.removeEventListener('click', handleClick) && setIsListening(erst => !erst);
     });
   }, [isListening, onScreen]);
 
@@ -206,11 +205,9 @@ export default React.memo(function Section({
 
     getNodes.then((nodes) => {
         document.querySelector('[data-index="0"]').setAttribute('class', 'curr-head');
-        //console.log(nodes);
       }).catch((e) => {
         console.error(e);
       }).finally(() => {
-        //document.querySelector('[data-index="0"]').setAttribute('class', 'curr-head');
       });
 
     return () => {
