@@ -34,6 +34,8 @@ export default React.memo(function Section({
       return {};
     },
   });
+  let [isListening, setIsListening] = React.useState(false);
+
   let [lastActiveIndex, setLastActiveindex] = React.useState(0);
 
   if (!Object.keys(VALID_SECTIONS).includes(Section)) {
@@ -51,7 +53,7 @@ export default React.memo(function Section({
     return (Section === 'section') ? null : id;
   }, [id, Section]);
 
-  let [onScreen, secRef ] = useOnscreen();
+  let [onScreen, secRef] = useOnscreen();
   let catchRef = React.useRef(null);
 
   let generateRef = () => {
@@ -83,9 +85,12 @@ export default React.memo(function Section({
       NodesList.getList.forEach((e) => {
         e === NodesList.getList[index] 
           ? e.setAttribute('class', 'curr-head')
-          : e.toggleAttribute('class');
+          : e.removeAttribute('class', 'curr-head');
+        //TODO: handle rightward observer skips
+        //console.log(NodesList.getList[1].getAttribute('class'))
       });
-    };
+      console.log('Event executed');
+    }
 
     if (!NodesList.collection) {
       Object.defineProperties(NodesList, {
@@ -150,10 +155,11 @@ export default React.memo(function Section({
               writable: true,
               enumerable: true,
             });
-
+            console.log(`Render ran.`);
             if (/*onScreen && */secRef.current.id) {
               this.collection.forEach((node) => {
-                node.firstElementChild.addEventListener('click', handleClick);
+                !isListening && node.firstElementChild.addEventListener('click', handleClick) && setIsListening(erst => true);
+                console.log(this.collection)
                 node === target && node.setAttribute('class', 'curr-head');
                 !onScreen && target?.getAttribute('name') && target.toggleAttribute('class');
                 node.getAttribute('class') && this.activeStack.push(node); 
@@ -183,9 +189,9 @@ export default React.memo(function Section({
     let [nodes, targetNode] = [NodesList.getList, NodesList.retrieve()];
     NodesList.smartObserve(targetNode);
     return () => nodes.forEach((node) => {
-      node.removeEventListener('click', handleClick);
+      isListening && node.removeEventListener('click', handleClick);
     });
-  });
+  }, [isListening, onScreen]);
 
   React.useEffect(() => {
     let getNodes = new Promise((resolve, reject) => {
@@ -199,11 +205,12 @@ export default React.memo(function Section({
     });
 
     getNodes.then((nodes) => {
-        console.log(nodes);
+        document.querySelector('[data-index="0"]').setAttribute('class', 'curr-head');
+        //console.log(nodes);
       }).catch((e) => {
         console.error(e);
       }).finally(() => {
-        document.querySelector('[data-index="0"]').setAttribute('class', 'curr-head');
+        //document.querySelector('[data-index="0"]').setAttribute('class', 'curr-head');
       });
 
     return () => {
