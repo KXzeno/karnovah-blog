@@ -85,6 +85,19 @@ export default React.memo(function Section({
   let isMobileLandscape = React.useMemo(() => !isBreak);
 
   React.useEffect(() => {
+    let nodes = document.querySelectorAll('[data-index]');
+    isMobileLandscape && 
+      +(() => {
+        nodes.forEach((node, i, list) => {
+          (node.getAttribute('class') === 'curr-head') 
+            && (i === list.length - 1) 
+            && list[0].setAttribute('class', 'curr-head');
+        });
+      })();
+
+  }, [isMobileLandscape]);
+
+  React.useEffect(() => {
     //let start = performance.now()
     // Can pass in prototype as an object to defineProps
     // E.g., String.prototype
