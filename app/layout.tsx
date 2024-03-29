@@ -73,7 +73,6 @@ export const metadata: Metadata = {
     url: 'https://blog.karnovah.com',
     type: 'website',
     title: 'Karnovah',
-    template: '%s | Karnovah',
     description: 'My blogsite', 
   },
 };
