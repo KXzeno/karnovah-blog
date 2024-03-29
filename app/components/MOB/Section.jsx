@@ -166,15 +166,12 @@ export default React.memo(function Section({
                 node.getAttribute('class') && this.activeStack.push(node); 
               });
 
-              //!isListening && setIsListening(true);
-              console.log(this.listener, isListening);
-
               for (let val of this.collection.values()) {
-                if (!isListening) {
-                  //continue;
+                if (this.listener) {
+                  continue;
                 }
-
                 if (this.activeStack.length > 1) {
+                  console.log(this.listener);
                   this.activeStack.length != 1 
                     && val.getAttribute('class')
                     && this.activeStack.pop() 
@@ -206,11 +203,13 @@ export default React.memo(function Section({
     let [nodes, targetNode] = [NodesList.getList, NodesList.retrieve()];
     NodesList.smartObserve(targetNode);
     return () => {
-      isListening &&
-      nodes.forEach((node) => {
-        console.log('Event dismissed');
-        node.removeEventListener('click', handleClick);
-      });
+      if (isListening) {
+        nodes.forEach((node) => {
+          console.log('Event dismissed');
+          node.removeEventListener('click', handleClick);
+        });
+        setIsListening(() => false);
+      }
     }
   }, [isListening, onScreen]);
 
