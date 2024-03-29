@@ -2,6 +2,7 @@
 import React from 'react';
 
 import useOnscreen from '@H/useOnscreen';
+import detectResize from '@H/detectResize';
 
 const h7 = Symbol.for('k');
 const h8 = Symbol('k');
@@ -69,6 +70,19 @@ export default React.memo(function Section({
     }
     //console.log(refs);
   };
+
+  let {
+    [Symbol.for('width')]: width,
+    [Symbol.for('breakpointCrossed')]: isBreak
+  } = detectResize();
+
+ // Alternative destructuring
+ // let [width, isMobile, breakpoint] = 
+ //   [screen[Symbol.for('width')], 
+ //   screen[Symbol.for('breakpointCrossed')], 
+ //   screen.breakPoint];
+
+  let isMobileLandscape = React.useMemo(() => !isBreak);
 
   React.useEffect(() => {
     //let start = performance.now()
@@ -217,7 +231,7 @@ export default React.memo(function Section({
       }
       //console.log('Render discarded.');
     }
-  }, [isListening, onScreen]);
+  }, [isListening, onScreen, isMobileLandscape]);
 
   React.useEffect(() => {
     let getNodes = new Promise((resolve, reject) => {
