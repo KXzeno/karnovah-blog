@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function detectResize(breakpoint = 768) {
+export default function useDetectResize(breakpoint = 768) {
   // const h7 = Symbol.for('k');
   // const h9 = Symbol('f');
   // const h10 = Symbol.keyFor(h8);

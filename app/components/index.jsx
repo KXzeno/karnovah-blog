@@ -4,7 +4,7 @@ import SubMenu from '@F/SubMenu';
 import Footer from '@M/Footer';
 import Icons, { Warning } from '@M/Icons';
 import TableOfContents from '@M/ToC';
-import detectResize from '@H/detectResize';
+import useDetectResize from '@H/useDetectResize';
 
 export {
   Home,
@@ -13,5 +13,5 @@ export {
   Footer,
   Icons, Warning,
   TableOfContents,
-  detectResize,
+  useDetectResize,
 }

@@ -2,7 +2,7 @@
 import React from 'react';
 
 import useOnscreen from '@H/useOnscreen';
-import detectResize from '@H/detectResize';
+import useDetectResize from '@H/useDetectResize';
 
 const h7 = Symbol.for('k');
 const h8 = Symbol('k');
@@ -74,7 +74,7 @@ export default React.memo(function Section({
   let {
     [Symbol.for('width')]: width,
     [Symbol.for('breakpointCrossed')]: isBreak
-  } = detectResize();
+  } = useDetectResize();
 
  // Alternative destructuring
  // let [width, isMobile, breakpoint] = 
