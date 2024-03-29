@@ -102,7 +102,7 @@ export default function TableOfContents() {
         <span 
           key={`#${prop[1]}-${prop[0]}`} 
           data-index={prop[1].substring(prop[1].indexOf('\n')).trimStart()} 
-          name={`${prop[0]}`}>
+          name={`${prop[0]}-*`}>
           <a 
             href={`#${prop[0]}`} 
             rel="noreferrer"> {/*target="_blank"*/}
