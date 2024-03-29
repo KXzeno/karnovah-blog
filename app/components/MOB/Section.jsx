@@ -87,7 +87,6 @@ export default React.memo(function Section({
           ? e.setAttribute('class', 'curr-head')
           : e.removeAttribute('class', 'curr-head');
       });
-      setIsListening(erst => !erst);
       console.log('Event executed');
     }
 
@@ -157,7 +156,7 @@ export default React.memo(function Section({
             console.log(`Render ran.`);
             if (/*onScreen && */secRef.current.id) {
               this.collection.forEach((node) => {
-                !isListening && node.firstElementChild.addEventListener('click', handleClick);
+                !isListening && node.firstElementChild.addEventListener('click', handleClick) && setIsListening(erst => !erst);
                 node === target && node.setAttribute('class', 'curr-head');
                 !onScreen && target?.getAttribute('name') && target.toggleAttribute('class');
                 node.getAttribute('class') && this.activeStack.push(node); 
