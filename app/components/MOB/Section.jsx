@@ -258,8 +258,8 @@ export default React.memo(function Section({
     });
 
     getNodes.then((nodes) => {
-      document.querySelectorAll('[data-index]').forEach((child) => {
-        child.getAttribute('data-index') === 0 && child.setAttribute('class', 'curr-head');
+      document.querySelectorAll('[data-index]').forEach((child, i) => {
+        i === 0 && child.setAttribute('class', 'curr-head');
       });
       }).catch((e) => {
         console.error(e);
