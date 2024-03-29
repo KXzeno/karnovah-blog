@@ -87,7 +87,10 @@ export default React.memo(function Section({
           ? e.setAttribute('class', 'curr-head')
           : e.removeAttribute('class', 'curr-head');
       });
+
       console.log('Event executed');
+      setIsListening(() => true);
+      NodesList.setListener = true;
     }
 
     if (!NodesList.collection) {
@@ -154,15 +157,22 @@ export default React.memo(function Section({
               enumerable: true,
             });
             console.log(`Render ran.`);
+            isListening && +(() => this.listener = true)();
             if (/*onScreen && */secRef.current.id) {
               this.collection.forEach((node) => {
-                !isListening && node.firstElementChild.addEventListener('click', handleClick) && setIsListening(erst => !erst);
+                !isListening && node.firstElementChild.addEventListener('click', handleClick); 
                 node === target && node.setAttribute('class', 'curr-head');
                 !onScreen && target?.getAttribute('name') && target.toggleAttribute('class');
                 node.getAttribute('class') && this.activeStack.push(node); 
               });
 
+              //!isListening && setIsListening(true);
+              console.log(this.listener, isListening);
+
               for (let val of this.collection.values()) {
+                if (!isListening) {
+                  //continue;
+                }
 
                 if (this.activeStack.length > 1) {
                   this.activeStack.length != 1 
@@ -181,14 +191,27 @@ export default React.memo(function Section({
           },
           enumerable: true,
         },
+        setListener: {
+          set: function(boolean) {
+            this.listener = boolean;
+          }
+        },
+        getListener: {
+          get: function(boolean) {
+            return this.listener;
+          }
+        },
       });
     }
     let [nodes, targetNode] = [NodesList.getList, NodesList.retrieve()];
     NodesList.smartObserve(targetNode);
-    return () => nodes.forEach((node) => {
-      console.log('Event dismissed');
-      isListening && node.removeEventListener('click', handleClick) && setIsListening(erst => !erst);
-    });
+    return () => {
+      isListening &&
+      nodes.forEach((node) => {
+        console.log('Event dismissed');
+        node.removeEventListener('click', handleClick);
+      });
+    }
   }, [isListening, onScreen]);
 
   React.useEffect(() => {
