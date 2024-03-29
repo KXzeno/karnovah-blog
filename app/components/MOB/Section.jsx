@@ -88,6 +88,7 @@ export default React.memo(function Section({
           : e.removeAttribute('class', 'curr-head');
       });
 
+      //TODO: Use custom hook instead for synthetic listener on event
       console.log('Event executed');
       setIsListening(() => true);
       NodesList.setListener = true;
@@ -157,32 +158,27 @@ export default React.memo(function Section({
               enumerable: true,
             });
             console.log(`Render ran.`);
-            isListening && +(() => this.listener = true)();
             if (/*onScreen && */secRef.current.id) {
               this.collection.forEach((node) => {
                 !isListening && node.firstElementChild.addEventListener('click', handleClick); 
                 node === target && node.setAttribute('class', 'curr-head');
-                !onScreen && target?.getAttribute('name') && target.toggleAttribute('class');
+                !onScreen && target?.getAttribute('name') && target.removeAttribute('class');
                 node.getAttribute('class') && this.activeStack.push(node); 
               });
 
+              console.log(this.listener, isListening);
               for (let val of this.collection.values()) {
-                if (this.listener) {
-                  continue;
-                }
                 if (this.activeStack.length > 1) {
-                  console.log(this.listener);
                   this.activeStack.length != 1 
                     && val.getAttribute('class')
                     && this.activeStack.pop() 
-                    && val.toggleAttribute('class');
+                    && val.removeAttribute('class', 'class');
                 }
 
                 let index = this.activeStack.length === 0
                   && secRef.current.id === val.getAttribute('name')
                   && val.getAttribute('data-index');
                 index && NodesList.getList[index - 1]?.setAttribute('class', 'curr-head');
-
               }
             }
           },
@@ -205,11 +201,12 @@ export default React.memo(function Section({
     return () => {
       if (isListening) {
         nodes.forEach((node) => {
-          console.log('Event dismissed');
           node.removeEventListener('click', handleClick);
         });
+        console.log('Event dismissed');
         setIsListening(() => false);
       }
+      console.log('Render discarded.');
     }
   }, [isListening, onScreen]);
 
@@ -225,14 +222,13 @@ export default React.memo(function Section({
     });
 
     getNodes.then((nodes) => {
-        document.querySelector('[data-index="0"]').setAttribute('class', 'curr-head');
+      document.querySelectorAll('[data-index]').forEach((child) => {
+        child.getAttribute('data-index') === 0 && child.setAttribute('class', 'curr-head');
+      });
       }).catch((e) => {
         console.error(e);
       }).finally(() => {
       });
-
-    return () => {
-    };
   }, []);
 
   return (
