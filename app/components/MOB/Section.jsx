@@ -48,53 +48,6 @@ export default React.memo(function Section({
 
   Section = Object.getOwnPropertyDescriptor(VALID_SECTIONS, Section).value;
 
-  React.useEffect(() => {
-    let getNodes = new Promise((resolve, reject) => {
-      let intervalId = setInterval(() => {
-        let nodes = document.querySelectorAll('[data-index]');
-        if (nodes.length > 0) {
-          clearInterval(intervalId);
-          resolve(nodes);
-        }
-      }, 100);
-    });
-
-    getNodes.then((nodes) => {
-      document.querySelectorAll('[data-index]').forEach((child, i) => {
-        i === 0 && child.setAttribute('class', 'curr-head');
-      });
-      }).catch((e) => {
-        console.error(e);
-      }).finally(() => {
-      });
-  }, []);
-
-  React.useEffect(() => {
-    let getElements = new Promise((resolve, reject) => {
-      let elements = document.querySelectorAll('h3, h4');
-      if (elements.length > 0) {
-        resolve(elements) 
-      }
-    });
-
-    getElements.then((elements) => {
-      elements.forEach((element, i, list) => {
-        if (elementStack.length !== list.length) {
-          setElementStack(prev => [...prev, element]);
-          //console.log(list.length, elementStack.length);
-        }
-      });
-    });
-
-    return () => {
-      let elementsLength = document.querySelectorAll('h3, h4').length;
-      if (elementStack.length > elementsLength) {
-        setElementStack(prev => prev.splice(elementsLength, prev.length - 1));
-      }
-    };
-  }, [elementStack]);
-
-
   /**
    * Handles optional id delivery to component
    * @returns {string} header tags 5 or 6
@@ -109,45 +62,18 @@ export default React.memo(function Section({
   let [onScreen, secRef] = useOnscreen();
   let catchRef = React.useRef(null);
 
-  let generateRef = () => {
-    if (Section !== 'section' && Object.keys(refs).length  < 5 /* secRef.current?.tagName === 'H5' */) {
-      setRefs(erst => ({
-        ...erst, 
-        [refIndex]: {
-          'onScreen': onScreen,
-          'secRef': secRef,
-        },
-      }));
-      setRefIndex(erst => erst + 1);
-    }
-    //console.log(refs);
-  };
-
   let {
     [Symbol.for('width')]: width,
     [Symbol.for('breakpointCrossed')]: isBreak
   } = useDetectResize();
 
- // Alternative destructuring
- // let [width, isMobile, breakpoint] = 
- //   [screen[Symbol.for('width')], 
- //   screen[Symbol.for('breakpointCrossed')], 
- //   screen.breakPoint];
+  // Alternative destructuring
+  // let [width, isMobile, breakpoint] = 
+  //   [screen[Symbol.for('width')], 
+  //   screen[Symbol.for('breakpointCrossed')], 
+  //   screen.breakPoint];
 
   let isMobileLandscape = React.useMemo(() => !isBreak);
-
-  React.useEffect(() => {
-    let nodes = document.querySelectorAll('[data-index]');
-    isMobileLandscape && 
-      +(() => {
-        nodes.forEach((node, i, list) => {
-          (node.getAttribute('class') === 'curr-head') 
-            && (i === list.length - 1) 
-            && list[0].setAttribute('class', 'curr-head');
-        });
-      })();
-
-  }, [isMobileLandscape]);
 
   React.useEffect(() => {
     //let start = performance.now()
@@ -214,7 +140,7 @@ export default React.memo(function Section({
           value: function() {
             let returnedNode;
             this.collection.forEach((node) => {
-              if (node.getAttribute('name') === secRef.current.id) {
+              if (node.getAttribute('name') === `${secRef.current.id}-*`) {
                 return returnedNode = node;
               }
             });
@@ -237,26 +163,30 @@ export default React.memo(function Section({
               writable: true,
               enumerable: true,
             });
-            //console.log(`Render ran.`);
+
+            // Executes only when observing element id exists
             if (/*onScreen && */secRef.current.id) {
+
+              // Toggles highlight on all toc items
               this.collection.forEach((node) => {
-                console.log(node);
                 node === target && node.setAttribute('class', 'curr-head');
-                //!onScreen && target?.getAttribute('name') && target.removeAttribute('class');
+                // Toggle attribute on observer dismissal, ensures end node removal
+                !onScreen && target.getAttribute('name') && target.toggleAttribute('class');
                 node.getAttribute('class') && this.activeStack.push(node); 
               });
 
-              //console.log(this.listener, isListening);
+              // Detoggles previous node's classes
               for (let val of this.collection.values()) {
                 if (this.activeStack.length > 1) {
                   this.activeStack.length != 1 
                     && val.getAttribute('class')
                     && this.activeStack.pop() 
-                    && val.removeAttribute('class', 'class');
+                    && val.removeAttribute('class', 'curr-head');
                 }
 
+                // Highlights previous node when escaping last node
                 let index = this.activeStack.length === 0
-                  && secRef.current.id === val.getAttribute('name')
+                  && `${secRef.current.id}-*` === val.getAttribute('name')
                   && val.getAttribute('data-index');
                 index && NodesList.getList[index - 1]?.setAttribute('class', 'curr-head');
               }
@@ -295,6 +225,65 @@ export default React.memo(function Section({
       //console.log('Render discarded.');
     }
   }, [isListening, onScreen, isMobileLandscape]);
+
+  React.useEffect(() => {
+    let getNodes = new Promise((resolve, reject) => {
+      let intervalId = setInterval(() => {
+        let nodes = document.querySelectorAll('[data-index]');
+        if (nodes.length > 0) {
+          clearInterval(intervalId);
+          resolve(nodes);
+        }
+      }, 100);
+    });
+
+    getNodes.then((nodes) => {
+      document.querySelectorAll('[data-index]').forEach((child, i) => {
+        i === 0 && child.setAttribute('class', 'curr-head');
+      });
+    }).catch((e) => {
+      console.error(e);
+    }).finally(() => {
+    });
+  }, []);
+
+  React.useEffect(() => {
+    let getElements = new Promise((resolve, reject) => {
+      let elements = document.querySelectorAll('h3, h4');
+      if (elements.length > 0) {
+        resolve(elements) 
+      }
+    });
+
+    getElements.then((elements) => {
+      elements.forEach((element, i, list) => {
+        if (elementStack.length !== list.length) {
+          setElementStack(prev => [...prev, element]);
+          //console.log(list.length, elementStack.length);
+        }
+      });
+    });
+
+    return () => {
+      let elementsLength = document.querySelectorAll('h3, h4').length;
+      if (elementStack.length > elementsLength) {
+        setElementStack(prev => prev.splice(elementsLength, prev.length - 1));
+      }
+    };
+  }, [elementStack]);
+
+  React.useEffect(() => {
+    let nodes = document.querySelectorAll('[data-index]');
+    isMobileLandscape && 
+      +(() => {
+        nodes.forEach((node, i, list) => {
+          (node.getAttribute('class') === 'curr-head') 
+            && (i === list.length - 1) 
+            && list[0].setAttribute('class', 'curr-head');
+        });
+      })();
+
+  }, [isMobileLandscape]);
 
   return (
     <Section
