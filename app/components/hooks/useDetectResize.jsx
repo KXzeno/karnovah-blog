@@ -18,7 +18,8 @@ export default function useDetectResize(breakpoint = 768) {
   }
 
   React.useEffect(() => {
-    window.addEventListener('resize', handleWidthResize)
+    typeof window !== 'undefined' 
+      && window.addEventListener('resize', handleWidthResize)
 
     return () => {
       window.removeEventListener('resize', handleWidthResize)
