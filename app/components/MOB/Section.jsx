@@ -35,6 +35,9 @@ export default React.memo(function Section({
       return {};
     },
   });
+
+  let [elementStack, setElementStack] = React.useState([]);
+
   let [isListening, setIsListening] = React.useState(false);
 
   let [lastActiveIndex, setLastActiveindex] = React.useState(0);
@@ -45,13 +48,62 @@ export default React.memo(function Section({
 
   Section = Object.getOwnPropertyDescriptor(VALID_SECTIONS, Section).value;
 
+  React.useEffect(() => {
+    let getNodes = new Promise((resolve, reject) => {
+      let intervalId = setInterval(() => {
+        let nodes = document.querySelectorAll('[data-index]');
+        if (nodes.length > 0) {
+          clearInterval(intervalId);
+          resolve(nodes);
+        }
+      }, 100);
+    });
+
+    getNodes.then((nodes) => {
+      document.querySelectorAll('[data-index]').forEach((child, i) => {
+        i === 0 && child.setAttribute('class', 'curr-head');
+      });
+      }).catch((e) => {
+        console.error(e);
+      }).finally(() => {
+      });
+  }, []);
+
+  React.useEffect(() => {
+    let getElements = new Promise((resolve, reject) => {
+      let elements = document.querySelectorAll('h3, h4');
+      if (elements.length > 0) {
+        resolve(elements) 
+      }
+    });
+
+    getElements.then((elements) => {
+      elements.forEach((element, i, list) => {
+        if (elementStack.length !== list.length) {
+          setElementStack(prev => [...prev, element]);
+          //console.log(list.length, elementStack.length);
+        }
+      });
+    });
+
+    return () => {
+      let elementsLength = document.querySelectorAll('h3, h4').length;
+      if (elementStack.length > elementsLength) {
+        setElementStack(prev => prev.splice(elementsLength, prev.length - 1));
+      }
+    };
+  }, [elementStack]);
+
+
   /**
    * Handles optional id delivery to component
    * @returns {string} header tags 5 or 6
    * @author Kx
    */
   let idInserter = React.useCallback(() => {
-    return (Section === 'section') ? null : id;
+    return (Section === 'section') 
+      ? null
+      : secRef.current?.outerText.toLowerCase().split(' ').join('-');
   }, [id, Section]);
 
   let [onScreen, secRef] = useOnscreen();
@@ -118,9 +170,6 @@ export default React.memo(function Section({
         });
       }
       setTimeout(toggleOnClick, 70);
-
-      //TODO: Use custom hook instead for synthetic listener on event
-      //console.log('Event executed');
       setIsListening(() => true);
       NodesList.setListener = true;
     }
@@ -129,7 +178,7 @@ export default React.memo(function Section({
       Object.defineProperties(NodesList, {
         // HTML Collection of ToC items
         collection: {
-          value: document.querySelectorAll('[name$=":"]')
+          value: document.querySelectorAll('[name$="-*"]')
         },
         /**
          * Getter
@@ -191,8 +240,9 @@ export default React.memo(function Section({
             //console.log(`Render ran.`);
             if (/*onScreen && */secRef.current.id) {
               this.collection.forEach((node) => {
+                console.log(node);
                 node === target && node.setAttribute('class', 'curr-head');
-                !onScreen && target?.getAttribute('name') && target.removeAttribute('class');
+                //!onScreen && target?.getAttribute('name') && target.removeAttribute('class');
                 node.getAttribute('class') && this.activeStack.push(node); 
               });
 
@@ -245,27 +295,6 @@ export default React.memo(function Section({
       //console.log('Render discarded.');
     }
   }, [isListening, onScreen, isMobileLandscape]);
-
-  React.useEffect(() => {
-    let getNodes = new Promise((resolve, reject) => {
-      let intervalId = setInterval(() => {
-        let nodes = document.querySelectorAll('[data-index]');
-        if (nodes.length > 0) {
-          clearInterval(intervalId);
-          resolve(nodes);
-        }
-      }, 100);
-    });
-
-    getNodes.then((nodes) => {
-      document.querySelectorAll('[data-index]').forEach((child, i) => {
-        i === 0 && child.setAttribute('class', 'curr-head');
-      });
-      }).catch((e) => {
-        console.error(e);
-      }).finally(() => {
-      });
-  }, []);
 
   return (
     <Section
