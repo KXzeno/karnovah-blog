@@ -171,7 +171,8 @@ export default React.memo(function Section({
               this.collection.forEach((node) => {
                 node === target && node.setAttribute('class', 'curr-head');
                 // Toggle attribute on observer dismissal, ensures end node removal
-                !onScreen && target.getAttribute('name') && target.toggleAttribute('class');
+                !onScreen && Number(target.getAttribute('data-index')) !== 0
+                  && target.getAttribute('name') && target.toggleAttribute('class');
                 node.getAttribute('class') && this.activeStack.push(node); 
               });
 
