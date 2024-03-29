@@ -8,13 +8,13 @@ export default function useDetectResize(breakpoint = 768) {
   const breakpointCrossed = Symbol.for('breakpointCrossed');
 
   // Represents current screen width
-  let [screenWidth, setScreenWidth] = React.useState(() => !!window && window.innerWidth);
+  let [screenWidth, setScreenWidth] = React.useState(window.innerWidth || 0);
 
   // Custom breakpoint variable using 'screenWidth' state
   let isWidth = screenWidth <= breakpoint;
 
   function handleWidthResize() {
-    setScreenWidth(() => !!window && window.innerWidth);
+    setScreenWidth(window.innerWidth || 0);
   }
 
   React.useEffect(() => {
