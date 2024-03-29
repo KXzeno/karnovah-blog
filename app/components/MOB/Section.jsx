@@ -71,6 +71,7 @@ export default React.memo(function Section({
   };
 
   React.useEffect(() => {
+    //let start = performance.now()
     // Can pass in prototype as an object to defineProps
     // E.g., String.prototype
     let NodesList = {}
@@ -82,14 +83,17 @@ export default React.memo(function Section({
      */
     let handleClick = ({ target: { parentElement: element } }) => {
       let index = element.getAttribute('data-index');
-      NodesList.getList.forEach((e) => {
-        e === NodesList.getList[index] 
-          ? e.setAttribute('class', 'curr-head')
-          : e.removeAttribute('class', 'curr-head');
-      });
+      function toggleOnClick() {
+        NodesList.getList.forEach((e) => {
+          e === NodesList.getList[index] 
+            ? e.setAttribute('class', 'curr-head')
+            : e.removeAttribute('class', 'curr-head');
+        });
+      }
+      setTimeout(toggleOnClick, 70);
 
       //TODO: Use custom hook instead for synthetic listener on event
-      console.log('Event executed');
+      //console.log('Event executed');
       setIsListening(() => true);
       NodesList.setListener = true;
     }
@@ -157,16 +161,15 @@ export default React.memo(function Section({
               writable: true,
               enumerable: true,
             });
-            console.log(`Render ran.`);
+            //console.log(`Render ran.`);
             if (/*onScreen && */secRef.current.id) {
               this.collection.forEach((node) => {
-                !isListening && node.firstElementChild.addEventListener('click', handleClick); 
                 node === target && node.setAttribute('class', 'curr-head');
                 !onScreen && target?.getAttribute('name') && target.removeAttribute('class');
                 node.getAttribute('class') && this.activeStack.push(node); 
               });
 
-              console.log(this.listener, isListening);
+              //console.log(this.listener, isListening);
               for (let val of this.collection.values()) {
                 if (this.activeStack.length > 1) {
                   this.activeStack.length != 1 
@@ -195,18 +198,24 @@ export default React.memo(function Section({
           }
         },
       });
+      NodesList.getList.forEach((node) => {
+        !isListening && node.firstElementChild.addEventListener('click', handleClick, { once: true }); 
+      });
     }
+
     let [nodes, targetNode] = [NodesList.getList, NodesList.retrieve()];
     NodesList.smartObserve(targetNode);
+    //let end = performance.now();
+    //console.log(`${end - start}`);
     return () => {
       if (isListening) {
         nodes.forEach((node) => {
           node.removeEventListener('click', handleClick);
         });
-        console.log('Event dismissed');
+        //console.log('Event dismissed');
         setIsListening(() => false);
       }
-      console.log('Render discarded.');
+      //console.log('Render discarded.');
     }
   }, [isListening, onScreen]);
 
