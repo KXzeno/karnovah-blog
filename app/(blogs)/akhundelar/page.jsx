@@ -1,6 +1,6 @@
 import React from 'react';
 import { Warning } from '@M/Icons';
-import '../posts/pages.css';
+import '../../posts/pages.css';
 import ArticleProvider, { 
   Header,
   SubHeader,
