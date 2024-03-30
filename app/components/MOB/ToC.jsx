@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 export default function TableOfContents() {
   let [tocList, setTocList] = React.useState({});
@@ -103,11 +104,11 @@ export default function TableOfContents() {
           key={`#${prop[1]}-${prop[0]}`} 
           data-index={prop[1].substring(prop[1].indexOf('\n')).trimStart()} 
           name={`${prop[0]}-*`}>
-          <a 
+          <Link 
             href={`#${prop[0]}`} 
             rel="noreferrer"> {/*target="_blank"*/}
             {`${prop[1].substring(0, prop[1].indexOf('\n'))}`}
-          </a>
+          </Link>
         </span>
         );
       })
