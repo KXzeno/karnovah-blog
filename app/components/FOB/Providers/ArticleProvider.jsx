@@ -36,7 +36,7 @@ export default function ArticleProvider({
 }
 
 export function Header({ children }) {
-  return <h1>{children}</h1>
+  return <h1 id="header">{children}</h1>
 }
 
 export function RightMargin({ children }) {
