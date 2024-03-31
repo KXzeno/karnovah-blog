@@ -271,7 +271,7 @@ export default React.memo(function Section({
         setElementStack(prev => prev.splice(elementsLength, prev.length - 1));
       }
     };
-  }, [elementStack]);
+  }, []);
 
   React.useEffect(() => {
     let nodes = document.querySelectorAll('[data-index]');
