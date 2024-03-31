@@ -67,26 +67,26 @@ export default function TableOfContents() {
 
   }, [tocList, elemNodes, isProxy]);
 
-  let indexer = React.useCallback(async (o, prop) => {
-     prop[1] = await `${prop[1]}\n${Object.keys(o).indexOf(prop[0])}`
+  let indexer = React.useCallback((o, prop) => {
+     prop[1] = `${prop[1]}\n${Object.keys(o).indexOf(prop[0])}`
   }, []);
 
   React.useEffect(() => {
-    +(async (obj) => {
+    +((obj) => {
       for (let entry of Object.entries(obj)) {
         /* setArrData prev + 1 === length each render */
         //entry[1] = `${entry[1].substring(0, index)}\n${Object.keys(obj).indexOf(entry[0])}`;
         //entry[1] = `${entry[1]}\n${Object.keys(obj).indexOf(entry[0])}`;
         indexer(obj, entry);
         //console.log(entry);
-        await setArrData(erst => [...erst, entry]);
+        setArrData(erst => [...erst, entry]);
         //console.log(arrData);
         //arr.push(entry);
       }
     })(tocList, tocIndex);
 
-    return async () => {
-      await setArrData(erst => erst.splice(tocList.length));
+    return () => {
+      setArrData(erst => erst.splice(tocList.length));
     };
   }, [tocList, setArrData, indexer]);
 
@@ -104,11 +104,14 @@ export default function TableOfContents() {
           key={`#${prop[1]}-${prop[0]}`} 
           data-index={prop[1].substring(prop[1].indexOf('\n')).trimStart()} 
           name={`${prop[0]}-*`}>
-          <Link 
+          {/*<Link>*/}
+          <a 
             href={`#${prop[0]}`} 
-            rel="noreferrer"> {/*target="_blank"*/}
+            rel="noreferrer"
+          > {/*target="_blank"*/}
             {`${prop[1].substring(0, prop[1].indexOf('\n'))}`}
-          </Link>
+          </a>
+            {/*</Link>*/}
         </span>
         );
       })
