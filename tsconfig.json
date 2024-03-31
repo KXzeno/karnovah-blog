@@ -23,6 +23,7 @@
       "@F/*": ["./components/FOB/*"],
       "@H/*": ["./components/hooks/*"],
       "@P/*": ["./components/FOB/Providers/*"],
+      "@A/*": ["./components/actions/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
