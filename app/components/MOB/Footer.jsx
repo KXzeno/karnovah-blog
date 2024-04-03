@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 
 export default function Footer() {
-  const currYear = new Date().getFullYear();
+  const currYear = new Date().toLocaleString('en-US', { year: 'numeric' });
 
   return (
     <footer className="flex flex-row basis-1/6 relative place-items-center h-32 bg-gradient-to-b from-violet-950 to-indigo-900 basis mt-[2.3rem] text-[#3f7300]">
