@@ -25,23 +25,9 @@ export default React.memo(function Section({
 }) {
 
   let id = React.useId();
-  let [refIndex, setRefIndex] = React.useState(0);
-  let [refs, setRefs] = React.useState({
-    /** @function
-  @generator
-     * @returns {} cloned observer hooks
-     */
-    create() {
-      return {};
-    },
-  });
-
   let [elementStack, setElementStack] = React.useState([]);
 
   let [isListening, setIsListening] = React.useState(false);
-
-  let [lastActiveIndex, setLastActiveindex] = React.useState(0);
-
   if (!Object.keys(VALID_SECTIONS).includes(Section)) {
     throw new Error(`Unrecognized section: ${Section}. Expected: ${VALID_SECTIONS}`);
   };
