@@ -1,5 +1,6 @@
 import type { Metadata, ResolvingMetadata } from 'next';
 import { Urbanist, Inter, Cinzel, Diphylleia, Roboto, Merriweather, Spectral, DM_Sans, Quicksand, Dosis, Sono} from "next/font/google";
+import { cookies } from 'next/headers';
 import "./globals.css";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap'});
@@ -63,6 +64,9 @@ const sono = Sono({
   weight: ['400'],
   variable: '--font-sono',
 });
+
+let savedTheme = cookies().get('color-theme');
+// { name: 'color-theme', value: '' }
 
 export const metadata: Metadata = {
   title: {
