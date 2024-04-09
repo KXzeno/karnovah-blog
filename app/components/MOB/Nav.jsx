@@ -6,6 +6,7 @@ import './MOB.css';
 import useToggle from '@H/use-toggle';
 import SubMenu from '@F/SubMenu';
 import Link from 'next/link';
+import { LayoutGroup, motion } from 'framer-motion';
 
 export default function Nav() {
   const router = useRouter();
@@ -64,14 +65,18 @@ export default function Nav() {
           About
         </Link>
         <div className={`${dollarSigns != 0 ? 'visible' : 'hidden'} absolute right-8 h-16 w-16`}>
-          <button 
-            className="absolute inset-0 text-center text-inherit"
-            onClick={() => {
-              setDollarSigns(dollarSigns.slice(1))
-            }}
-          >
-            { dollarSigns }
-          </button>
+          <LayoutGroup>
+            <motion.button 
+              whileHover={{ scale:1.7 }}
+              whileTap={{ scale:0.9 }}
+              className="absolute inset-0 text-center text-inherit"
+              onClick={() => {
+                setDollarSigns(dollarSigns.slice(1))
+              }}
+            >
+              { dollarSigns }
+            </motion.button>
+          </LayoutGroup>
         </div>
       </nav>
       { showSubMenu && 
