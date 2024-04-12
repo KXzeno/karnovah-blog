@@ -41,9 +41,7 @@ async function getFile(filePath: string) {
     }
 }
 
-export default async function Feed({
-children,
-}: Home) {
+export default async function Feed() {
 let post = await getFile('(blogs)/akhundelar/akhundelar.json');
 
   return (

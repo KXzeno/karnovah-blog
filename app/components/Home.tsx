@@ -7,9 +7,8 @@ interface HomeProps {
   children: React.ReactNode;
 }
 
-export default function Home({
-  children,
-}: HomeProps): React.ReactElement {
+export default function Home(
+): React.ReactElement {
 
   return (
     <React.Fragment>
