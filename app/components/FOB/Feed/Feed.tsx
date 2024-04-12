@@ -31,7 +31,7 @@ interface Home {
   children: React.ReactNode;
 }
 
-async function getFile(filePath) {
+async function getFile(filePath: string) {
     try {
       let data = await readFile(`./app/${filePath}`, { encoding: 'utf8' });
       let content = JSON.parse(data)
@@ -43,7 +43,7 @@ async function getFile(filePath) {
 
 export default async function Feed({
 children,
-}: Home): React.ReactElement {
+}: Home) {
 let post = await getFile('(blogs)/akhundelar/akhundelar.json');
 
   return (
