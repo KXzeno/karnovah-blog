@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+      @apply bg-gradient-to-br from-[#1F2022] from-20% via-[#2E3033] via-[83.7%] to-[#1F2022] to-100% max-md:w-screen max-[368px]:w-max;
+    }
+}
+
+@layer utilities {
+  #hero-title {
+    @apply text-[#E4E6E1];
+  }
+
+  #hero-abstract {
+    @apply text-[#E5E1E6];
+  }
+
+  #hero-date {
+    @apply text-[#E6E6E6]
+  }
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { readFile } from 'fs/promises';
 import { motion } from 'framer-motion';
+import './Feed.css';
  
 interface postData {
   title: string,
@@ -13,13 +14,13 @@ function FeedCard({ title, abstract, date }: postData) {
       <div
         className="h-16 w-64 mx-auto"
       >
-        <div>
+        <div id="hero-title">
           {title}
         </div>
-        <div>
+        <div id="hero-abstract">
           {abstract}
         </div>
-        <div>
+        <div id="hero-date">
           {date}
         </div>
       </div>
