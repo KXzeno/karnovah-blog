@@ -69,7 +69,7 @@ export default React.memo(function Section({
   //   screen[Symbol.for('breakpointCrossed')], 
   //   screen.breakPoint];
 
-  let isMobileLandscape = React.useMemo(() => !isBreak);
+  let isMobileLandscape = React.useMemo(() => !isBreak, [isBreak]);
 
   React.useEffect(() => {
     //let start = performance.now()
@@ -77,12 +77,18 @@ export default React.memo(function Section({
     // E.g., String.prototype
     let NodesList = {}
 
+    interface ClickEvent {
+        target: {
+            parentElement: HTMLElement,
+        },
+    }
+
     /**
      * Click handler for toc elements to properly display new highlight
      * @param {object} target - Destructured element from event object
      * @author Kx
      */
-    let handleClick = ({ target: { parentElement: element } }) => {
+    let handleClick = ({ target: { parentElement: element } }: ClickEvent) => {
       let index = element.getAttribute('data-index');
       function toggleOnClick() {
         NodesList.getList.forEach((e) => {
