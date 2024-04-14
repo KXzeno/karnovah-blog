@@ -54,14 +54,16 @@ export default React.memo(function Section({
   }, [id, Section]);
 
   let [onScreen, secRef] = useOnscreen();
-  let catchRef = React.useRef(null);
+
+  let widthSym: symbol = Symbol.for('width');
+  let bkpSym: symbol = Symbol.for('breakpointCrossed');
 
   let {
-    [Symbol.for('width')]: width,
-    [Symbol.for('breakpointCrossed')]: isBreak
-  } = useDetectResize();
+    [widthSym]: width,
+    [bkpSym]: isBreak
+  }: { [key in typeof widthSym | typeof bkpSym]: number | boolean } = useDetectResize();
 
-  // Alternative destructuring
+// Alternative destructuring
   // let [width, isMobile, breakpoint] = 
   //   [screen[Symbol.for('width')], 
   //   screen[Symbol.for('breakpointCrossed')], 
