@@ -4,35 +4,43 @@ import React from 'react';
 import useOnscreen from '@H/useOnscreen';
 import useDetectResize from '@H/useDetectResize';
 
-const h7 = Symbol.for('k');
-const h8 = Symbol('k');
-const h9 = Symbol('f');
-const h10 = Symbol.keyFor(h8);
+const h7: symbol = Symbol.for('k');
+// const h8: symbol = Symbol('k');
+// const h9: symbol = Symbol('f');
+// const h10: string | undefined = Symbol.keyFor(h8);
 
-const VALID_SECTIONS = {
+const VALID_SECTIONS: Object = {
   'sec': 'h3',
   'subsec': 'h4', 
   'body': 'section',
   [h7]: 'x',
 };
 
-VALID_SECTIONS[h8] = 'z';
+interface Props {
+  children: React.ReactNode,
+  as: PropertyKey | string,
+}
 
 export default React.memo(function Section({
   children,
   as: Section = 'sec',
   ...delegated
-}) {
+}: Props) {
 
   let id = React.useId();
   let [elementStack, setElementStack] = React.useState([]);
 
   let [isListening, setIsListening] = React.useState(false);
-  if (!Object.keys(VALID_SECTIONS).includes(Section)) {
-    throw new Error(`Unrecognized section: ${Section}. Expected: ${VALID_SECTIONS}`);
+  if (!Object.keys(VALID_SECTIONS).includes(Section as string)) {
+    throw new Error(`Unrecognized section: ${String(Section)}. Expected: ${VALID_SECTIONS}`);
   };
 
-  Section = Object.getOwnPropertyDescriptor(VALID_SECTIONS, Section).value;
+  let descriptor = Object.getOwnPropertyDescriptor(VALID_SECTIONS, Section);
+  if (descriptor) {
+    Section = descriptor.value;
+  } else {
+    throw new Error(`Unrecognized section: ${String(Section)}. Expected one of the following: ${Object.keys(VALID_SECTIONS).join(', ')}`);
+  }
 
   /**
    * Handles optional id delivery to component
