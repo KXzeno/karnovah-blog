@@ -36,6 +36,8 @@ export default React.memo(function Section({
   let id = React.useId();
   let [elementStack, setElementStack] = React.useState<Node[]>([]);
 
+  let [onScreen, secRef] = useOnscreen();
+
   let [isListening, setIsListening] = React.useState(false);
   if (!Object.keys(VALID_SECTIONS).includes(Section as string)) {
     throw new Error(`Unrecognized section: ${String(Section)}. Expected: ${VALID_SECTIONS}`);
@@ -57,9 +59,7 @@ export default React.memo(function Section({
     return (Section === 'section') 
       ? null
       : secRef.current?.outerText.toLowerCase().split(' ').join('-');
-  }, [id, Section]);
-
-  let [onScreen, secRef] = useOnscreen();
+  }, [Section, secRef]);
 
   let widthSym: symbol = Symbol.for('width');
   let bkpSym: symbol = Symbol.for('breakpointCrossed');
@@ -268,7 +268,7 @@ export default React.memo(function Section({
         }
         //console.log('Render discarded.');
       }
-    }, [isListening, onScreen, isMobileLandscape]);
+    }, [isListening, onScreen, isMobileLandscape, secRef]);
 
     React.useEffect(() => {
       let getElements = new Promise<HTMLCollection>((resolve,) => {
@@ -316,7 +316,7 @@ export default React.memo(function Section({
           setElementStack(prev => prev.splice(elementsLength, prev.length - 1));
         }
       };
-    }, []);
+    }, [elementStack]);
 
     React.useEffect(() => {
       let nodes = document.querySelectorAll('[data-index]');
