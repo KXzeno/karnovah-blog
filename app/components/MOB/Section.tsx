@@ -18,7 +18,7 @@ const VALID_SECTIONS: Object = {
 
 interface Props {
   children: React.ReactNode,
-  as: PropertyKey | string,
+  as: PropertyKey | string | React.ElementType,
 }
 
 export default React.memo(function Section({
@@ -35,7 +35,7 @@ export default React.memo(function Section({
     throw new Error(`Unrecognized section: ${String(Section)}. Expected: ${VALID_SECTIONS}`);
   };
 
-  let descriptor = Object.getOwnPropertyDescriptor(VALID_SECTIONS, Section);
+  let descriptor = Object.getOwnPropertyDescriptor(VALID_SECTIONS, Section as PropertyKey);
   if (descriptor) {
     Section = descriptor.value;
   } else {
@@ -322,36 +322,6 @@ export default React.memo(function Section({
           && list[0].setAttribute('class', 'curr-head');
         });
       })();
-
-      let obj: any = {
-        myMethod: function() {
-          console.log('Hello Doodge!');
-        }
-      }
-
-      obj.myMethod();
-
-      function standaloneFunction() {
-        console.log('Standalone function');
-      }
-
-      standaloneFunction();
-      /**
-       * This is a description of the function.
-       *
-       * @param {number} x - The first number to add.
-       * @param {number} y - The second number to add.
-       * @returns {number} The sum of `x` and `y`.
-       *
-       * @example
-       * // returns 3
-       * add(1, 2);
-       */
-      function add(x, y) {
-        return x + y;
-      }
-
-
     }, [isMobileLandscape]);
 
     return (
