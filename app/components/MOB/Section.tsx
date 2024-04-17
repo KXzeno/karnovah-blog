@@ -28,7 +28,7 @@ export default React.memo(function Section({
 }: Props) {
 
   let id = React.useId();
-  let [elementStack, setElementStack] = React.useState([]);
+  let [elementStack, setElementStack] = React.useState<Node[]>([]);
 
   let [isListening, setIsListening] = React.useState(false);
   if (!Object.keys(VALID_SECTIONS).includes(Section as string)) {
@@ -288,7 +288,7 @@ export default React.memo(function Section({
     }, []);
 
     React.useEffect(() => {
-      let getElements = new Promise((resolve, reject) => {
+      let getElements = new Promise<NodeList>((resolve,) => {
         let elements = document.querySelectorAll('h3, h4');
         if (elements.length > 0) {
           resolve(elements) 
@@ -297,7 +297,7 @@ export default React.memo(function Section({
 
       getElements.then((elements) => {
         elements.forEach((element, i, list) => {
-          if (elementStack.length !== list.length) {
+          if (elementStack && elementStack.length !== list.length) {
             setElementStack(prev => [...prev, element]);
             //console.log(list.length, elementStack.length);
           }
