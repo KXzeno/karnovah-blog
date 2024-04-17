@@ -65,7 +65,7 @@ const sono = Sono({
   variable: '--font-sono',
 });
 
-let savedTheme = cookies().get('color-theme');
+// let savedTheme = cookies().get('color-theme');
 // { name: 'color-theme', value: '' }
 
 export const metadata: Metadata = {
