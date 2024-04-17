@@ -88,7 +88,7 @@ export default React.memo(function Section({
     // Can pass in prototype as an object to defineProps
     // E.g., String.prototype
     type htmlLC = {
-      collection?: HTMLCollection,
+      readonly collection?: HTMLCollection,
       getList?: HTMLCollection,
       setListener?: boolean,
       retrieve?: Function,
@@ -96,7 +96,6 @@ export default React.memo(function Section({
     }
 
     let elemCollection: htmlLC = {};
-
     /**
      * Click handler for toc elements to properly display new highlight
      * @param {object} event - Destructured element from event object
@@ -110,7 +109,6 @@ export default React.memo(function Section({
       function toggleOnClick() {
         if (elemCollection && elemCollection.getList) {
           let list: HTMLCollection = elemCollection.getList;
-
           for (let i = 0; i < list.length; i++) {
             let parsedElem: Element | null;
             let e: Element | null = list.item(i);
@@ -128,16 +126,15 @@ export default React.memo(function Section({
       } 
     }
       if (!elemCollection.collection) {
+        // Make Predicators
+        let collection = document.getElementById('toc-list'); 
+        if (!collection) return;
         Object.defineProperties(elemCollection, {
           // HTML Collection of ToC items
           collection: {
-            value: function(): HTMLCollection | null {
-              let parentElem = document.getElementById('toc-list');
-              if (parentElem && parentElem.children) {
-                return parentElem.children;
-              }
-              return null;
-            }
+            value: collection.children,
+            enumerable: true,
+            configurable: false
           },
           /**
            * Getter
@@ -145,12 +142,8 @@ export default React.memo(function Section({
            * @returns {NodeList | object} Returns collection prop
            * @author Kx
            */
-          getList: {
-            get: function(): HTMLCollection {
+          get getList(): PropertyDescriptor {
               return this.collection;
-            },
-            enumerable: true,
-            configurable: false,
           },
           /**
            * Mutates collection
@@ -245,7 +238,10 @@ export default React.memo(function Section({
             }
           },
         });
-        let list = elemCollection.getList;
+        let list;
+        if (elemCollection.getList) {
+          list = elemCollection.getList;
+        }
         list && (() => {
           for (let i = 0; i < list.length; i++) {
             let parsedElem: Element | null = list.item(i);
