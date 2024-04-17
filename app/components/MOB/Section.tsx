@@ -19,29 +19,35 @@ const VALID_SECTIONS: Object = {
 interface ComponentProps {
   id: string;
   ref: React.RefObject<HTMLElement> | any;
+  children: React.ReactNode;
 }
 
 interface Props {
   children: React.ReactNode,
   as: keyof JSX.IntrinsicElements |
-    React.ComponentType<ComponentProps>,
+   React.ComponentType<ComponentProps> | string,
+  // string | PropertyKey 
 }
 
 export default React.memo(function Section({
   children,
-  as: Section,
+  as: Section = 'sec',
   ...delegated
 }: Props) {
 
-  let id = React.useId();
   let [elementStack, setElementStack] = React.useState<Node[]>([]);
 
   let [onScreen, secRef] = useOnscreen();
 
   let [isListening, setIsListening] = React.useState(false);
+
+  /** Check if valid type
+   * @deprecated
+   */
   if (!Object.keys(VALID_SECTIONS).includes(Section as string)) {
     throw new Error(`Unrecognized section: ${String(Section)}. Expected: ${VALID_SECTIONS}`);
   };
+  
 
   let descriptor = Object.getOwnPropertyDescriptor(VALID_SECTIONS, Section as PropertyKey);
   if (descriptor) {
@@ -166,11 +172,14 @@ export default React.memo(function Section({
           retrieve: {
             value: function() {
               let returnedElement: Element | null = null;
-              this.collection.forEach((e: Element) => {
-                if (e.getAttribute('name') === `${secRef.current.id}-*`) {
-                  return returnedElement = e;
+              if (this.collection) {
+                for (let i = 0; i < this.collection.length; i++) {
+                  let nameAttr = this.collection.item(i).getAttribute('name');
+                  if (nameAttr === `${secRef.current.id}-*`) {
+                    return returnedElement = this.collection.item(i);
+                  }
                 }
-              });
+              }
               return returnedElement;
             },
             writable: false,
@@ -195,28 +204,30 @@ export default React.memo(function Section({
               if (/*onScreen && */secRef.current.id) {
 
                 // Toggles highlight on all toc items
-                this.collection.forEach((e: Element) => {
+                for (let i = 0; i < this.collection.length; i++) {
+                  let e = this.collection.item(i);
                   e === target && e.setAttribute('class', 'curr-head');
                   // Toggle attribute on observer dismissal, ensures end e removal
                   !onScreen && Number(target.getAttribute('data-index')) !== 0
                   && target.getAttribute('name') && target.toggleAttribute('class');
                   e.getAttribute('class') && this.activeStack.push(e); 
-                });
+                }
 
                 // Detoggles previous node's classes
-                for (let val of this.collection.values()) {
+                for (let i = 0; i < this.collection.length; i++) {
+                  let node = this.collection.item(i);
                   if (this.activeStack.length > 1) {
                     this.activeStack.length != 1 
-                    && val.getAttribute('class')
+                    && node.getAttribute('class')
                     && this.activeStack.pop() 
-                    && val.removeAttribute('class', 'curr-head');
+                    && node.removeAttribute('class', 'curr-head');
                   }
 
                   // Highlights previous node when escaping last node
                   let targetElem = elemCollection.getList;
                   let index = this.activeStack.length === 0
-                  && `${secRef.current.id}-*` === val.getAttribute('name')
-                  && val.getAttribute('data-index');
+                  && `${secRef.current.id}-*` === node.getAttribute('name')
+                  && node.getAttribute('data-index');
                   index && targetElem && targetElem[index - 1]?.setAttribute('class', 'curr-head');
                 }
               }
@@ -338,5 +349,5 @@ export default React.memo(function Section({
       >
         {children}
       </Section>
-    )
+    );
   });
