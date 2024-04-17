@@ -119,11 +119,11 @@ export default React.memo(function Section({
                 : e.classList.remove('curr-head');
             }
           }
-          setTimeout(toggleOnClick, 70);
-          setIsListening(() => true);
-          elemCollection.setListener = true;
         }
       } 
+      setTimeout(toggleOnClick, 70);
+      setIsListening(() => true);
+      elemCollection.setListener = true;
     }
       if (!elemCollection.collection) {
         // Make Predicators
