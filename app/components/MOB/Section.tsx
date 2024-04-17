@@ -16,14 +16,20 @@ const VALID_SECTIONS: Object = {
   [h7]: 'x',
 };
 
+interface ComponentProps {
+  id: string;
+  ref: React.RefObject<HTMLElement> | any;
+}
+
 interface Props {
   children: React.ReactNode,
-  as: PropertyKey | string | React.ElementType,
+  as: keyof JSX.IntrinsicElements |
+    React.ComponentType<ComponentProps>,
 }
 
 export default React.memo(function Section({
   children,
-  as: Section = 'sec',
+  as: Section,
   ...delegated
 }: Props) {
 
