@@ -88,7 +88,7 @@ export default function TableOfContents() {
     return () => {
       setArrData(erst => erst.splice(tocList.length));
     };
-  }, [tocList, setArrData, indexer]);
+  }, [tocList, setArrData, indexer, tocIndex]);
 
   let data = React.useMemo(() => {
    // if (arrData.length > Object.keys(tocList).length) {
@@ -116,7 +116,7 @@ export default function TableOfContents() {
         );
       })
     );
-  }, [arrData, tocList]);
+  }, [arrData]);
 
   return (
     <nav id='toc-list'>
