@@ -265,20 +265,22 @@ export default React.memo(function Section({
     }, [isListening, onScreen, isMobileLandscape]);
 
     React.useEffect(() => {
-      let getNodes = new Promise((resolve, reject) => {
+      let getElements = new Promise<HTMLCollection>((resolve,) => {
         let intervalId = setInterval(() => {
-          let nodes = document.querySelectorAll('[data-index]');
-          if (nodes.length > 0) {
+          let [targetElem, children]: [HTMLElement | null, HTMLCollection | undefined] = [document.getElementById('toc-list'), undefined];
+          if (targetElem) {
+            children = targetElem.children;
+          }
+          if (children && children.length > 0) {
             clearInterval(intervalId);
-            resolve(nodes);
+            resolve(children);
           }
         }, 100);
       });
 
-      getNodes.then((nodes) => {
-        document.querySelectorAll('[data-index]').forEach((child, i) => {
-          i === 0 && child.setAttribute('class', 'curr-head');
-        });
+      getElements.then((elements) => {
+        let child = elements.item(0);
+        child && child.setAttribute('class', 'curr-head');
       }).catch((e) => {
         console.error(e);
       }).finally(() => {
