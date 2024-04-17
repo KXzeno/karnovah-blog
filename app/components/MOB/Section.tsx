@@ -114,6 +114,7 @@ export default React.memo(function Section({
           elemCollection.setListener = true;
         }
       } 
+    }
       if (!elemCollection.collection) {
         Object.defineProperties(elemCollection, {
           // HTML Collection of ToC items
@@ -236,7 +237,7 @@ export default React.memo(function Section({
             }
           }})();
       }
-      let [elements, targetElem]: [HTMLCollection, Element | undefined];
+      let [elements, targetElem]: [HTMLCollection | undefined, Element | undefined] = [undefined, undefined];
       if (elemCollection.retrieve !== undefined) {
         targetElem = elemCollection.retrieve();
       }
@@ -249,10 +250,13 @@ export default React.memo(function Section({
       //let end = performance.now();
       //console.log(`${end - start}`);
       return () => {
-        if (isListening) {
-          elements.forEach((element) => {
-            element.removeEventListener('click', handleClick);
-          });
+        if (isListening && elements) {
+          for (let i = 0; i < elements.length; i++) {
+            let element = elements.item(i);
+            if (element) {
+              element.removeEventListener('click', handleClick);
+            }
+          }
           //console.log('Event dismissed');
           setIsListening(() => false);
         }
