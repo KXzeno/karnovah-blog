@@ -1,13 +1,13 @@
 import React from 'react';
 
-export default function Icons({}) {
+export default function Icons(): React.ReactNode {
   return (
     <>
     </>
   );
 }
 
-export function Warning({ className }) {
+export function Warning({ className }: { className?: string | undefined }) {
   return (
     <svg
       className={`h-6 w-6 -translate-y-[3px] ${className}`}
