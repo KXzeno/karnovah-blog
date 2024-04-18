@@ -1,5 +1,11 @@
-import React from 'react';
+import React, {SetStateAction} from 'react';
 import useClickListener from '@H/use-click-listener';
+
+interface SubMenuProps {
+  children: React.ReactNode,
+  showSubMenu: boolean,
+  toggleSubMenu: Function,
+}
 
 /**
  * Self-serving sub menu component
@@ -15,7 +21,7 @@ export default React.forwardRef(function SubMenu({
   showSubMenu, 
   toggleSubMenu, 
   ...delegated
-}, subMenuRef) {
+}: SubMenuProps, subMenuRef: React.LegacyRef<HTMLDivElement>) {
   /**
    * Represents condition for toggle state
    * State behaving as either > 0 or === 0
@@ -24,7 +30,7 @@ export default React.forwardRef(function SubMenu({
   let [checkChange, setCheckChange] = React.useState(1);
 
   // Represents custom hook that fires a click event listener
-  let [pointer, setPointer] = useClickListener();
+  const [pointer, setPointer] = useClickListener();
 
   // Represents current screen width
   let [width, setWidth] = React.useState(window.innerWidth);
@@ -49,8 +55,9 @@ export default React.forwardRef(function SubMenu({
    * @return {function} Sets checkChange to 0
    * @author Kx
    */
-  let toggleLeave = React.useCallback((e) => {
-    if (e.target === subMenuRef.current.firstChild) {
+  let toggleLeave = React.useCallback((e: Event) => {
+    let proxyRef = subMenuRef as React.RefObject<HTMLElement>;
+    if (subMenuRef && proxyRef.current && e.target as HTMLElement === proxyRef.current.firstChild) {
       return;
     };
 
@@ -61,26 +68,26 @@ export default React.forwardRef(function SubMenu({
     setCheckChange(0);
   }, [isMobile, toggleSubMenu, subMenuRef]);
 
-    /**
-     * Callback event handler to read current window size
-     * @returns {function} 'width' setter function
-     * @author Kx
-     */
-    function handleWindowSizeChange() {
-      setWidth(window.innerWidth);
-    }
+  /**
+   * Callback event handler to read current window size
+   * @returns {function} 'width' setter function
+   * @author Kx
+   */
+  function handleWindowSizeChange(): void {
+    setWidth(window.innerWidth);
+  }
 
-    /**
-     * Onmount hook to identify window size
-     * @param {function} () - Handles resize events and updates 'width'
-     * @author Kx
-     */
-    React.useEffect(() => {
-      window.addEventListener('resize', handleWindowSizeChange);
-      return () => {
-        window.removeEventListener('resize', handleWindowSizeChange);
-      }
-    }, []);
+  /**
+   * Onmount hook to identify window size
+   * @param {function} () - Handles resize events and updates 'width'
+   * @author Kx
+   */
+  React.useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    }
+  }, []);
 
   /**
    * Hook to conditionally display SubMenu
@@ -88,41 +95,47 @@ export default React.forwardRef(function SubMenu({
    * @author Kx
    */
   React.useEffect(() => {
-    if (!isMobile) {
-      let smRef = subMenuRef.current;
-      smRef.addEventListener('pointermove', toggleEnter);
-      smRef.addEventListener('pointerleave', toggleLeave);
+    if (!isMobile && subMenuRef) {
+      let smRef = (subMenuRef as React.RefObject<HTMLElement>).current;
+      smRef && smRef.addEventListener('pointermove', toggleEnter);
+      smRef && smRef.addEventListener('pointerleave', toggleLeave);
 
       showSubMenu === true && pointer === true && checkChange !== 0
         ? +(() => {
           setPointer(false);
           return;
         })()
-        : +(() => {
-          if (checkChange === 0 && pointer === true && showSubMenu === true) {
-            toggleSubMenu();
+          : +(() => {
+            if (checkChange === 0 && pointer === true && showSubMenu === true) {
+              toggleSubMenu();
+            }
+          })();
+          return () => {
+            smRef?.removeEventListener('pointermove', toggleEnter);
+            smRef?.removeEventListener('pointerleave', toggleLeave);
           }
-        })();
-      return () => {
-        smRef?.removeEventListener('pointermove', toggleEnter);
-        smRef?.removeEventListener('pointerleave', toggleLeave);
-      }
     }
 
     if (isMobile) {
       // showSubMenu === true && isMobile && checkChange !== 0
-      let smRef = subMenuRef.current;
-      smRef.addEventListener('touchend', toggleEnter);
+      let smRef: HTMLElement | null;
+      if (subMenuRef) {
+        smRef = (subMenuRef as React.RefObject<HTMLElement>).current;
+      } else {
+        return;
+      }
+
+      smRef && smRef.addEventListener('touchend', toggleEnter);
       window.addEventListener('touchend', toggleLeave);
 
       showSubMenu === true && checkChange !== 0
         ? setCheckChange(1)
         : toggleSubMenu();
 
-      return () => {
-        smRef?.removeEventListener('touchend', toggleEnter);
-        window.removeEventListener('touchend', toggleLeave);
-      }
+        return () => {
+          smRef?.removeEventListener('touchend', toggleEnter);
+          window.removeEventListener('touchend', toggleLeave);
+        }
     }
 
   }, [pointer, showSubMenu, toggleSubMenu, setPointer, subMenuRef, toggleLeave, checkChange, isMobile]);
