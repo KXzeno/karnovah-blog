@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, {Dispatch, SetStateAction} from 'react';
 import { useRouter } from 'next/navigation';
 import './MOB.css';
 import useToggle from '@H/use-toggle';
@@ -10,42 +10,45 @@ import { LayoutGroup, motion } from 'framer-motion';
 
 export default function Nav() {
   const router = useRouter();
-  let [dollarSigns, setDollarSigns] = React.useState([
+  // Left-hand annotation is redundant if typing by generics
+  let [dollarSigns, setDollarSigns]: [string[] | string, Dispatch<SetStateAction<string[]>>] = React.useState<string[]>([
     '$',
     '$',
     '$',
   ]);
 
-  let [showSubMenu, toggleSubMenu] = useToggle(false);
+  let [showSubMenu, toggleSubMenu]: [boolean, Function] = useToggle(false);
 
-  let id = React.useId(null);
-  let [hoveredNavItem, setHoveredNavItem] = React.useState(null);
+  let id: string = React.useId();
+  let [hoveredNavItem, setHoveredNavItem]: [string | undefined, Function] = React.useState(undefined);
 
-  /**
+  /** Optional use
    * Manual routers which otherwise toggles a sub menu
    * @param {object} e - event to access innerHTML or 'outerText'
    * @returns {function} Either triggers a toggler or reroute function
    * @author Kx
    */
-  let handleRoute = (e) => {
-    let { target: { outerText: value } } = e;
-    return value === '▼' ? toggleSubMenu() : router.push(`${value.toLowerCase()}`);
+  let handleRoute: Function = (e: Event) => {
+    let [target, value]: [HTMLElement, Function | string | undefined] = [e.target as HTMLElement, undefined];
+    if (target && target.outerText) {
+      let { outerText: value } = target;
+    }
+    if (value) {
+      return value === '▼' ? toggleSubMenu() : router.push(`${(value as string).toLowerCase()}`);
+    }
   }
 
   /**
+   * @deprecated
+   *
    * Prevent default event responses
    * @param {object} e - event triggered
    * @returns {function} method to prevent default revent responses
    * @author Kx
    */  
-  let handleDefault = (e) => e.preventDefault();
+  let handleDefault: Function = (e: Event) => e.preventDefault();
 
   let subMenuRef = React.useRef(null);
-
-     <motion.div
-      className="absolute inset-0 shadow-lg rounded-lg shadow-green-500/50"
-      layoutId={id}
-    />
 
   let LINKS = [
     {
@@ -114,7 +117,7 @@ export default function Nav() {
           </Link>
           */}
         </LayoutGroup>
-        <div className={`${dollarSigns != 0 ? 'visible' : 'hidden'} absolute right-8 h-16 w-16`}>
+        <div className={`${dollarSigns.length !== 0 ? 'visible' : 'hidden'} absolute right-8 h-16 w-16`}>
           <LayoutGroup>
             <motion.button 
               whileHover={{ scale:1.7 }}
