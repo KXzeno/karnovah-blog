@@ -1,7 +1,8 @@
-import React from 'react';
+'use client';
+import React, {SetStateAction} from 'react';
 
 export default function useClickListener() {
-  const [mouseClick, setMouseClick] = React.useState(false);
+  const [mouseClick, setMouseClick]: [boolean, React.Dispatch<SetStateAction<boolean>>] = React.useState(false);
 
   React.useEffect(() => {
     function handlePointerDown() {
@@ -17,5 +18,5 @@ export default function useClickListener() {
     };
   }, []);
 
-  return [mouseClick, setMouseClick];
+  return [mouseClick, setMouseClick] as const;
 }
