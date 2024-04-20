@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-export default function TableOfContents() {
+export default function TableOfContents(): React.ReactNode {
   let [tocList, setTocList] = React.useState({});
   let [elemNodes, setElemNodes] = React.useState({});
   let [isProxy, setIsProxy] = React.useState(false);
@@ -37,8 +37,11 @@ export default function TableOfContents() {
   React.useEffect(() => {
     let elemNodesProxy = document.querySelectorAll("h3, h4");
     //console.log(elemNodesProxy);
-    elemNodesProxy.forEach(({ id }) => {
-      if (!!Object.values(elemNodes).find(({ id: linkId }) => linkId === id) === false) {
+    elemNodesProxy.forEach(({ id }: { id: string }) => {
+      let values = Object.values(elemNodes);
+      //TODO: Make my own find method
+      let parsedId = values.find(({ id: linkId }) => linkId === id);
+      if (!parsedId) {
         //console.error('Proxy Dismissed.')
       } else {
         setIsProxy(true);
