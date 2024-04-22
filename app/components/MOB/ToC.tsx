@@ -17,8 +17,10 @@ export default function TableOfContents(): React.ReactNode {
    * @returns {Object} Parochial object used for hook setter functions
    * @author Kx
    */
-  let newTocList = (target: { target: HTMLElement }}) => {
-    console.log(target);
+  let newTocList = ({ target: { id, outerText } }: { target: HTMLElement }) => {
+    // Alternative destructuring
+    // let { target } = e;
+    // let { id, outerText } = target as HTMLElement;
     let tempObj = {};
 
     if (!id) { return };
