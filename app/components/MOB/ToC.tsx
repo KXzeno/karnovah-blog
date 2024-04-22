@@ -37,6 +37,15 @@ export default function TableOfContents(): React.ReactNode {
     return tempObj;
   };
 
+  interface SearchSign {
+    (value: unknown, index?: number, object?: unknown[]): unknown, 
+    object?: object[],
+  }
+
+  function search(params: SearchSign) {
+    console.log(params);
+  }
+
   React.useEffect(() => {
     let elemNodesProxy = document.querySelectorAll("h3, h4");
     //console.log(elemNodesProxy);
