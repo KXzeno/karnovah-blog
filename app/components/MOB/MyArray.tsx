@@ -3,7 +3,8 @@ class ObjectArray<T> extends String {
   index?: number;
   object?: T[];
 
-  ObjectArray(value: T, index?: number, object?: T[]) {
+  constructor(value: T, index?: number, object?: T[]) {
+    super();
     this.value = value;
     this.index = index;
     this.object = object;
