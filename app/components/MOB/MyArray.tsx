@@ -1,19 +1,19 @@
 class ObjectArray<T> extends String {
-  let value: T;
-  let index?: number;
-  let object?: T[];
+  value: T;
+  index?: number;
+  object?: T[];
 
-  ObjectArray(value, index, object) {
+  ObjectArray(value: T, index?: number, object?: T[]) {
     this.value = value;
     this.index = index;
     this.object = object;
   }
 
-  function locate() {
+  locate(value: T, index: number, object: T[]) {
     let indices = [];
-    for (let i = 0; i < this.object.length; i++) {
-      if (this.index && this.object[this.index] === this.value) {
-        indices.push(this.index);
+    for (let i = 0; i < object.length; i++) {
+      if (index && object[index] === value) {
+        indices.push(index);
       }
     }
   }
