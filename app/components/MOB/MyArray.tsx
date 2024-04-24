@@ -1,24 +1,26 @@
-class ObjectArray<T> extends String {
-  value: T;
-  index?: number;
-  object?: T[];
+interface fnProps {
+  (element: unknown,
+   index?: number,
+   reference?: object[]): boolean
+}
 
-  constructor(value: T, index?: number, object?: T[]) {
+class ObjectArray extends Array {
+  constructor(value: object[]) {
     super();
-    this.value = value;
-    this.index = index;
-    this.object = object;
+    for (let i = 0; i < value.length; i++) {
+      this[i] = value[i];
+    }
   }
 
-  locate(value: T, index: number, object: T[]) {
-    let indices = [];
-    for (let i = 0; i < object.length; i++) {
-      if (index && object[index] === value) {
-        indices.push(index);
+  locate(fn: fnProps) {
+    let elements = Object.values(this[0]);
+    for (let i = 0; i < elements.length; i++) {
+      if (fn(elements[i])) {
+        return elements[i];
       }
     }
   }
 }
 
-let smth = new ObjectArray(1);
-console.log(smth);
+// let smth = new ObjectArray([{bruh: 'ight'}]);
+// console.log(smth.locate((val) => val === 'ight'));
