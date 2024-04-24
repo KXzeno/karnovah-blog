@@ -1,6 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 
+/* Local Imports */
+import ObjectArray from './MyArray';
+
 export default function TableOfContents(): React.ReactNode {
   let [tocList, setTocList] = React.useState({});
   let [elemNodes, setElemNodes] = React.useState({});
@@ -37,22 +40,14 @@ export default function TableOfContents(): React.ReactNode {
     return tempObj;
   };
 
-  interface SearchSign {
-    (value: unknown, index?: number, object?: unknown[]): unknown, 
-    object?: object[],
-  }
-
-  function search(params: SearchSign) {
-    console.log(params);
-  }
-
   React.useEffect(() => {
     let elemNodesProxy = document.querySelectorAll("h3, h4");
     //console.log(elemNodesProxy);
     elemNodesProxy.forEach(({ id }: { id: string }) => {
-      let values = Object.values(elemNodes);
+      // let values = Object.values(elemNodes);
       //TODO: Make my own find method
-      let parsedId = values.find(({ id: linkId }) => linkId === id);
+      let values = new ObjectArray(Object.values(elemNodes));
+      let parsedId = values.locate((e) => e === id);
       if (!parsedId) {
         //console.error('Proxy Dismissed.')
       } else {
