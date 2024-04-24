@@ -4,7 +4,7 @@ interface fnProps {
    reference?: object[]): boolean
 }
 
-class ObjectArray extends Array {
+export default class ObjectArray extends Array {
   constructor(value: object[]) {
     super();
     for (let i = 0; i < value.length; i++) {
