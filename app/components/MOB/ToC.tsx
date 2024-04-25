@@ -45,10 +45,9 @@ export default function TableOfContents(): React.ReactNode {
     //console.log(elemNodesProxy);
     elemNodesProxy.forEach(({ id }: { id: string }) => {
       // let values = Object.values(elemNodes);
-      //TODO: Make my own find method
       let values = new ObjectArray(Object.values(elemNodes));
-      let parsedId = values.locate((e) => e === id);
-      if (!parsedId) {
+      let parsedElem = values.locate((e) => e === id);
+      if (!parsedElem) {
         //console.error('Proxy Dismissed.')
       } else {
         setIsProxy(true);
@@ -60,7 +59,7 @@ export default function TableOfContents(): React.ReactNode {
     if (isProxy === false) {
       setElemNodes(erst => ({ ...erst, ...elemNodesProxy }));
       //console.log(elemNodes);
-      let elems = elemNodesProxy.values();
+      let elems = new ObjectArray(Object.values(elemNodesProxy));
 
       for (const value of elems) {
         let altered = newTocList(value);
