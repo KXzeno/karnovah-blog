@@ -5,11 +5,11 @@ import Link from 'next/link';
 import ObjectArray from './MyArray';
 
 export default function TableOfContents(): React.ReactNode {
-  let [tocList, setTocList] = React.useState({});
-  let [elemNodes, setElemNodes] = React.useState({});
-  let [isProxy, setIsProxy] = React.useState(false);
-  let [arrData, setArrData] = React.useState([]);
-  let [tocIndex, setTocIndex] = React.useState(0);
+  let [tocList, setTocList] = React.useState<object>({});
+  let [elemNodes, setElemNodes] = React.useState<object>({});
+  let [isProxy, setIsProxy] = React.useState<boolean>(false);
+  let [arrData, setArrData] = React.useState<Array<unknown>>([]);
+  let [tocIndex, setTocIndex] = React.useState<number>(0);
 
   /** @function
    * Callback hook which destructures DOM nodes
@@ -24,7 +24,7 @@ export default function TableOfContents(): React.ReactNode {
     // Alternative destructuring
     // let { target } = e;
     // let { id, outerText } = target as HTMLElement;
-    let tempObj = {};
+    let tempObj: object = {};
 
     if (!id) { return };
     // Could also work with Object.assign()
@@ -41,7 +41,7 @@ export default function TableOfContents(): React.ReactNode {
   };
 
   React.useEffect(() => {
-    let elemNodesProxy = document.querySelectorAll("h3, h4");
+    let elemNodesProxy: NodeList = document.querySelectorAll("h3, h4");
     //console.log(elemNodesProxy);
     elemNodesProxy.forEach(({ id }: { id: string }) => {
       // let values = Object.values(elemNodes);
@@ -68,7 +68,6 @@ export default function TableOfContents(): React.ReactNode {
         setTocList(erst => ({ ...erst, ...altered }));
         // console.log("tocList:", tocList);
       }
-
     }
     return () => {
       elemNodesProxy = null;
