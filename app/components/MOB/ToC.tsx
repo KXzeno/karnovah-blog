@@ -26,7 +26,7 @@ export default function TableOfContents(): React.ReactNode {
     // let { id, outerText } = target as HTMLElement;
     let tempObj: object = {};
 
-    if (!id) { return };
+    if (!id || !outerText) { return };
     // Could also work with Object.assign()
     Object.defineProperties(tempObj, {
       [id]: { 
