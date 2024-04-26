@@ -62,7 +62,7 @@ export default function TableOfContents(): React.ReactNode {
       let elems = new ObjectArray(Object.values(elemNodesProxy));
 
       for (const value of elems) {
-        let altered = newTocList(value);
+        let altered: object = newTocList(value);
         // console.log("Altered:", altered)
         setTocList(erst => ({ ...erst, ...altered }));
         // console.log("tocList:", tocList);
@@ -75,12 +75,13 @@ export default function TableOfContents(): React.ReactNode {
 
   }, [tocList, elemNodes, isProxy]);
 
+  // TODO: See React type for inference
   let indexer = React.useCallback((o, prop) => {
      prop[1] = `${prop[1]}\n${Object.keys(o).indexOf(prop[0])}`
   }, []);
 
   React.useEffect(() => {
-    +((obj) => {
+    +((obj: object) => {
       for (let entry of Object.entries(obj)) {
         /* setArrData prev + 1 === length each render */
         //entry[1] = `${entry[1].substring(0, index)}\n${Object.keys(obj).indexOf(entry[0])}`;
@@ -98,6 +99,7 @@ export default function TableOfContents(): React.ReactNode {
     };
   }, [tocList, setArrData, indexer, tocIndex]);
 
+  // TODO: See React type for inference
   let data = React.useMemo(() => {
    // if (arrData.length > Object.keys(tocList).length) {
    //   arrData.splice(Object.keys(tocList).length);
