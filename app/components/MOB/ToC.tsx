@@ -41,7 +41,7 @@ export default function TableOfContents(): React.ReactNode {
   };
 
   React.useEffect(() => {
-    let elemNodesProxy: NodeList = document.querySelectorAll("h3, h4");
+    let elemNodesProxy: NodeList | null = document.querySelectorAll("h3, h4");
     //console.log(elemNodesProxy);
     elemNodesProxy.forEach((node) => {
       // let values = Object.values(elemNodes);
@@ -62,7 +62,7 @@ export default function TableOfContents(): React.ReactNode {
       let elems = new ObjectArray(Object.values(elemNodesProxy));
 
       for (const value of elems) {
-        let altered: object = newTocList(value);
+        let altered: object | undefined = newTocList(value);
         // console.log("Altered:", altered)
         setTocList(erst => ({ ...erst, ...altered }));
         // console.log("tocList:", tocList);
@@ -75,9 +75,8 @@ export default function TableOfContents(): React.ReactNode {
 
   }, [tocList, elemNodes, isProxy]);
 
-  // TODO: See React type for inference
-  let indexer = React.useCallback((o, prop) => {
-     prop[1] = `${prop[1]}\n${Object.keys(o).indexOf(prop[0])}`
+  let indexer = React.useCallback((o: object, prop: Array<object | string>) => {
+     prop[1] = `${prop[1]}\n${Object.keys(o).indexOf(prop[0] as string)}`
   }, []);
 
   React.useEffect(() => {
