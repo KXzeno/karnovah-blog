@@ -8,7 +8,7 @@ export default function TableOfContents(): React.ReactNode {
   let [tocList, setTocList] = React.useState<object>({});
   let [elemNodes, setElemNodes] = React.useState<object>({});
   let [isProxy, setIsProxy] = React.useState<boolean>(false);
-  let [arrData, setArrData] = React.useState<Array<unknown>>([]);
+  let [arrData, setArrData] = React.useState<Array<string | string[]>>([]);
   let [tocIndex, setTocIndex] = React.useState<number>(0);
 
   /** @function
@@ -76,7 +76,7 @@ export default function TableOfContents(): React.ReactNode {
   }, [tocList, elemNodes, isProxy]);
 
   let indexer = React.useCallback((o: object, prop: Array<object | string>) => {
-     prop[1] = `${prop[1]}\n${Object.keys(o).indexOf(prop[0] as string)}`
+    prop[1] = `${prop[1]}\n${Object.keys(o).indexOf(prop[0] as string)}`
   }, []);
 
   React.useEffect(() => {
@@ -96,32 +96,32 @@ export default function TableOfContents(): React.ReactNode {
     return () => {
       setArrData(erst => erst.splice(Object.keys(tocList).length));
     };
-  }, [tocList, setArrData, indexer, tocIndex]);
+  }, [tocList, setArrData, indexer]);
 
   // TODO: See React type for inference
   let data = React.useMemo(() => {
-   // if (arrData.length > Object.keys(tocList).length) {
-   //   arrData.splice(Object.keys(tocList).length);
-   // }
+    // if (arrData.length > Object.keys(tocList).length) {
+    //   arrData.splice(Object.keys(tocList).length);
+    // }
 
-      //console.log(`tocList: ${Object.keys(tocList)}, arrData: ${arrData}`);
+    //console.log(`tocList: ${Object.keys(tocList)}, arrData: ${arrData}`);
     return (
-     //console.log(arrData),
+      //console.log(arrData),
       arrData./*splice(Object.keys(tocList).length).*/map((prop) => {
         return (
-        <span 
-          key={`#${prop[1]}-${prop[0]}`} 
-          data-index={prop[1].substring(prop[1].indexOf('\n')).trimStart()} 
-          name={`${prop[0]}-*`}>
-          {/*<Link>*/}
-          <a 
-            href={`#${prop[0]}`} 
-            rel="noreferrer"
-          > {/*target="_blank"*/}
-            {`${prop[1].substring(0, prop[1].indexOf('\n'))}`}
-          </a>
+          <span 
+            key={`#${prop[1]}-${prop[0]}`} 
+            data-index={prop[1].substring(prop[1].indexOf('\n')).trimStart()} 
+            data-name={`${prop[0]}-*`}>
+            {/*<Link></Link>*/}
+            <a 
+              href={`#${prop[0]}`} 
+              rel="noreferrer"
+            > {/*target="_blank"*/}
+              {`${prop[1].substring(0, prop[1].indexOf('\n'))}`}
+            </a>
             {/*</Link>*/}
-        </span>
+          </span>
         );
       })
     );
@@ -133,4 +133,3 @@ export default function TableOfContents(): React.ReactNode {
     </nav>
   );
 }
-
