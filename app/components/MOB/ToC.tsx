@@ -24,7 +24,6 @@ export default function TableOfContents(): React.ReactNode {
     // Alternative destructuring
     // { target: { id, outerText } }: { target: HTMLElement }
     // OR let { target } = e; let { id, outerText } = target as HTMLElement;
-    console.log(element);
     let tempObj: object = {};
 
     if (!element.id || !element.outerText) { return };
@@ -43,6 +42,9 @@ export default function TableOfContents(): React.ReactNode {
 
   React.useEffect(() => {
     let elemNodesProxy: NodeList | null = document.querySelectorAll("h3, h4");
+    if (Object.keys(tocList).length === elemNodesProxy.length) {
+      return;
+    }
     //console.log(elemNodesProxy);
     elemNodesProxy.forEach((node) => {
       // let values = Object.values(elemNodes);
@@ -69,12 +71,13 @@ export default function TableOfContents(): React.ReactNode {
         // console.log("tocList:", tocList);
       }
     }
+    //console.log(tocList);
     return () => {
       elemNodesProxy = null;
       //console.log('Cleanup Successful');
     };
 
-  }, [tocList, elemNodes, isProxy]);
+  }, [tocList, isProxy]);
 
   let indexer = React.useCallback((o: object, prop: Array<object | string>) => {
     prop[1] = `${prop[1]}\n${Object.keys(o).indexOf(prop[0] as string)}`
