@@ -20,17 +20,18 @@ export default function TableOfContents(): React.ReactNode {
    * @returns {Object} Parochial object used for hook setter functions
    * @author Kx
    */
-  let newTocList = ({ target: { id, outerText } }: { target: HTMLElement }) => {
+  let newTocList = (element: HTMLElement) => {
     // Alternative destructuring
-    // let { target } = e;
-    // let { id, outerText } = target as HTMLElement;
+    // { target: { id, outerText } }: { target: HTMLElement }
+    // OR let { target } = e; let { id, outerText } = target as HTMLElement;
+    console.log(element);
     let tempObj: object = {};
 
-    if (!id || !outerText) { return };
+    if (!element.id || !element.outerText) { return };
     // Could also work with Object.assign()
     Object.defineProperties(tempObj, {
-      [id]: { 
-        value: outerText,
+      [element.id]: { 
+        value: element.outerText,
         writable: false,
         enumerable: true,
         configurable: false,
