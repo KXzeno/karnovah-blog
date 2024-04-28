@@ -91,7 +91,7 @@ export default function TableOfContents(): React.ReactNode {
         //console.log(arrData);
         //arr.push(entry);
       }
-    })(tocList, tocIndex);
+    })(tocList);
 
     return () => {
       setArrData(erst => erst.splice(tocList.length));
