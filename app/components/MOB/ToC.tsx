@@ -43,10 +43,10 @@ export default function TableOfContents(): React.ReactNode {
   React.useEffect(() => {
     let elemNodesProxy: NodeList = document.querySelectorAll("h3, h4");
     //console.log(elemNodesProxy);
-    elemNodesProxy.forEach(node as HTMLElement => {
+    elemNodesProxy.forEach((node) => {
       // let values = Object.values(elemNodes);
       let values = new ObjectArray(Object.values(elemNodes));
-      let parsedElem = values.locate((e) => e === node.id);
+      let parsedElem = values.locate((e) => e === (node as HTMLElement).id);
       if (!parsedElem) {
         //console.error('Proxy Dismissed.')
       } else {
