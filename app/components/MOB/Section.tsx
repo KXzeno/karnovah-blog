@@ -167,7 +167,7 @@ export default React.memo(function Section({
               let returnedElement: Element | null = null;
               if (this.collection) {
                 for (let i = 0; i < this.collection.length; i++) {
-                  let nameAttr = this.collection.item(i).getAttribute('name');
+                  let nameAttr = this.collection.item(i).getAttribute('data-name');
                   if (nameAttr === `${secRef.current.id}-*`) {
                     return returnedElement = this.collection.item(i);
                   }
@@ -202,7 +202,7 @@ export default React.memo(function Section({
                   e === target && e.setAttribute('class', 'curr-head');
                   // Toggle attribute on observer dismissal, ensures end e removal
                   !onScreen && Number(target.getAttribute('data-index')) !== 0
-                  && target.getAttribute('name') && target.toggleAttribute('class');
+                  && target.getAttribute('data-name') && target.toggleAttribute('class');
                   e.getAttribute('class') && this.activeStack.push(e); 
                 }
 
@@ -219,7 +219,7 @@ export default React.memo(function Section({
                   // Highlights previous node when escaping last node
                   let targetElem = elemCollection.getList;
                   let index = this.activeStack.length === 0
-                  && `${secRef.current.id}-*` === node.getAttribute('name')
+                  && `${secRef.current.id}-*` === node.getAttribute('data-name')
                   && node.getAttribute('data-index');
                   index && targetElem && targetElem[index - 1]?.setAttribute('class', 'curr-head');
                 }
