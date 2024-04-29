@@ -40,11 +40,11 @@ export default function ArticleProvider({
   );
 }
 
-export function Header({ children }) {
+export function Header({ children }: { children: React.ReactNode }) {
   return <h1 id="header">{children}</h1>
 }
 
-export function RightMargin({ children }) {
+export function RightMargin({ children }: {children: React.ReactNode }) {
   return (
     <div className="right-margin">
       {children}
@@ -52,7 +52,8 @@ export function RightMargin({ children }) {
   );
 }
 
-export function SubHeader({ children, AddHeader }) {
+// AddHeader passes compiler checks if typed 'React.ReactPortal' --> explore
+export function SubHeader({ children, AddHeader }: {children: React.ReactNode, AddHeader: React.ReactNode }) {
   return (
     <hgroup className="sub-heading">
       <div>
@@ -63,7 +64,7 @@ export function SubHeader({ children, AddHeader }) {
   );
 }
 
-export function AddHeader({ children, HeaderNote }) {
+export function AddHeader({ children, HeaderNote }: {children: React.ReactNode, HeaderNote: React.ReactNode }) {
   return (
     <aside className="add-header">
       <p>{children}</p>
@@ -72,7 +73,7 @@ export function AddHeader({ children, HeaderNote }) {
   );
 }
 
-export function HeaderNote({ children }) {
+export function HeaderNote({ children }: {children: React.ReactNode }) {
   return (
     <div className="header-note">
       {children}
@@ -80,7 +81,7 @@ export function HeaderNote({ children }) {
   );
 }
 
-export function PrimaryContent({ children }) {
+export function PrimaryContent({ children }: {children: React.ReactNode }) {
   return (
     <div>
       <section className="primary-content">
