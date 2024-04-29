@@ -6,12 +6,17 @@ import Footer from '@M/Footer';
 import { Warning } from '@M/Icons';
 import ToC from '@M/ToC';
 
-export const ArticleContext = React.createContext();
+// TODO: Refactor to TSX
+export const ArticleContext = React.createContext(null);
+
+type FCParams = {
+  children: React.ReactNode,
+}
 
 export default function ArticleProvider({ 
   children, 
   ...delegated
-}) {
+}: FCParams) {
 
   return (
     <>
