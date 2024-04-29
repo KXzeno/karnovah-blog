@@ -7,7 +7,7 @@ import { Warning } from '@M/Icons';
 import ToC from '@M/ToC';
 
 // TODO: Refactor to TSX
-export const ArticleContext = React.createContext(null);
+export const ArticleContext = React.createContext({});
 
 type FCParams = {
   children: React.ReactNode,
