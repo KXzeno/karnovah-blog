@@ -10,11 +10,13 @@ export default function useMousePosition(): object {
     y: 0,
   });
 
+  type TargetEvent = React.MouseEvent<Window>
+
   React.useEffect(() => {
-    function handleMouseMove(event: React.MouseEvent) {
-      setMousePosition({
-        x: event.clientX,
-        y: event.clientY,
+    function handleMouseMove(event: TargetEvent | Event): void {
+       setMousePosition({
+        x: (event as TargetEvent).clientX,
+        y: (event as TargetEvent).clientY,
       });
     }
 
