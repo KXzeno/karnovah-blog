@@ -4,21 +4,29 @@ import React from 'react';
  * Custom hook to observe element visibility on current viewport
  * @returns {state | ref} Destructurable variables for element visibility and reference
  */
-export default function useOnscreen() { // Can instead use elementRef as prop and export only isOnscreen
+export default function useOnscreen(): [boolean, React.MutableRefObject<HTMLElement | undefined>] { // Can instead use elementRef as prop and export only isOnscreen
   const [isOnscreen, setIsOnscreen] = React.useState(false);
   const elementRef = React.useRef();
 
   //TODO: Use rect to automate intersection of root/element
   React.useEffect(() => {
+    if (!elementRef.current) {
+      return;
+    }
+
     let [rect, sib] = 
-      [elementRef.current.getBoundingClientRect(), 
-      elementRef.current.nextElementSibling];
+      [(elementRef.current as HTMLElement).getBoundingClientRect(), 
+      (elementRef.current as HTMLElement).nextElementSibling];
+
+      if (!sib) {
+        return;
+      }
 
     let sibTag = sib ? sib.tagName : null;
     let sibRect = sibTag !== null ? sib.getBoundingClientRect() : 0;
 
     let totalHeight = sibRect !== 0 
-      ? rect.height + sibRect.height
+      ? rect.height + (sibRect as DOMRect).height
       : rect.height
 
 
