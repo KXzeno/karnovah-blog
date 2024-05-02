@@ -24,7 +24,7 @@ interface ComponentProps {
 
 interface Props {
   children: React.ReactNode,
-  as: keyof JSX.IntrinsicElements |
+  as?: keyof JSX.IntrinsicElements |
    React.ComponentType<ComponentProps> | string,
   // string | PropertyKey 
 }
