@@ -9,13 +9,13 @@ import ArticleProvider, {
   PrimaryContent,
 } from '@P/ArticleProvider';
 import Section from '@M/Section';
-import ToC from '@M/ToC';
+// import ToC from '@M/ToC';
 
-export const metadata = {
+export const metadata: object = {
   title: "Akhundelar",
 };
 
-export default function Akhundelar() {
+export default function Akhundelar(): React.ReactNode {
 
   return (
     <ArticleProvider>
