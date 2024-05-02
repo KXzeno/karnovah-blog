@@ -1,4 +1,4 @@
-export default function Blog({ params }) {
+export default function Blog({ params }: { params: { id: string }}): React.ReactNode {
   return (
     <>
       {console.log(params)}
