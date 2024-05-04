@@ -20,4 +20,8 @@
   #hero-date {
     @apply text-[#E6E6E6]
   }
+
+  #hero-author {
+    @apply text-[#E6E6E6]
+  }
 }
