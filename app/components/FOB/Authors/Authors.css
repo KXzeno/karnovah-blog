@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
+@layer utilities {
+  .author-profile {
+    @apply
+  }
+
+  .author-name {
+    @apply
+  }
+
+  .author-level {
+    @apply
+  }
+}
