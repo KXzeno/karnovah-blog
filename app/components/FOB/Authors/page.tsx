@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Author() {
+export default function Author({ user }) {
   return (
     <div id="author-profile">
       <div id="author-name">
