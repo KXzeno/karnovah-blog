@@ -24,6 +24,7 @@
       "@H/*": ["./components/hooks/*"],
       "@P/*": ["./components/FOB/Providers/*"],
       "@A/*": ["./components/actions/*"],
+      "@authors/*": ["./components/Fob/authors/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
