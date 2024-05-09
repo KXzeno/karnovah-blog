@@ -1,7 +1,7 @@
 import React from 'react';
 import { readFile } from 'fs/promises';
 import { motion } from 'framer-motion';
-import { authors } from '@F/authors';
+import authors from '@F/authors';
 import './Feed.css';
  
 interface postData {
@@ -25,6 +25,8 @@ function FeedCard({ title, abstract, date, author }: postData) {
         <div id="hero-date">
           {date}
         </div>
+        <Author>
+        </ Author>
         <div id="hero-author">
           {author}
         </div>
