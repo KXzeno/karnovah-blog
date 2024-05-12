@@ -1,5 +1,16 @@
 import React from 'react';
+import { readFile } from 'fs/promises';
 import AUTHOR_LIST from './authorList';
+
+async function getFile(filePath: string) {
+    try {
+      let data = await readFile(`./app/${filePath}`, { encoding: 'utf8' });
+      let content = JSON.parse(data)
+      return content;
+    } catch (err) {
+        console.error(err);
+    }
+}
 
 export default function Author({ user }: { user: string }): React.ReactNode {
   return (
