@@ -1,7 +1,7 @@
 import React from 'react';
 import { readFile } from 'fs/promises';
 import { motion } from 'framer-motion';
-import authors from '@F/authors';
+import Author from '@F/authors';
 import './Feed.css';
  
 interface postData {
