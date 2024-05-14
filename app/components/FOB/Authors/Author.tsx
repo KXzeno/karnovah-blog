@@ -13,6 +13,8 @@ async function getFile(filePath: string) {
 }
 
 export default function Author({ user }: { user: string }): React.ReactNode {
+  let fileData = getFile('components/FOB/Authors/Author');
+
   return (
     <div id="author-profile">
       <div id="author-name">
