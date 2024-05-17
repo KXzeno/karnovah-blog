@@ -1,24 +1,27 @@
 import React from 'react';
 import { readFile } from 'fs/promises';
-import AUTHOR_LIST from './authorList';
 
-async function getFile(filePath: string) {
+  async function getFile(filePath: string) {
     try {
       let data = await readFile(`./app/${filePath}`, { encoding: 'utf8' });
       let content = JSON.parse(data)
       return content;
     } catch (err) {
-        console.error(err);
+      console.error(err);
     }
-}
+  }
 
-export default function Author({ user }: { user: string }): React.ReactNode {
-  let authors = getFile('components/FOB/Authors/Author');
+  export default async function Author({ user }: { user: string }) {
+  let authors = await getFile('components/FOB/Authors/authorList.json');
+  if (!user || !authors) {
+    throw new Error('Invalid user');
+  }
+  console.log(authors[user]);
 
   return (
     <div id="author-profile">
       <div id="author-name">
-        authors.user
+        {`${user}`}
         <div id="author-level">
         </div>
       </div>
