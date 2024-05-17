@@ -11,7 +11,7 @@ import { readFile } from 'fs/promises';
     }
   }
 
-  export default async function Author({ user }: { user: string }) {
+  export default async function Author({ user }: { user: string }): Promise<React.ReactNode> {
   let authors = await getFile('components/FOB/Authors/authorList.json');
   if (!user || !authors) {
     throw new Error('Invalid user');
