@@ -27,7 +27,6 @@ function FeedCard({ title, abstract, date, author }: postData) {
         </div>
         <Author user='kx'/>
         <div id="hero-author">
-          {author}
         </div>
       </div>
     );
