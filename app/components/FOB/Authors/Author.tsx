@@ -1,5 +1,6 @@
 import React from 'react';
 import { readFile } from 'fs/promises';
+import Image from 'next/image';
 
   async function getFile(filePath: string) {
     try {
@@ -20,6 +21,7 @@ import { readFile } from 'fs/promises';
 
   return (
     <div id="author-profile">
+      <Image src={`./imgs/${user}`} alt='author-img' />
       <div id="author-name">
         {`${user}`}
         <div id="author-level">
