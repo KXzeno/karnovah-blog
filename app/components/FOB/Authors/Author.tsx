@@ -21,7 +21,7 @@ import Image from 'next/image';
 
   return (
     <div id="author-profile">
-      <Image src={`./imgs/${user}`} alt='author-img' />
+      <Image src={`/${user}.png`} alt='author-img' width='32' height='32'/>
       <div id="author-name">
         {`${user}`}
         <div id="author-level">
