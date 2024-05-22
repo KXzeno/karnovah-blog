@@ -21,9 +21,9 @@ import Image from 'next/image';
 
   return (
     <div id="author-profile">
-      <Image src={`/${user}.png`} alt='author-img' width='32' height='32'/>
-      <div id="author-name">
-        {`${user}`}
+      <Image className='float-right' src={`/${user}.png`} alt='author-img' width='32' height='32'/>
+      <div id="author-name" className='relative pt-[8px] text-right'>
+        <span className="pr-2">{`${user}`}</span>
         <div id="author-level">
         </div>
       </div>
