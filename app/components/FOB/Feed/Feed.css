@@ -14,7 +14,7 @@
   }
 
   #hero-abstract {
-    @apply text-[#E5E1E6];
+    @apply text-[#E5E1E6] px-4 py-2;
   }
 
   #hero-date {
