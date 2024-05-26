@@ -22,6 +22,7 @@ export default async function Author({ user, date }: { user: string, date: strin
   return (
     <div id="author-profile" className="flex w-full place-content-end">
       <div id="author-name" className='flex relative w-max pt-[8px] text-right'>
+        <span className="pr-3 self-end">{`${date}`}</span>
         <span className="pr-3 place-self-end">{`${user}`}</span>
         <Image className='float-right' src={`/${user}.png`} alt='author-img' width='32' height='32'/>
         <div id="author-level">
