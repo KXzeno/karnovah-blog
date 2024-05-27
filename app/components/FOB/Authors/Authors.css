@@ -3,15 +3,23 @@
 @tailwind components;
 
 @layer utilities {
-  .author-profile {
-    @apply rounded-md;
+  #author-profile {
+    @apply flex relative w-full;
   }
 
-  .author-name {
-    @apply
+  #publish-date {
+    @apply pr-3 self-end;
   }
 
-  .author-level {
-    @apply
+  #author-name {
+    @apply absolute inline-flex right-0 bottom-0 place-self-end w-max pt-[8px];
+  }
+
+  #author-name span {
+    @apply inline-block pr-3 align-text-bottom self-end;
+  }
+
+  #author-name img {
+    @apply float-right;
   }
 }
