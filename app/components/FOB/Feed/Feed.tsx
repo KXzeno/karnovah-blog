@@ -14,7 +14,7 @@ interface postData {
 function FeedCard({ title, abstract, date, author }: postData) {
     return (
       <div
-        className="min-h-16 w-64 mx-auto border-2" 
+        className="min-h-16 w-64 mx-auto" 
       >
         <div id="hero-title">
           {title}
@@ -48,7 +48,7 @@ let post = await getFile('(blogs)/akhundelar/akhundelar.json');
 
   return (
       <>
-        <div className="grid grid-cols-[77%_max(23%)] size-full border-2">
+        <div className="grid grid-cols-[77%_max(23%)] size-full">
           <div className="feed-container h-screen">
             <FeedCard {...post}/>
           </div>
