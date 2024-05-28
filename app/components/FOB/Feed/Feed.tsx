@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { readFile } from 'fs/promises';
 import { motion } from 'framer-motion';
 import Author from '@F/authors';
@@ -17,7 +18,7 @@ function FeedCard({ title, abstract, date, author }: postData) {
         className="min-h-16 w-64 mx-auto" 
       >
         <div id="hero-title">
-          {title}
+          <Link href={`./posts/${title}`}>{title}</Link>
         </div>
         <div id="hero-abstract">
           {abstract}
