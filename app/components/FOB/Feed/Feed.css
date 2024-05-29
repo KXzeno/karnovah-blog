@@ -13,6 +13,10 @@
     @apply text-[#E4E6E1];
   }
 
+  #hero-title a {
+    @apply text-cyan-500;
+  }
+
   #hero-abstract {
     @apply text-[#E5E1E6] px-4 py-2;
   }
