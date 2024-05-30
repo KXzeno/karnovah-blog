@@ -12,7 +12,7 @@ interface postData {
   author: string,
 }
 
-function FeedCard({ title, abstract, date, author }: postData) {
+function FeedCard({ title, abstract, date }: postData) {
     return (
       <div
         className="min-h-16 w-64 mx-auto" 
