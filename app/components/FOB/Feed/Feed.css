@@ -9,6 +9,9 @@
 }
 
 @layer utilities {
+  #feed-ctr {
+    @apply min-h-16 w-64 mx-auto;
+  }
   #hero-title {
     @apply text-[#E4E6E1];
   }
