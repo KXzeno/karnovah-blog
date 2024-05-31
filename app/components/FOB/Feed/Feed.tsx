@@ -15,7 +15,7 @@ interface postData {
 function FeedCard({ title, abstract, date }: postData) {
     return (
       <div
-        className="min-h-16 w-64 mx-auto" 
+        id="feed-ctr"
       >
         <div id="hero-title">
           <Link href={`./posts/${title}`}>{title}</Link>
