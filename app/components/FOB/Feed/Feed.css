@@ -17,7 +17,7 @@
   }
 
   #hero-title a {
-    @apply text-cyan-500;
+    @apply hover:text-cyan-500;
   }
 
   #hero-abstract {
