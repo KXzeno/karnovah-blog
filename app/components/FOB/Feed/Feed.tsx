@@ -46,11 +46,13 @@ async function getFile(filePath: string) {
 
 export default async function Feed() {
 let post = await getFile('(blogs)/akhundelar/akhundelar.json');
+let STATIC_POSTS = await getFile('(blogs)/articles.json');
 
   return (
       <>
         <div className="grid grid-cols-[77%_max(23%)] size-full">
           <div className="feed-container h-screen">
+            { /* Map fetched data */  }
             <FeedCard {...post}/>
           </div>
           <div className="right-margin">
