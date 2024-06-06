@@ -53,7 +53,7 @@ let STATIC_POSTS = await getFile('(blogs)/articles.json');
         <div className="grid grid-cols-[77%_max(23%)] size-full">
           <div className="feed-container h-screen">
             { /* Map fetched data */  }
-            <FeedCard {...post}/>
+            <FeedCard {...STATIC_POSTS}/>
           </div>
           <div className="right-margin">
           </div>
