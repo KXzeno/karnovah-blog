@@ -24,6 +24,7 @@
       "@F/*": ["./components/FOB/*"],
       "@H/*": ["./components/hooks/*"],
       "@P/*": ["./components/FOB/Providers/*"],
+      "@/actions": ["./components/actions/index.ts"],
       "@A/*": ["./components/actions/*"],
       "@authors/*": ["./components/Fob/authors/*"],
     }
