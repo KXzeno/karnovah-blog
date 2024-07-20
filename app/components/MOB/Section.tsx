@@ -61,10 +61,12 @@ export default React.memo(function Section({
    * @returns {string} header tags 5 or 6
    * @author Kx
    */
-  let idInserter = React.useCallback(() => {
-    return (Section === 'section') 
-      ? null
-      : secRef.current?.outerText.toLowerCase().split(' ').join('-');
+  let idInserter = React.useCallback((): string => {
+    if (secRef && secRef.current) {
+      return (Section === 'section') 
+        ? ''
+        : secRef.current?.outerText.toLowerCase().split(' ').join('-');
+    } else { throw Error('No ID Found.') }
   }, [Section, secRef]);
 
   let widthSym: symbol = Symbol.for('width');
@@ -75,7 +77,7 @@ export default React.memo(function Section({
     [bkpSym]: isBreak
   }: { [key in typeof widthSym | typeof bkpSym]: number | boolean } = useDetectResize();
 
-// Alternative destructuring
+  // Alternative destructuring
   // let [width, isMobile, breakpoint] = 
   //   [screen[Symbol.for('width')], 
   //   screen[Symbol.for('breakpointCrossed')], 
@@ -125,225 +127,225 @@ export default React.memo(function Section({
       setIsListening(() => true);
       elemCollection.setListener = true;
     }
-      if (!elemCollection.collection) {
-        // Make Predicators
-        let collection = document.getElementById('toc-list'); 
-        if (!collection) return;
-        Object.defineProperties(elemCollection, {
-          // HTML Collection of ToC items
-          collection: {
-            value: collection.children,
-            enumerable: true,
-            configurable: false
-          },
-          /**
-           * Getter
-           * @function
-           * @returns {NodeList | object} Returns collection prop
-           * @author Kx
-           */
-          get getList(): PropertyDescriptor {
-              return this.collection;
-          },
-          /**
-           * Mutates collection
-           * @deprecated - HTML Collections / NodeLists allow for inline mutation
-           * @param {NodeList | object} nodes - A collection of nodes to mutate object
-           * @author Kx
-           */
-          setList: {
-            set: function(collection) {
-              this.collection = collection;
-            }
-          },
-          /**
-           * Retrieves toc element linked with section ref
-           * @function
-           * @returns {Node | object} Toc node or null
-           * @author Kx
-           */
-          retrieve: {
-            value: function() {
-              let returnedElement: Element | null = null;
-              if (this.collection) {
-                for (let i = 0; i < this.collection.length; i++) {
-                  let nameAttr = this.collection.item(i).getAttribute('data-name');
-                  if (nameAttr === `${secRef.current.id}-*`) {
-                    return returnedElement = this.collection.item(i);
-                  }
+    if (!elemCollection.collection) {
+      // Make Predicators
+      let collection = document.getElementById('toc-list'); 
+      if (!collection) return;
+      Object.defineProperties(elemCollection, {
+        // HTML Collection of ToC items
+        collection: {
+          value: collection.children,
+          enumerable: true,
+          configurable: false
+        },
+        /**
+         * Getter
+         * @function
+         * @returns {NodeList | object} Returns collection prop
+         * @author Kx
+         */
+        get getList(): PropertyDescriptor {
+          return this.collection;
+        },
+        /**
+         * Mutates collection
+         * @deprecated - HTML Collections / NodeLists allow for inline mutation
+         * @param {NodeList | object} nodes - A collection of nodes to mutate object
+         * @author Kx
+         */
+        setList: {
+          set: function(collection) {
+            this.collection = collection;
+          }
+        },
+        /**
+         * Retrieves toc element linked with section ref
+         * @function
+         * @returns {Node | object} Toc node or null
+         * @author Kx
+         */
+        retrieve: {
+          value: function() {
+            let returnedElement: Element | null = null;
+            if (this.collection) {
+              for (let i = 0; i < this.collection.length; i++) {
+                let nameAttr = this.collection.item(i).getAttribute('data-name');
+                if (secRef.current && nameAttr === `${secRef.current.id}-*`) {
+                  return returnedElement = this.collection.item(i);
                 }
               }
-              return returnedElement;
-            },
-            writable: false,
-            enumerable: false,
-            configurable: false,
+            }
+            return returnedElement;
           },
-          /**
-           * Handles dynamic class toggling across multiple observed sections
-           * @function
-           * @param {Node object} target - retrieved node used for collation
-           * @author Kx
-           */
-          smartObserve: {
-            value: function(target: Element) {
-              Object.defineProperty(elemCollection, 'activeStack', {
-                value: [],
-                writable: true,
-                enumerable: true,
-              });
+          writable: false,
+          enumerable: false,
+          configurable: false,
+        },
+        /**
+         * Handles dynamic class toggling across multiple observed sections
+         * @function
+         * @param {Node object} target - retrieved node used for collation
+         * @author Kx
+         */
+        smartObserve: {
+          value: function(target: Element) {
+            Object.defineProperty(elemCollection, 'activeStack', {
+              value: [],
+              writable: true,
+              enumerable: true,
+            });
 
-              // Executes only when observing element id exists
-              if (/*onScreen && */secRef.current.id) {
+            // Executes only when observing element id exists
+            if (/*onScreen && */secRef.current && secRef.current.id) {
 
-                // Toggles highlight on all toc items
-                for (let i = 0; i < this.collection.length; i++) {
-                  let e = this.collection.item(i);
-                  e === target && e.setAttribute('class', 'curr-head');
-                  // Toggle attribute on observer dismissal, ensures end e removal
-                  !onScreen && Number(target.getAttribute('data-index')) !== 0
-                  && target.getAttribute('data-name') && target.toggleAttribute('class');
-                  e.getAttribute('class') && this.activeStack.push(e); 
-                }
-
-                // Detoggles previous node's classes
-                for (let i = 0; i < this.collection.length; i++) {
-                  let node = this.collection.item(i);
-                  if (this.activeStack.length > 1) {
-                    this.activeStack.length != 1 
-                    && node.getAttribute('class')
-                    && this.activeStack.pop() 
-                    && node.removeAttribute('class', 'curr-head');
-                  }
-
-                  // Highlights previous node when escaping last node
-                  let targetElem = elemCollection.getList;
-                  let index = this.activeStack.length === 0
-                  && `${secRef.current.id}-*` === node.getAttribute('data-name')
-                  && node.getAttribute('data-index');
-                  index && targetElem && targetElem[index - 1]?.setAttribute('class', 'curr-head');
-                }
+              // Toggles highlight on all toc items
+              for (let i = 0; i < this.collection.length; i++) {
+                let e = this.collection.item(i);
+                e === target && e.setAttribute('class', 'curr-head');
+                // Toggle attribute on observer dismissal, ensures end e removal
+                !onScreen && Number(target.getAttribute('data-index')) !== 0
+                && target.getAttribute('data-name') && target.toggleAttribute('class');
+                e.getAttribute('class') && this.activeStack.push(e); 
               }
-            },
-            enumerable: true,
-          },
-          setListener: {
-            set: function(boolean) {
-              this.listener = boolean;
+
+              // Detoggles previous node's classes
+              for (let i = 0; i < this.collection.length; i++) {
+                let node = this.collection.item(i);
+                if (this.activeStack.length > 1) {
+                  this.activeStack.length != 1 
+                  && node.getAttribute('class')
+                  && this.activeStack.pop() 
+                  && node.removeAttribute('class', 'curr-head');
+                }
+
+                // Highlights previous node when escaping last node
+                let targetElem = elemCollection.getList;
+                let index = this.activeStack.length === 0
+                && `${secRef.current.id}-*` === node.getAttribute('data-name')
+                && node.getAttribute('data-index');
+                index && targetElem && targetElem[index - 1]?.setAttribute('class', 'curr-head');
+              }
             }
           },
-          getListener: {
-            get: function() {
-              return this.listener;
-            }
-          },
-        });
-        let list;
-        if (elemCollection.getList) {
-          list = elemCollection.getList;
-        }
-        list && (() => {
-          for (let i = 0; i < list.length; i++) {
-            let parsedElem: Element | null = list.item(i);
-            if (!isListening && parsedElem?.firstElementChild) {
-              parsedElem.addEventListener('click', handleClick, { once: true }); 
-            }
-          }})();
-      }
-      let [elements, targetElem]: [HTMLCollection | undefined, Element | undefined] = [undefined, undefined];
-      if (elemCollection.retrieve !== undefined) {
-        targetElem = elemCollection.retrieve();
-      }
-
-      if (elemCollection && elemCollection.getList && elemCollection.smartObserve) {
-        elements = elemCollection.getList;
-        elemCollection.smartObserve(targetElem); 
-      }
-
-      //let end = performance.now();
-      //console.log(`${end - start}`);
-      return () => {
-        if (isListening && elements) {
-          for (let i = 0; i < elements.length; i++) {
-            let element = elements.item(i);
-            if (element) {
-              element.removeEventListener('click', handleClick);
-            }
+          enumerable: true,
+        },
+        setListener: {
+          set: function(boolean) {
+            this.listener = boolean;
           }
-          //console.log('Event dismissed');
-          setIsListening(() => false);
-        }
-        //console.log('Render discarded.');
+        },
+        getListener: {
+          get: function() {
+            return this.listener;
+          }
+        },
+      });
+      let list;
+      if (elemCollection.getList) {
+        list = elemCollection.getList;
       }
-    }, [isListening, onScreen, isMobileLandscape, secRef]);
-
-    React.useEffect(() => {
-      let getElements = new Promise<HTMLCollection>((resolve,) => {
-        let intervalId = setInterval(() => {
-          let [targetElem, children]: [HTMLElement | null, HTMLCollection | undefined] = [document.getElementById('toc-list'), undefined];
-          if (targetElem) {
-            children = targetElem.children;
+      list && (() => {
+        for (let i = 0; i < list.length; i++) {
+          let parsedElem: Element | null = list.item(i);
+          if (!isListening && parsedElem?.firstElementChild) {
+            parsedElem.addEventListener('click', handleClick, { once: true }); 
           }
-          if (children && children.length > 0) {
-            clearInterval(intervalId);
-            resolve(children);
+        }})();
+    }
+    let [elements, targetElem]: [HTMLCollection | undefined, Element | undefined] = [undefined, undefined];
+    if (elemCollection.retrieve !== undefined) {
+      targetElem = elemCollection.retrieve();
+    }
+
+    if (elemCollection && elemCollection.getList && elemCollection.smartObserve) {
+      elements = elemCollection.getList;
+      elemCollection.smartObserve(targetElem); 
+    }
+
+    //let end = performance.now();
+    //console.log(`${end - start}`);
+    return () => {
+      if (isListening && elements) {
+        for (let i = 0; i < elements.length; i++) {
+          let element = elements.item(i);
+          if (element) {
+            element.removeEventListener('click', handleClick);
           }
-        }, 100);
-      });
+        }
+        //console.log('Event dismissed');
+        setIsListening(() => false);
+      }
+      //console.log('Render discarded.');
+    }
+  }, [isListening, onScreen, isMobileLandscape, secRef]);
 
-      getElements.then((elements) => {
-        let child = elements.item(0);
-        child && child.setAttribute('class', 'curr-head');
-      }).catch((e) => {
-        console.error(e);
-      }).finally(() => {
-      });
-    }, []);
+  React.useEffect(() => {
+    let getElements = new Promise<HTMLCollection>((resolve,) => {
+      let intervalId = setInterval(() => {
+        let [targetElem, children]: [HTMLElement | null, HTMLCollection | undefined] = [document.getElementById('toc-list'), undefined];
+        if (targetElem) {
+          children = targetElem.children;
+        }
+        if (children && children.length > 0) {
+          clearInterval(intervalId);
+          resolve(children);
+        }
+      }, 100);
+    });
 
-    React.useEffect(() => {
-      let getElements = new Promise<NodeList>((resolve,) => {
-        let elements = document.querySelectorAll('h3, h4');
-        if (elements.length > 0) {
-          resolve(elements) 
+    getElements.then((elements) => {
+      let child = elements.item(0);
+      child && child.setAttribute('class', 'curr-head');
+    }).catch((e) => {
+      console.error(e);
+    }).finally(() => {
+    });
+  }, []);
+
+  React.useEffect(() => {
+    let getElements = new Promise<NodeList>((resolve,) => {
+      let elements = document.querySelectorAll('h3, h4');
+      if (elements.length > 0) {
+        resolve(elements) 
+      }
+    });
+
+    getElements.then((elements) => {
+      elements.forEach((element, i, list) => {
+        if (elementStack && elementStack.length !== list.length) {
+          setElementStack(prev => [...prev, element]);
+          //console.log(list.length, elementStack.length);
         }
       });
+    });
 
-      getElements.then((elements) => {
-        elements.forEach((element, i, list) => {
-          if (elementStack && elementStack.length !== list.length) {
-            setElementStack(prev => [...prev, element]);
-            //console.log(list.length, elementStack.length);
-          }
-        });
+    return () => {
+      let elementsLength = document.querySelectorAll('h3, h4').length;
+      if (elementStack.length > elementsLength) {
+        setElementStack(prev => prev.splice(elementsLength, prev.length - 1));
+      }
+    };
+  }, [elementStack]);
+
+  React.useEffect(() => {
+    let nodes = document.querySelectorAll('[data-index]');
+    isMobileLandscape && 
+      +(() => {
+      nodes.forEach((node, i, list) => {
+        (node.getAttribute('class') === 'curr-head') 
+        && (i === list.length - 1) 
+        && list[0].setAttribute('class', 'curr-head');
       });
+    })();
+  }, [isMobileLandscape]);
 
-      return () => {
-        let elementsLength = document.querySelectorAll('h3, h4').length;
-        if (elementStack.length > elementsLength) {
-          setElementStack(prev => prev.splice(elementsLength, prev.length - 1));
-        }
-      };
-    }, [elementStack]);
-
-    React.useEffect(() => {
-      let nodes = document.querySelectorAll('[data-index]');
-      isMobileLandscape && 
-        +(() => {
-        nodes.forEach((node, i, list) => {
-          (node.getAttribute('class') === 'curr-head') 
-          && (i === list.length - 1) 
-          && list[0].setAttribute('class', 'curr-head');
-        });
-      })();
-    }, [isMobileLandscape]);
-
-    return (
-      <Section
-        id={idInserter()}
-        ref={secRef}
-        {...delegated}
-      >
-        {children}
-      </Section>
-    );
-  });
+  return (
+    <Section
+      id={idInserter()}
+      ref={secRef}
+      {...delegated}
+    >
+      {children}
+    </Section>
+  );
+});
