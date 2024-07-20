@@ -5,7 +5,7 @@ import Footer from '@M/Footer';
 import Icons, { Warning } from '@M/Icons';
 import TableOfContents from '@M/ToC';
 import useDetectResize from '@H/useDetectResize';
-import Author from '@F/authors/Author';
+import Author from '@F/Authors';
 
 export {
   Home,
