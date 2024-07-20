@@ -7,7 +7,7 @@ import React from 'react';
  * @returns {state} Logic-encapsulated on/off variable
  * @returns {function} Component-side setter function for value state
  */
-export default function useToggle(initialValue:boolean = false): Array<boolean | Function> {
+export default function useToggle(initialValue:boolean = false): [boolean, Function] {
   if (
     typeof initialValue !== 'boolean' &&
     typeof initialValue !== 'function'
