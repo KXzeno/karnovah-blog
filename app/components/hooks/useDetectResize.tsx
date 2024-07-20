@@ -1,11 +1,16 @@
 import React from 'react';
 
-export default function useDetectResize(breakpoint: number = 768): object {
+const widthSymbol: symbol = Symbol.for('width');
+const breakpointCrossedSymbol: symbol = Symbol.for('breakpointCrossed');
+
+type SymboledObject = {
+  [key in typeof widthSymbol | typeof breakpointCrossedSymbol]: number | boolean;
+}
+
+export default function useDetectResize(breakpoint: number = 768): SymboledObject {
   // const h7 = Symbol.for('k');
   // const h9 = Symbol('f');
   // const h10 = Symbol.keyFor(h8);
-  const width: symbol = Symbol.for('width');
-  const breakpointCrossed: symbol = Symbol.for('breakpointCrossed');
 
   let defaultWidth: number = 0;
   if (typeof window !== 'undefined') {
@@ -24,19 +29,19 @@ export default function useDetectResize(breakpoint: number = 768): object {
 
   React.useEffect(() => {
     typeof window !== 'undefined' 
-      && window.addEventListener('resize', handleWidthResize)
+    && window.addEventListener('resize', handleWidthResize)
 
     return () => {
       window.removeEventListener('resize', handleWidthResize)
     };
   }, []);
 
-  return { 
-    [width]: screenWidth, 
-    [breakpointCrossed]: isWidth,
-    // TODO: Give a generator function that handles array of breakpoints
-    function() {
-      console.log('test');
-    }
+  return {
+    [widthSymbol]: screenWidth,
+    [breakpointCrossedSymbol]: isWidth,
   };
+  // TODO: Give a generator function that handles array of breakpoints
+  // function() {
+  //   console.log('test');
+  // }
 }
