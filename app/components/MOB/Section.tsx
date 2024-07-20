@@ -17,7 +17,7 @@ const VALID_SECTIONS: Object = {
 };
 
 interface ComponentProps {
-  id: string;
+  id?: string;
   ref: React.RefObject<HTMLElement> | any;
   children: React.ReactNode;
 }
@@ -61,12 +61,13 @@ export default React.memo(function Section({
    * @returns {string} header tags 5 or 6
    * @author Kx
    */
-  let idInserter = React.useCallback((): string => {
-    if (secRef && secRef.current) {
+  let idInserter = React.useCallback((): string | null => {
+    if (secRef.current && secRef.current.outerText) {
       return (Section === 'section') 
-        ? ''
+        ? null
         : secRef.current?.outerText.toLowerCase().split(' ').join('-');
-    } else { throw Error('No ID Found.') }
+    }
+    return null;
   }, [Section, secRef]);
 
   let widthSym: symbol = Symbol.for('width');
@@ -339,9 +340,12 @@ export default React.memo(function Section({
     })();
   }, [isMobileLandscape]);
 
+  let id = idInserter();
+
   return (
     <Section
-      id={idInserter()}
+      // Object spreading as key value pairs is exclusive to React
+      {...(id && { id })}
       ref={secRef}
       {...delegated}
     >
