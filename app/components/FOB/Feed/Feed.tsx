@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { readFile } from 'fs/promises';
 import { motion } from 'framer-motion';
-import Author from '@F/authors';
+import { Author } from '@/components';
 import './Feed.css';
  
 interface postData {
