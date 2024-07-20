@@ -77,7 +77,7 @@ export default function TableOfContents(): React.ReactNode {
       //console.log('Cleanup Successful');
     };
 
-  }, [tocList, isProxy]);
+  }, [tocList, isProxy, elemNodes]);
 
   let indexer = React.useCallback((o: object, prop: Array<object | string>) => {
     prop[1] = `${prop[1]}\n${Object.keys(o).indexOf(prop[0] as string)}`
