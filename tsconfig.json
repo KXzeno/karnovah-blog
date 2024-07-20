@@ -20,6 +20,7 @@
     "baseUrl": "app/",
     "paths": {
       "@/components": ["./components/index.ts"],
+      "@/actions": ["./components/actions/index.ts"],
       "@M/*": ["./components/MOB/*"],
       "@F/*": ["./components/FOB/*"],
       "@H/*": ["./components/hooks/*"],
