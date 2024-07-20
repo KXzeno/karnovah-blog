@@ -1,6 +1,8 @@
+import { ResolvingMetadata } from "next";
+
 export async function generateMetadata(
   { params, searchParams }: { params: { slug: string }, searchParams: object }, 
-  parent: object) {
+  parent: ResolvingMetadata) {
     // read route params
     const { slug } = params;
 
@@ -20,4 +22,4 @@ export async function generateMetadata(
     }
   }
 
-  export default function Page({ params, searchParams }) {}
+  export default function Page({ params, searchParams }: { params: object, searchParams: object }) {}
