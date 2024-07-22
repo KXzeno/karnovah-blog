@@ -1,3 +1,7 @@
 node_modules
 # Keep environment variables out of version control
 .env
+
+# DB
+prisma/db-alt.ts
+prisma/neon-db.ts
