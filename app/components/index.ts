@@ -6,6 +6,7 @@ import Icons, { Warning } from '@M/Icons';
 import TableOfContents from '@M/ToC';
 import useDetectResize from '@H/useDetectResize';
 import Author from '@F/Authors';
+import Post from '@M/Post';
 
 export {
   Home,
@@ -16,4 +17,5 @@ export {
   TableOfContents,
   useDetectResize,
   Author,
+  Post,
 }
