@@ -22,6 +22,7 @@
       "@/components": ["./components/index.ts"],
       "@/actions": ["./components/actions/index.ts"],
       "@/utils": ["../utils/index.ts"],
+      "@/prisma": ["../prisma/index.ts"],
       "@U/*": ["../utils/*"],
       "@M/*": ["./components/MOB/*"],
       "@F/*": ["./components/FOB/*"],
