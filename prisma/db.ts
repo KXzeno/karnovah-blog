@@ -6,7 +6,7 @@ import 'dotenv/config';
 */
 
 const prismaClientSingleton = () => {
-  return new PrismaClient({ datasources: { db: { url: process.env.DATABASE_URL_NEON } } });
+  return new PrismaClient({ datasources: { db: { url: process.env.DATABASE_URL } } });
 };
 
 declare const globalThis: {
