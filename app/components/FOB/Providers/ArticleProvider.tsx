@@ -53,7 +53,7 @@ export function RightMargin({ children }: {children: React.ReactNode }) {
 }
 
 // AddHeader passes compiler checks if typed 'React.ReactPortal' --> explore
-export function SubHeader({ children, AddHeader }: {children: React.ReactNode, AddHeader: React.ReactNode }) {
+export function SubHeader({ children, AddHeader }: {children: React.ReactNode, AddHeader?: React.ReactNode }) {
   return (
     <hgroup className="sub-heading">
       <div>
@@ -64,7 +64,7 @@ export function SubHeader({ children, AddHeader }: {children: React.ReactNode, A
   );
 }
 
-export function AddHeader({ children, HeaderNote }: {children: React.ReactNode, HeaderNote: React.ReactNode }) {
+export function AddHeader({ children, HeaderNote }: {children: React.ReactNode, HeaderNote?: React.ReactNode }) {
   return (
     <aside className="add-header">
       <p>{children}</p>
