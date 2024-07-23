@@ -2,10 +2,10 @@ import React from 'react';
 import { Post } from '@/components';
 
 export default function Blog({ params }: { params: { id: string }}): React.ReactNode {
+  let id = params.id.toLowerCase();
   return (
     <>
-      {console.log(params)}
-      <h1>ID: {params.id}</h1>
+      <Post param={id}/>
     </>
   );
 }
