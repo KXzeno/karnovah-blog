@@ -78,7 +78,7 @@ async function recurseData(data: Array<Section>, step?: number): Promise<React.A
 export default async function Test({ param }: { param: string }): Promise<React.AwaitedReactNode> {
   let post = await readPost(param);
   if (post === null || post === undefined) notFound();
-  // @ts-expect-error
+  // LOCAL: @ts-expect-error
   let sections: Array<Section> = post.Section;
 
   return (
@@ -87,7 +87,7 @@ export default async function Test({ param }: { param: string }): Promise<React.
         {post.title}
       </Header>
       <SubHeader>
-        {/* @ts-expect-error */}
+        {/* LOCAL: @ts-expect-error */}
         {post.description}
       </SubHeader>
       <PrimaryContent>
