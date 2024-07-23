@@ -2,7 +2,7 @@
 
 import prisma from '../../../prisma/neon-db';
 
-export async function altReadPost(title: string) {
+export async function readPost(title: string) {
   if (title && typeof title === 'string') { title = title.toLowerCase() };
 
   // Weak implementation of title match.
