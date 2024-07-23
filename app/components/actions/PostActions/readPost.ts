@@ -1,6 +1,6 @@
 'use server';
 
-import prisma from '../../../prisma/neon-db';
+import { prisma } from "@/prisma";
 
 export async function readPost(title: string) {
   if (title && typeof title === 'string') { title = title.toLowerCase() };
