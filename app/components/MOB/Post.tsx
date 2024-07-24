@@ -33,15 +33,54 @@ let jsxLinkedList = new SinglyLinkedList<React.ReactNode>();
  * @returns {ReactNode} A react node to dynamically render in RFC
  * @author Kx
  */
-function renderJSX(list: SinglyLinkedList<React.ReactNode>): React.ReactNode {
+function renderJSX(list: SinglyLinkedList<React.ReactNode>, opt?: { renderContent: boolean }): React.ReactNode {
   if (list.getSize() === 0) return;
-  let node = jsxLinkedList.removeFirst();
-  return (<>{node}{renderJSX(list)}</>);
+  let nodeArr: React.ReactNode[] = [];
+  if (opt && opt.renderContent === true) {
+    let contentNode: React.ReactNode[] = [];
+
+    // Separately handle recursion over section content
+    while (list.getHead() !== null) {
+      // Use type assertion to access react-dom props (node.type)
+      let node: React.ReactNode = list.removeFirst() as React.ReactElement;
+      let newHead: React.ReactNode = list.first() as React.ReactElement;
+      if (newHead && typeof newHead.type === 'object' || list.getTail() === null) { 
+        // Continues section head recursion
+        return contentNode;
+      }
+      contentNode.push(node);
+    }
+    return;
+  }
+
+  // Separately handle recursion over section headers
+  while (list.getHead() !== null) {
+    let node: React.ReactNode = list.removeFirst() as React.ReactElement;
+    // Dynamically wrap section tag around section children
+    let isHeader = typeof node.type === 'object';
+
+    if (!isHeader) {
+      // Calls section content recursion
+      node = <section>{renderJSX(list, { renderContent: true })}</section>;
+    }
+
+    nodeArr.push(node);
+  }
+  console.log(...nodeArr);
+  return [...nodeArr];
+
+  /** @deprecated
+   *  Ternary recursion technique creates nested section
+   *  elements, allowing zero mutation to control flow
+   *  
+   * return (!isHeader && isPrevHead) ? 
+   *   (<section>{node}{renderJSX(list, isHeader)}</section>) :
+   *   (<>{node}{renderJSX(list, isHeader)}</>); */
 }
 
 /** {@inheritDoc renderJSX}
- * Iterate over queried db data recursively and compiles to
- * React elements using globally defined linked list
+ * Iterate over queried db data recursively and compiles
+ * to React elements using globally defined linked list
  * @param {Section[]} data - Individual content queried from database
  * @param {number} step - Trace identifier for indexing data
  * @returns {ReactNode} An element with embedded function calls to render other elements
@@ -67,11 +106,13 @@ async function recurseData(data: Array<Section>, step?: number): Promise<React.A
   let headerNode = (isSubHeader === false) ?
     <Section>{header}</Section> : <Section as='subsec'>{header}</Section>;
 
-  jsxLinkedList.addLast(headerNode)
+  jsxLinkedList.addLast(headerNode);
+
   for (let i = 0; i < content.length; i++) {
     let contentNode = (<p>{content[i]}</p>);
     jsxLinkedList.addLast(contentNode);
   }
+
   return recurseData(data, step);
 }
 
