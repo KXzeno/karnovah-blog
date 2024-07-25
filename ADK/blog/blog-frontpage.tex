@@ -1,0 +1,54 @@
+\documentclass[7px]{article}
+\usepackage{preamble}
+\usepackage{adkore}
+
+\begin{document}
+\frontmatter
+{Feature}
+{Frontpage - Blog}
+{ON}
+{Backend features were implemented and now the immediate concerns are parsing the available posts and conveniently adding them to the front page.}
+
+\strategy
+% Core Decision
+{Implement a frontpage that has components featuring new, sortable posts}
+% Prospects
+{
+  \begin{enumerate}
+    \item Seamless filtration of data during query
+    \item Three layouts
+      \small{
+        \begin{itemize}[label=$\multimapdotinv$, leftmargin=1.7mm]
+          \item Card, features description
+          \item Bicolumnar grid
+          \item Tricolumn grid
+        \end{itemize}
+      }
+      \normalsize
+    \item Functional navbar
+      \small{
+        \begin{itemize}[label=$\multimapdotinv$, leftmargin=1.7mm]
+          \item By default, posts are sorted by recent
+          \item Recency also operates off sort feature
+        \end{itemize}
+      }
+    \item Dark mode saved using cookieStore
+  \end{enumerate}
+}
+% Decision Parameters
+{
+  \begin{itemize}[label=\textsection]
+  \end{itemize}
+}
+% Zero Technical Debt Concerns
+{
+  \raggedright
+  \begin{itemize}[label=\blitzb]
+    \small
+    \item Sort feature not implemented, however with queries API is not difficult
+  \end{itemize}
+  }
+
+
+  \end{document}
+
