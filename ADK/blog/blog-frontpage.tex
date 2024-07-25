@@ -16,6 +16,7 @@
 {
   \begin{enumerate}
     \item Seamless filtration of data during query
+    \item Limit number of posts on view
     \item Three layouts
       \small{
         \begin{itemize}[label=$\multimapdotinv$, leftmargin=1.7mm]
@@ -32,12 +33,22 @@
           \item Recency also operates off sort feature
         \end{itemize}
       }
+    \item Animate on scroll
     \item Dark mode saved using cookieStore
   \end{enumerate}
 }
 % Decision Parameters
 {
   \begin{itemize}[label=\textsection]
+    \item {\textbf{Animation: }}
+      \small
+      \begin{itemize}[label=$\multimapdotinv$, leftmargin=3mm]
+        \item Use intersection observer API
+          \footnotesize{
+          \item Slide from below effect (scrolling down)
+          \item Slide from above effect (scrolling up)
+          }
+      \end{itemize}
   \end{itemize}
 }
 % Zero Technical Debt Concerns
@@ -46,9 +57,19 @@
   \begin{itemize}[label=\blitzb]
     \small
     \item Sort feature not implemented, however with queries API is not difficult
+    \item Database query executes $n$ times where $n = \text{total}$\hspace{0.7mm}$\text{post}$\hspace{0.7mm}$\text{count}$
+      \footnotesize
+      \begin{itemize}[label=$\multimapinv$]
+        \item Consider dynamic, on-demand query approach
+        \item For seamless {\cap} observer API, fetch based on 3x screen length and preload on scroll
+      \begin{itemize}[label=$\multimapinv$]
+        \item Query database when intersecting 79\% of the content
+    \end{itemize}
+      \end{itemize}
+      \small
   \end{itemize}
-  }
+}
 
 
-  \end{document}
+\end{document}
 
