@@ -1,9 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { readFile } from 'fs/promises';
-import { motion } from 'framer-motion';
+import { motion, LayoutGroup } from 'framer-motion';
 import { Author } from '@/components';
 import './Feed.css';
+import { readPostAll } from '@A/PostActions';
  
 interface postData {
   title: string,
@@ -12,6 +13,7 @@ interface postData {
   author: string,
 }
 
+// TODO: Query db and sort by recent
 function FeedCard({ title, abstract, date }: postData) {
     return (
       <div
@@ -34,33 +36,64 @@ interface Home {
   children: React.ReactNode;
 }
 
-async function getFile(filePath: string) {
-    try {
-      let data = await readFile(`./app/${filePath}`, { encoding: 'utf8' });
-      let content = JSON.parse(data)
-      return content;
-    } catch (err) {
-        console.error(err);
-    }
+/** @deprecated
+ * @param {string} filePath - path, relative to root, to json
+ * @returns {object | undefined} parsed JSON on fulfilled, null on reject
+ * @author Kx
+ */
+async function getFile(filePath: string): Promise<object | null> {
+  try {
+    let data = await readFile(`./app/${filePath}`, { encoding: 'utf8' });
+    let content = JSON.parse(data)
+    return content;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+interface Post {
+  post_id: number,
+  title: string,
+  createdAt: Date,
+  published: boolean,
+  subtitle: string,
+  description: string,
+  Section: Array<Section>
+}
+
+interface Section {
+  section_id: number;
+  header: string | null;
+  postId: number;
+  subheader: string | null;
+  content: string[];
+  img: string[];
+  aside: string[];
 }
 
 export default async function Feed() {
-let post = await getFile('(blogs)/akhundelar/akhundelar.json');
-let STATIC_POSTS = await getFile('(blogs)/articles.json');
+  let data = await readPostAll({ field: 'createdAt', value: 'desc' }) as Post[];
+  let posts: Array<Post> = [];
 
+  if (data) {
+    for (let i = 0; i < data.length; i++) {
+      // let pruned: Array<> = 
+    }
+  }
   return (
-      <>
-        <div className="grid grid-cols-[77%_max(23%)] size-full">
-          <div className="feed-container h-screen">
-            { /* Map fetched data */  }
-            <FeedCard {...STATIC_POSTS}/>
-          </div>
-          <div className="right-margin">
-          </div>
-        </div>
-        <div className="grid grid-cols-subgrid col-span-2 text-center">
-        </div>
-      </>
-    //</form>
+    <>
+      <main className='home-page'>
+        {data && data.map((post: Post) => {
+          return (
+            <section className='post-ctr' key={post.title}>
+              <h1 className='post-title'>{post.title}</h1>
+              <p className='post-desc'>{post.description}</p>
+              <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
+            </section>
+          );
+        })}
+      </main>
+    </>
   );
 }
