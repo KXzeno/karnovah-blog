@@ -45,9 +45,58 @@
       \begin{itemize}[label=$\multimapdotinv$, leftmargin=3mm]
         \item Use intersection observer API
           \footnotesize{
-          \item Slide from below effect (scrolling down)
-          \item Slide from above effect (scrolling up)
+            \begin{itemize}[label=$\multimapinv$]
+              \item Slide from below effect (scrolling down)
+              \item Slide from above effect (scrolling up)
+            \end{itemize}
           }
+      \end{itemize}
+    \item {\textbf{Querying: }}
+      \small
+      \begin{itemize}[label=$\multimapdotinv$, leftmargin=3mm]
+        \item Add optional parameter in server action
+          \footnotesize{
+            \begin{itemize}[label=$\multimapinv$]
+              \item Introduce optional filtering in query
+              \item Encapsulate abstraction in API (RFC)
+            \end{itemize}
+          }
+        \item Use native array map method to display posts
+      \end{itemize}
+    \item {\textbf{Navbar: }}
+      \small
+      \begin{itemize}[label=$\multimapdotinv$, leftmargin=3mm]
+        \item Button: \textbf{Recent}
+          \footnotesize{
+            \begin{itemize}[label=$\multimapinv$]
+              \item Due to sort by recency, this is useless
+              \item Transform to: \textsl{Choice}, writer's choice for public read
+                \begin{itemize}
+                  \item Set specific styles if target blog is in view
+                \end{itemize}
+            \end{itemize}
+          }
+          \small
+        \item Button: \textbf{Posts}
+          \footnotesize{
+            \begin{itemize}[label=$\multimapinv$]
+              \item Transform to: \textbf{Categories}
+                \begin{itemize}
+                  \item Shows a succinct list of categories and post count
+                  \item Use a separate route which nests category routes spreading relevant pages
+                \end{itemize}
+            \end{itemize}
+          }
+          \small
+        \item Button: \textbf{About}
+          \footnotesize{
+            \begin{itemize}[label=$\multimapinv$]
+              \item Uses own route
+              \item Ambiguously define goals and intent
+              \item Links to relevant platforms
+            \end{itemize}
+          }
+          \small
       \end{itemize}
   \end{itemize}
 }
@@ -62,14 +111,21 @@
       \begin{itemize}[label=$\multimapinv$]
         \item Consider dynamic, on-demand query approach
         \item For seamless {\cap} observer API, fetch based on 3x screen length and preload on scroll
-      \begin{itemize}[label=$\multimapinv$]
-        \item Query database when intersecting 79\% of the content
-    \end{itemize}
+          \begin{itemize}[label=$\multimapinv$]
+            \item Query database when intersecting 79\% of the content
+          \end{itemize}
       \end{itemize}
       \small
   \end{itemize}
 }
 
+\deploy
+%Results and conflicts
+{
+  \begin{enumerate}
+    \item Removed responsibility of layout grids
+  \end{enumerate}
+}
 
 \end{document}
 
