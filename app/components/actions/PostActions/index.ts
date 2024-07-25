@@ -1,2 +1,2 @@
-// export { default } from './readPost';
-export * from './readPost';
+export { readPost } from './readPost';
+export { readPostAll } from './readPostAll';
