@@ -14,9 +14,9 @@ export async function readPostAll(params?: SortParams) {
         orderBy: {
           [params.field]: params.value
         },
-        include: {
-          Section: true,
-        },
+        // include: {
+        //   Section: true,
+        // },
       });
       return db;
     } catch (error) {
