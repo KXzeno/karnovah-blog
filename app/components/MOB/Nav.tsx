@@ -33,9 +33,12 @@ export default function Nav() {
     if (target && target.outerText) {
       let { outerText: value } = target;
     }
-    if (value) {
-      return value === '▼' ? toggleSubMenu() : router.push(`${(value as string).toLowerCase()}`);
-    }
+    console.log(value);
+    /** @deprecated
+     * if (value) {
+     *   return value === '▼' ? toggleSubMenu() : router.push(`${(value as string).toLowerCase()}`);
+     * }
+     */
   }
 
   /**
@@ -53,12 +56,12 @@ export default function Nav() {
   let LINKS = [
     {
       slug: 'recent',
-      label: 'Recent',
+      label: 'Choice',
       href: '/recent'
     },
     {
       slug: 'posts',
-      label: 'Posts',
+      label: 'Categories',
       href: '/posts'
     },
     {
@@ -82,40 +85,22 @@ export default function Nav() {
                 zIndex: hoveredNavItem === slug ? 1 : 2,
               }}
               className="nav-btn"
+              onClick={(e) => {
+                e.preventDefault();
+                let element = (e.target as HTMLElement);
+                let inner: string = element.outerText;
+                console.log(element.outerHTML);
+              }}
             >
               {label}
               {hoveredNavItem === slug && (
                 <motion.div
-                  className="absolute inset-0 -mx-[0.31rem] shadow-lg rounded-xl shadow-green-500/50 shadow-[#A70AFF]"
+                  className="absolute inset-0 shadow-lg rounded-xl shadow-green-500/50 shadow-[#A70AFF]"
                   layoutId={id}
                 />
               )}
             </Link>
           ))}
-          {/*
-          <Link href="/recent" onClick={handleRoute} className="nav-btn">
-            Recent
-          </Link>
-          <Link 
-            href="/posts"
-            type="button" 
-            onClick={handleRoute} 
-            className="relative nav-btn-posts pointer-events-auto">
-            <p className="nav-btn inline">
-              Posts
-            </p>
-            <span 
-              onClick={handleDefault}
-              dir="rtl"
-              id="sub-menu"
-            >
-              ▼
-            </span>
-          </Link>
-          <Link href="/about" type="button" onClick={handleRoute} className="nav-btn">
-            About
-          </Link>
-          */}
         </LayoutGroup>
         <div className={`${dollarSigns.length !== 0 ? 'visible' : 'hidden'} absolute right-8 h-16 w-16`}>
           <LayoutGroup>
