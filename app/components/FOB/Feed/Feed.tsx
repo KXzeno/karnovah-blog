@@ -63,7 +63,7 @@ interface Post {
   description: string;
   sections: Array<Section>;
   categories: Category[];
-  choice: number,
+  choice: number | null,
 }
 
 interface Section {
