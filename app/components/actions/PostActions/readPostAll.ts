@@ -15,7 +15,7 @@ export async function readPostAll(params?: SortParams) {
           [params.field]: params.value
         },
         // include: {
-        //   Section: true,
+        //   sections: true,
         // },
       });
       return db;
@@ -25,7 +25,7 @@ export async function readPostAll(params?: SortParams) {
       try {
         let db = await prisma.post.findMany({ 
           include: {
-            Section: true,
+            sections: true,
           },
         });
         return db;

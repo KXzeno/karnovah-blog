@@ -27,7 +27,7 @@ export async function readPost(title: string) {
   try {
     let db = await prisma.post.findUnique({ 
       include: {
-        Section: true,
+        sections: true,
       },
       where: {
         title: title
