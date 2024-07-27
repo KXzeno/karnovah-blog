@@ -116,7 +116,7 @@ async function recurseData(data: Array<Section>, step?: number): Promise<React.A
   return recurseData(data, step);
 }
 
-export default async function Test({ param }: { param: string }): Promise<React.AwaitedReactNode> {
+export default async function Post({ param }: { param: string }): Promise<React.AwaitedReactNode> {
   let post = await readPost(param);
   if (post === null || post === undefined) notFound();
   // LOCAL: @ts-expect-error
