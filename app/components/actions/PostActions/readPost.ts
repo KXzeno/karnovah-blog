@@ -61,7 +61,7 @@ export async function readPost(title: string) {
         title: title
       }
     });
-    return db as Post;
+    return db;
   } catch (error) {
     console.error(error);
   }
