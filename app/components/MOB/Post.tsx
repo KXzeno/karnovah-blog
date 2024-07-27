@@ -120,7 +120,7 @@ export default async function Test({ param }: { param: string }): Promise<React.
   let post = await readPost(param);
   if (post === null || post === undefined) notFound();
   // LOCAL: @ts-expect-error
-  let sections: Array<Section> = post.Section;
+  let sections: Array<Section> = post.sections;
 
   return (
     <ArticleProvider>
