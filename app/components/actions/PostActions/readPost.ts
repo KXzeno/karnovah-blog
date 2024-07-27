@@ -2,6 +2,34 @@
 
 import { prisma } from "@/prisma";
 
+interface Post {
+  post_id: number;
+  title: string;
+  createdAt: Date;
+  published: boolean;
+  subtitle: string;
+  description: string;
+  sections: Array<Section>;
+  categories: Category[];
+  choice: number | null,
+}
+
+interface Section {
+  section_id: number;
+  header: string | null;
+  postId: number;
+  subheader: string | null;
+  content: string[];
+  img: string[];
+  aside: string[];
+}
+
+interface Category {
+  category_id: number;
+  name: string;
+  posts: Post[]
+}
+
 export async function readPost(title: string) {
   if (title && typeof title === 'string') { title = title.toLowerCase() };
 
@@ -33,7 +61,7 @@ export async function readPost(title: string) {
         title: title
       }
     });
-    return db;
+    return db as Post;
   } catch (error) {
     console.error(error);
   }
