@@ -52,14 +52,18 @@ async function getFile(filePath: string): Promise<object | null> {
   }
 }
 
+// TODO: Filter on query to avoid unnecessary fields
+
 interface Post {
-  post_id: number,
-  title: string,
-  createdAt: Date,
-  published: boolean,
-  subtitle: string,
-  description: string,
-  Section: Array<Section>
+  post_id: number;
+  title: string;
+  createdAt: Date;
+  published: boolean;
+  subtitle: string;
+  description: string;
+  sections: Array<Section>;
+  categories: Category[];
+  choice: number,
 }
 
 interface Section {
@@ -70,6 +74,12 @@ interface Section {
   content: string[];
   img: string[];
   aside: string[];
+}
+
+interface Category {
+  category_id: number;
+  name: string;
+  posts: Post[];
 }
 
 export default async function Feed() {
