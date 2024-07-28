@@ -24,6 +24,15 @@ interface Section {
   aside: string[];
 }
 
+/**
+ * O(n) execution for mapping queried Post data to elements,
+ * each iteration handles an array property using flatmap which 
+ * potentially performs up to O(n(log(n)))
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap}
+ * @param {Section[]} sections - property descriptor of queried data
+ * @returns {React.ReactNode} A spreaded array of React nodes
+ * @author Kx
+ */
 function project(sections: Section[]): React.ReactNode {
   let nodeG: React.ReactNode[] = [];
   for (let i = 0; i < sections.length; i++) {
