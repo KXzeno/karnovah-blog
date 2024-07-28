@@ -34,15 +34,30 @@ interface Section {
  * @author Kx
  */
 function project(sections: Section[]): React.ReactNode {
+  // Initialize return val
   let nodeG: React.ReactNode[] = [];
+  // Iterate through section body
   for (let i = 0; i < sections.length; i++) {
+    // Well-define 'header' using nullish coalescence  
     let hdr = sections[i].header ?? sections[i].subheader;
+    // If header, push as RFC; if subheader, push as RFC with prop
     (hdr === sections[i].header) ?
       nodeG.push(<Section>{hdr}</Section>) :
       nodeG.push(<Section as='subsec'>{hdr}</Section>);
-    let contents = sections[i].content.flatMap((par) => (<p>{par}</p>));
-    nodeG.push(<section>{[...contents]}</section>);
+    // Flatten all paragraphs and map transform each to React nodes
+    let contents = sections[i].content.flatMap((par, i) => (<p key={i}>{par}</p>));
+    nodeG.push(<section key={hdr}>{[...contents]}</section>);
   }
+  /** Return spread of React node array,
+   * @privateRemarks
+   * I'd venture that this works due to the nature of expression-only inputs within the children of the
+   * React node. Since expressions produce a value, the virtual DOM is left with only one concern: organizing
+   * the real DOM. Spreading is an expression that its elements, if from an array literal, are placed to 
+   * "where they are expected," and as form the totaltypescript article, the React node expects anything renderable, 
+   * including React elements and nodes. Primitives also work possibly due to "1 evaluates to 1" logic.
+   * @see {@link https://www.totaltypescript.com/jsx-element-vs-react-reactnode#reactreactnode}
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax}
+   */
   return [...nodeG];
 }
 
