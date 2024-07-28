@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "rectify": "javac utils/RectifySchema.java && java utils/RectifySchema.java && prisma format"
+    "rectify": "javac utils/RectifySchema.java && java utils/RectifySchema && prisma format"
   },
   "dependencies": {
     "@prisma/client": "^5.17.0",
