@@ -1,12 +1,13 @@
 {
   "name": "karnovah-blog",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "rectify": "javac utils/RectifySchema.java && java utils/RectifySchema.java && prisma format"
   },
   "dependencies": {
     "@prisma/client": "^5.17.0",
