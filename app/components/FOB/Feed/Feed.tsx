@@ -4,24 +4,6 @@ import './Feed.css';
 import { readPostAll, getInitialId } from '@A/PostActions';
 import useOnscreen from '@H/useOnscreen';
 
-/** @deprecated
- * @param {string} filePath - path, relative to root, to json
- * @returns {object | undefined} parsed JSON on fulfilled, null on reject
- * @author Kx
- */
-async function getFile(filePath: string): Promise<object | null> {
-  try {
-    let data = await readFile(`./app/${filePath}`, { encoding: 'utf8' });
-    let content = JSON.parse(data)
-    return content;
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
-}
-
-// TODO: Filter on query to avoid unnecessary fields
-
 interface Post {
   post_id: number;
   title: string;
