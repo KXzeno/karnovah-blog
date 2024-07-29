@@ -38,8 +38,8 @@
 
 🗡 Add functionality to navigation bar
 
-🗡 Realize [Karnovah](https://karnovah.com)
+🗡 Realize [Karnovah](https://github.com/KXzeno/Karnovah)
 
 ---
 
-<p align="center">CNAME record to apex: <a href="https://karovah.com/">Karnovah</a></p>
+<p align="center">CNAME record to apex: <a href="https://karnovah.com/">Karnovah</a></p>
