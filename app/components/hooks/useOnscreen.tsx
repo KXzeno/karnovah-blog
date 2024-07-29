@@ -1,67 +1,34 @@
 import React from 'react';
 
-/**
- * Custom hook to observe element visibility on current viewport
- * @returns {state | ref} Destructurable variables for element visibility and reference
- */
-export default function useOnscreen(): [boolean, React.MutableRefObject<HTMLElement | undefined>] { // Can instead use elementRef as prop and export only isOnscreen
-  const [isOnscreen, setIsOnscreen] = React.useState(false);
-  const elementRef = React.useRef();
 
-  //TODO: Use rect to automate intersection of root/element
+interface Post {
+  post_id: number;
+  title: string;
+  createdAt: Date;
+  published: boolean;
+  subtitle: string;
+  description: string;
+  choice: number | null;
+}
+
+export default function useOnscreen(elementRef: React.MutableRefObject<HTMLElement | null>, data: Post[]) {
+  const [isOnscreen, setIsOnscreen] = React.useState(false);
+
   React.useEffect(() => {
+    console.log(elementRef.current);
     if (!elementRef.current) {
       return;
     }
 
-    let [rect, sib] = 
-      [(elementRef.current as HTMLElement).getBoundingClientRect(), 
-      (elementRef.current as HTMLElement).nextElementSibling];
-
-      if (!sib) {
-        return;
-      }
-
-    let sibTag = sib ? sib.tagName : null;
-    let sibRect = sibTag !== null ? sib.getBoundingClientRect() : 0;
-
-    let totalHeight = sibRect !== 0 
-      ? rect.height + (sibRect as DOMRect).height
-      : rect.height
-
-
-//    let xHeight = (sibTag === 'SECTION')
- //     ? sib
-
     const observer = new IntersectionObserver((entries) => {
       const [entry] = entries;
       setIsOnscreen(entry.isIntersecting);
-      // console.log(entry.rootBounds, entry.boundingClientRect)
-    }, { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1], rootMargin: `${0}px 0px` });
-    let nextElement = (sib && sib.tagName === 'SECTION') 
-      ? sib : elementRef.current;
-
-    //console.log(nextElement);
-    observer.observe(nextElement);
+    });
+    const currentRef = elementRef.current;
+    observer.observe(currentRef);
     return () => {
       observer.disconnect();
     };
-  }, [elementRef]);
-  return [isOnscreen, elementRef]; // Using -{ }- disables destructuring
+  }, [elementRef.current, data]);
+  return isOnscreen; 
 }
-
-// export default function useOnscreen({ elementRef }) {
-//   const [isOnscreen, setIsOnscreen] = React.useState(false);
-// 
-//   React.useEffect(() => {
-//     const observer = new IntersectionObserver((entries) => {
-//       const [entry] = entries;
-//       setIsOnscreen(entry.isIntersecting);
-//     });
-//     observer.observe(elementRef.current);
-//     return () => {
-//       observer.disconnect();
-//     };
-//   }, [elementRef]);
-//   return isOnscreen; 
-// }
