@@ -2,15 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-    body {
-      @apply bg-gradient-to-br from-[#1F2022] from-20% via-[#2E3033] via-[83.7%] to-[#1F2022] to-100% max-md:w-screen max-[368px]:w-max;
-    }
-}
-
 @layer utilities {
   .home-page {
-    @apply relative flex flex-col min-h-full justify-items-center max-sm:gap-[1.7rem] sm:gap-[3rem] translate-y-8;
+    @apply relative flex flex-col min-h-full justify-items-center max-sm:gap-[1.7rem] sm:gap-[3rem] translate-y-8 mb-[11rem];
   }
 
   .post-ctr {

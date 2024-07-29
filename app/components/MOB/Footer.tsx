@@ -5,7 +5,7 @@ export default function Footer(): React.ReactNode {
   const currYear: string = new Date().toLocaleString('en-US', { year: 'numeric' });
 
   return (
-    <footer className="flex flex-row basis-1/6 relative place-items-center h-32 bg-gradient-to-b from-violet-950 to-indigo-900 basis mt-[2.3rem] text-[#3f7300] translate-y-16">
+    <footer className="flex flex-row basis-1/6 relative place-items-center h-32 bg-gradient-to-b from-violet-950 to-indigo-900 basis text-[#3f7300]">
       <div className="order-0 size-full text-center py-2 text-[0.77rem]">
         <div className="flex size-full place-items-center">
           <p className="inline-block grow">Copyright <span className="text-[1rem] align-middle">©</span> {currYear} Karnovah </p>
