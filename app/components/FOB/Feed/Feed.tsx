@@ -14,14 +14,14 @@ interface Post {
   choice: number | null;
 }
 
-export default function Feed() {
+export default React.memo(function Feed() {
   let [data, setData] = React.useState<Post[]>([]);
   let [cursor, setCursor] = React.useState<number | undefined>(undefined);
 
   let termRef = React.useRef<HTMLElement | null>(null);
   let isVisible = useOnscreen(termRef, data);
 
-  let loadPosts = async () => {
+  let loadPosts = React.useCallback(async () => {
     if (cursor === undefined) {
       try {
         let initialId = await getInitialId();
@@ -46,16 +46,12 @@ export default function Feed() {
     } catch (x) {
       console.error(x);
     }
-  }
+  }, [isVisible]);
 
   React.useEffect(() => {
     if (!(data.length > 0)) {
       loadPosts();
     }
-
-  }, []);
-
-  React.useEffect(() => {
     if (isVisible) {
       loadPosts();
     }
@@ -86,4 +82,4 @@ export default function Feed() {
       </main>
     </>
   );
-}
+});
