@@ -40,7 +40,7 @@
 
 @layer utilities {
   main.body-layout {
-    @apply md:grid relative grid-cols-[minmax(60%,70%),minmax(30%,40%)] text-[11px] mt-[3rem] place-items-center gap-[3rem] w-max mx-auto;
+    @apply md:grid relative grid-cols-[minmax(60%,70%),minmax(0%,30%)] text-[11px] mt-[3rem] place-items-center gap-[3rem] w-max mx-auto md:translate-x-[5rem];
   }
 
   .body-layout > *:nth-child(1) {
