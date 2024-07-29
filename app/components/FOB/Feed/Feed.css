@@ -10,7 +10,7 @@
 
 @layer utilities {
   .home-page {
-    @apply relative flex flex-col min-h-screen justify-items-center max-sm:gap-[1.7rem] sm:gap-[3rem] translate-y-8;
+    @apply relative flex flex-col min-h-full justify-items-center max-sm:gap-[1.7rem] sm:gap-[3rem] translate-y-8;
   }
 
   .post-ctr {
