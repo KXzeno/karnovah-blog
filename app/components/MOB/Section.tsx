@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 
-import useOnscreen from '@H/useOnscreen';
+import useAltOnscreen from '@H/useAltOnscreen';
 import useDetectResize from '@H/useDetectResize';
 
 const h7: symbol = Symbol.for('k');
@@ -37,7 +37,7 @@ export default React.memo(function Section({
 
   let [elementStack, setElementStack] = React.useState<Node[]>([]);
 
-  let [onScreen, secRef] = useOnscreen();
+  let [onScreen, secRef] = useAltOnscreen();
 
   let [isListening, setIsListening] = React.useState(false);
 
