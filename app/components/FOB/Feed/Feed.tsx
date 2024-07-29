@@ -1,40 +1,8 @@
+'use client';
 import React from 'react';
-import Link from 'next/link';
-import { readFile } from 'fs/promises';
-import { motion, LayoutGroup } from 'framer-motion';
-import { Author } from '@/components';
 import './Feed.css';
-import { readPostAll } from '@A/PostActions';
- 
-interface postData {
-  title: string,
-  abstract: string,
-  date: string,
-  author: string,
-}
-
-// TODO: Query db and sort by recent
-function FeedCard({ title, abstract, date }: postData) {
-    return (
-      <div
-        id="feed-ctr"
-      >
-        <div id="hero-title">
-          <Link href={`./posts/${title}`}>{title}</Link>
-        </div>
-        <div id="hero-abstract">
-          {abstract}
-        </div>
-        <Author user='kx' date={date}/>
-        <div id="hero-author">
-        </div>
-      </div>
-    );
-  }
-
-interface Home {
-  children: React.ReactNode;
-}
+import { readPostAll, getInitialId } from '@A/PostActions';
+import useOnscreen from '@H/useOnscreen';
 
 /** @deprecated
  * @param {string} filePath - path, relative to root, to json
@@ -61,47 +29,77 @@ interface Post {
   published: boolean;
   subtitle: string;
   description: string;
-  sections: Array<Section>;
-  categories: Category[];
-  choice: number | null,
+  choice: number | null;
 }
 
-interface Section {
-  section_id: number;
-  header: string | null;
-  postId: number;
-  subheader: string | null;
-  content: string[];
-  img: string[];
-  aside: string[];
-}
+export default function Feed() {
+  let [data, setData] = React.useState<Post[]>([]);
+  let [cursor, setCursor] = React.useState<number | undefined>(undefined);
 
-interface Category {
-  category_id: number;
-  name: string;
-  posts: Post[];
-}
+  let termRef = React.useRef<HTMLElement | null>(null);
+  let isVisible = useOnscreen(termRef, data);
 
-export default async function Feed() {
-  let data = await readPostAll({ field: 'createdAt', value: 'desc' }) as Post[];
-  let posts: Array<Post> = [];
+  let loadPosts = async () => {
+    if (cursor === undefined) {
+      try {
+        let initialId = await getInitialId();
+        if (initialId !== undefined) {
+          setCursor(initialId - 1);
+        }
+      } catch (x) {
+        console.error(`Unable to find initial post. ${x}`);
+      }
+    }
+    try {
+      let newData = await readPostAll({
+        field: 'createdAt',
+        value: 'desc',
+        cursor: cursor,
+      });
 
-  if (data) {
-    for (let i = 0; i < data.length; i++) {
-      // let pruned: Array<> = 
+      if (newData && newData.length > 0) {
+        setData((prevData) => [...prevData, ...newData]);
+        setCursor(newData[newData.length - 1].post_id);
+      }
+    } catch (x) {
+      console.error(x);
     }
   }
+
+  React.useEffect(() => {
+    if (!(data.length > 0)) {
+      loadPosts();
+    }
+
+  }, []);
+
+  React.useEffect(() => {
+    if (isVisible) {
+      loadPosts();
+    }
+  }, [isVisible]);
+
   return (
     <>
       <main className='home-page'>
-        {data && data.map((post: Post) => {
-          return (
-            <section className='post-ctr' key={post.title}>
-              <h1 className='post-title'>{post.title}</h1>
-              <p className='post-desc'>{post.description}</p>
-              <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
-            </section>
-          );
+        {data && data.map((post: any, index: number) => {
+          if (index === data.length - 1) {
+            return (
+              <section ref={termRef} className='post-ctr' key={post.title}>
+                <h1 className='post-title'>{post.title}</h1>
+                <p className='post-desc'>{post.description}</p>
+                <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
+              </section>
+            );
+          } else {
+            return (
+              <section className='post-ctr' key={post.title}>
+                <h1 className='post-title'>{post.title}</h1>
+                <p className='post-desc'>{post.description}</p>
+                <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
+              </section>
+            );
+          }
         })}
       </main>
     </>
