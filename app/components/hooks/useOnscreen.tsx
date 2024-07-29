@@ -11,7 +11,7 @@ interface Post {
   choice: number | null;
 }
 
-export default function useOnscreen(elementRef: React.MutableRefObject<HTMLElement | null>, data: Post[]) {
+export default function useOnscreen(elementRef: React.MutableRefObject<HTMLElement | null>, data?: Post[]) {
   const [isOnscreen, setIsOnscreen] = React.useState(false);
 
   React.useEffect(() => {
