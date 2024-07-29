@@ -1,0 +1,94 @@
+\documentclass[7px]{article}
+\usepackage{preamble}
+\usepackage{adkore}
+
+\begin{document}
+\frontmatter
+{Build}
+{Deploying Remotely}
+{\textcolor{green}{X}}
+{Pulling from a database using Prisma CLI on another repo reads from the database, not migrations. This implies that foreign relational keys will occupy the name of its Model, e.g., \texttt{post.sections} becomes \texttt{post.Section.}}
+
+\strategy
+% Core Decision
+{Bypass casing flaw on remote deployment.}
+% Prospects
+{
+  \begin{enumerate}
+    \item Control behaviors on build time
+    \item Produce a script modifying the schema on deploy
+  \end{enumerate}
+}
+% Decision Parameters
+{
+  \begin{itemize}[label=\textsection]
+    \item {\textbf{Using Prisma}}
+      \small
+      \begin{itemize}[label=$\multimapdotinv$, leftmargin=3mm]
+        \item Create an sql file which alters foreign keys
+          \footnotesize{
+            \begin{itemize}[label=$\multimapinv$]
+              \item Before remote generation, use \texttt{prisma execute --file <file> --schema <schema>}
+            \end{itemize}
+          }
+        \item Map fields using \texttt{@map, @@map}
+      \end{itemize}
+    \item {\textbf{Using Java or NodeJs }}
+      \small
+      \begin{itemize}[label=$\multimapdotinv$, leftmargin=3mm]
+        \item Create a class or function which is called on build time
+          \footnotesize{
+            \begin{itemize}[label=$\multimapinv$]
+              \item Use \texttt{prisma format} after the changes
+              \item Create an npm script that compiles, runs and formats
+            \end{itemize}
+          }
+      \end{itemize}
+      \small
+  \end{itemize}
+}
+% Zero Technical Debt Concerns
+{
+  \raggedright
+  \begin{itemize}[label=\blitzb]
+    \item The unexpected casing behavior demands revisits to the script if the schema were to change
+    \item If other alternatives are found, the build command pipeline must be reverted and the script deleted
+      \small
+  \end{itemize}
+}
+
+\deploy
+%Results and conflicts
+{
+  \begin{enumerate}
+    \item Mapped fields and models
+    \item Created \texttt{rectify-schema.sql}
+      \begin{itemize}
+        \item Altered "constraint" and foreign ids
+        \item Java utility class \texttt{RectifySchema} was made
+      \end{itemize}
+  \end{enumerate}
+  \normalsize
+}
+{
+  \begin{enumerate}
+    \small
+    \item Relational mapping of models requires back-end gynamstics to communicate with real db; out-of-sync
+      \begin{itemize}[label=$\multimapinv$]
+        \item Prisma execute is ignored by shadow database and updates real db
+        \item Relational mapping of relational values is prohibited 
+        \item[$\ddag$] \textcolor{red}{\footnotesize{Aborted}}
+      \end{itemize}
+    \item Java and JavaScript is capable of altering the schema pre-generation
+      \begin{itemize}[label=$\multimapinv$]
+        \item Used Java 11 methods; Netlify is at 8 by default
+        \item Refactored to Java 8 
+        \item Made npm script \texttt{rectify} to make schema changes post-pull preceding a format
+        \item[$\ddag$] \textcolor{green}{\footnotesize{Successful}}
+      \end{itemize}
+  \end{enumerate}
+}
+
+\end{document}
+
+
