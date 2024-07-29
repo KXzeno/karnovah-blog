@@ -15,7 +15,6 @@ export default function useOnscreen(elementRef: React.MutableRefObject<HTMLEleme
   const [isOnscreen, setIsOnscreen] = React.useState(false);
 
   React.useEffect(() => {
-    console.log(elementRef.current);
     if (!elementRef.current) {
       return;
     }
