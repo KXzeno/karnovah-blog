@@ -1,2 +1,2 @@
 export { readPost } from './readPost';
-export { readPostAll } from './readPostAll';
+export { readPostAll, getInitialId } from './readPostAll';
