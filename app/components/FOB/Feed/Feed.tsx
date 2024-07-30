@@ -20,84 +20,107 @@ interface StateDefaults {
   dispatchCursor: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
-async function getPosts({
-  dispatchData,
-  cursor,
-  dispatchCursor, 
-}: StateDefaults) {
-  if (cursor === undefined) {
-    try {
-      let initialId = await getInitialId();
-      if (initialId !== undefined) {
-        dispatchCursor(initialId - 1);
+function reducer(state: any, action: any) {
+  switch (action.type) {
+    case 'posts': {
+      // if (!action.payload.posts) {
+      //   throw new Error('No payload parsed.');
+      // }
+      console.log(action.payload);
+      return {
+        ...state,
+        posts: [...state.posts, ...action.payload.posts],
+        cursor: state.posts[state.posts.length - 1].post_id,
       }
-    } catch (x) {
-      console.error(`Unable to find initial post. ${x}`);
+    }
+    // Individual cursor setting
+    case 'cursor': {
+      if (!state || !state.posts || state.posts.length <= 0) throw new Error('No initial ID found.');
+      return {
+        cursor: state.posts[state.posts.length - 1].post_id,
+      }
     }
   }
-  try {
+}
+interface Post {
+  post_id: number;
+  title: string;
+  createdAt: Date;
+  published: boolean;
+  subtitle: string;
+  description: string;
+  choice: number | null;
+}
+
+interface FeedProps {
+  initialData: Post[];
+  initialCursor: number;
+}
+
+export default React.memo(function Feed({ initialData, initialCursor }: FeedProps) {
+  let [state, dispatch] = React.useReducer(reducer, { posts: [...initialData], cursor: initialCursor });
+
+  let termRef = React.useRef<HTMLElement | null>(null);
+  let isVisible = useOnscreen(termRef, state && state.posts);
+
+  async function getPosts(cursor: number) {
     let newData = await readPostAll({
       field: 'createdAt',
       value: 'desc',
       cursor: cursor,
     });
 
-    if (newData && newData.length > 0) {
-      dispatchData((prevData) => [...prevData, ...newData]);
-      dispatchCursor(newData[newData.length - 1].post_id);
+    if (typeof newData === 'undefined') {
+      throw new Error('No posts left.');
     }
-  } catch (x) {
-    console.error(x);
+
+    dispatch({ 
+      type: 'posts',
+      payload: {
+        posts: newData,
+      }
+    });
   }
-}
-
-export default React.memo(function Feed() {
-  let [data, setData] = React.useState<Post[]>([]);
-  let [cursor, setCursor] = React.useState<number | undefined>(undefined);
-
-  let termRef = React.useRef<HTMLElement | null>(null);
-  let isVisible = useOnscreen(termRef, data);
-
-  let loadPosts = React.useCallback(() => {
-    getPosts({ cursor, dispatchData: setData, dispatchCursor: setCursor })
-  }, [data, cursor]);
 
   React.useEffect(() => {
-    if (!(data.length > 0)) {
-      loadPosts();
+    // If server side rendering failed, load on client
+    if (state && state.posts && state.posts.length === 0) {
+      getPosts(state.cursor);
     }
-    if (isVisible) {
-      loadPosts();
+
+    // Cursor pagination
+    if (isVisible && state && state.posts && state.posts.length > 0) {
+      getPosts(state.cursor);
     }
   }, [isVisible]);
 
   let compiledRFC = React.useMemo(() => {
-    return (<main className='home-page'>
-      {data && data.map((post: any, index: number) => {
-        if (index === data.length - 1) {
-          return (
-            <section ref={termRef} className='post-ctr' key={post.title}>
-              <h1 className='post-title'>{post.title}</h1>
-              <p className='post-desc'>{post.description}</p>
-              <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
-            </section>
-          );
-        } else {
-          return (
-            <section className='post-ctr' key={post.title}>
-              <h1 className='post-title'>{post.title}</h1>
-              <p className='post-desc'>{post.description}</p>
-              <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
-            </section>
-          );
-        }
-      })}
-    </main>)
-  }, [data]);
+    return (
+      <main className='home-page'>
+        {state && state.posts && state.posts.map((post: any, index: number) => {
+          if (index === state.posts.length - 1) {
+            return (
+              <section ref={termRef} className='post-ctr' key={post.title}>
+                <h1 className='post-title'>{post.title}</h1>
+                <p className='post-desc'>{post.description}</p>
+                <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
+              </section>
+            );
+          } else {
+            return (
+              <section className='post-ctr' key={post.title}>
+                <h1 className='post-title'>{post.title}</h1>
+                <p className='post-desc'>{post.description}</p>
+                <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
+              </section>
+            );
+          }
+        })}
+      </main>)
+  }, [state]);
 
   return (
     <>
       {compiledRFC}
     </>
-  );
-});
+  )});
