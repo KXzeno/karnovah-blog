@@ -1,7 +1,7 @@
 import React from 'react';
 import Nav from '@M/Nav';
 import Footer from '@M/Footer';
-import Feed from '@F/Feed';
+import Landing from '@M/Landing';
 
 interface HomeProps {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ export default function Home(
   return (
     <React.Fragment>
       <Nav />
-      <Feed />
+      <Landing />
       <Footer />
     </React.Fragment>
   );
