@@ -57,29 +57,33 @@ export default React.memo(function Feed() {
     }
   }, [isVisible]);
 
+  let compiledRFC = React.useMemo(() => {
+    return (<main className='home-page'>
+      {data && data.map((post: any, index: number) => {
+        if (index === data.length - 1) {
+          return (
+            <section ref={termRef} className='post-ctr' key={post.title}>
+              <h1 className='post-title'>{post.title}</h1>
+              <p className='post-desc'>{post.description}</p>
+              <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
+            </section>
+          );
+        } else {
+          return (
+            <section className='post-ctr' key={post.title}>
+              <h1 className='post-title'>{post.title}</h1>
+              <p className='post-desc'>{post.description}</p>
+              <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
+            </section>
+          );
+        }
+      })}
+    </main>)
+  }, [data]);
+
   return (
     <>
-      <main className='home-page'>
-        {data && data.map((post: any, index: number) => {
-          if (index === data.length - 1) {
-            return (
-              <section ref={termRef} className='post-ctr' key={post.title}>
-                <h1 className='post-title'>{post.title}</h1>
-                <p className='post-desc'>{post.description}</p>
-                <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
-              </section>
-            );
-          } else {
-            return (
-              <section className='post-ctr' key={post.title}>
-                <h1 className='post-title'>{post.title}</h1>
-                <p className='post-desc'>{post.description}</p>
-                <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
-              </section>
-            );
-          }
-        })}
-      </main>
+      {compiledRFC}
     </>
   );
 });
