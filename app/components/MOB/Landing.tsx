@@ -16,7 +16,7 @@ interface Post {
 // DO PAGINATION ASYNCHRONOUSLY IN CLIENT COMPONENT
 
 export default async function Landing() {
-  let initialData: Post[] | undefined = await readPostAll({ field: 'createdAt', value: 'desc' });
+  let initialData: Post[] | undefined = await readPostAll({ orderBy: { createdAt: 'desc' } });
 
   if (!initialData) {
     throw new Error('Query for posts failed.');
