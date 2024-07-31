@@ -141,7 +141,7 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
         {state.posts.map((post: any, index: number) => {
           if (index === state.posts.length - 1) {
             return (
-              <section ref={termRef} className='post-ctr' key={post.title}>
+              <section ref={termRef} className={`post-ctr${post.choice < 4 ? `choice-${post.choice}` : ''}`} key={post.title}>
                 <Link href={`/${post.title}`}>
                   <h1 className='post-title'>{post.title}</h1>
                 </Link>
@@ -151,7 +151,7 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
             );
           } else {
             return (
-              <section className='post-ctr' key={post.title}>
+              <section className={`post-ctr${post.choice < 4 ? ` choice-${post.choice}` : ''}`} key={post.title}>
                 <span className='section-sym hidden'>§</span>
                 <Link href={`/${post.title}`}
                   onPointerOver={(e) => {
