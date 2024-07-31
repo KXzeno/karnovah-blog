@@ -1,7 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { Warning } from '@M/Icons';
-import '../../posts/pages.css';
 import ArticleProvider, { 
   Header,
   SubHeader,
@@ -10,7 +9,6 @@ import ArticleProvider, {
   PrimaryContent,
 } from '@P/ArticleProvider';
 import Section from '@M/Section';
-import './../../posts/pages.css';
 import { readPost } from '@A/PostActions';
 import { SinglyLinkedList } from '../../../utils/SinglyLinkedList';
 
