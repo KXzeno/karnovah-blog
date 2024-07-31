@@ -152,7 +152,27 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
           } else {
             return (
               <section className='post-ctr' key={post.title}>
-                <Link href={`/${post.title}`}>
+                <span className='section-sym hidden'>§</span>
+                <Link href={`/${post.title}`}
+                  onPointerOver={(e) => {
+                    let elem = e.target as HTMLElement;
+                    if (!elem) return;
+                    let parentElem = elem.parentElement as HTMLAnchorElement;
+                    if (!parentElem) return;
+                    let target = parentElem.previousElementSibling;
+                    if (!target) return;
+                    target.classList.toggle('hidden');
+                  }}
+                  onPointerOut={(e) => {
+                    let elem = e.target as HTMLElement;
+                    if (!elem) return;
+                    let parentElem = elem.parentElement as HTMLAnchorElement;
+                    if (!parentElem) return;
+                    let target = parentElem.previousElementSibling;
+                    if (!target) return;
+                    target.classList.toggle('hidden');
+                  }}
+                >
                   <h1 className='post-title'>{post.title}</h1>
                 </Link>
                 <p className='post-desc'>{post.description}</p>
