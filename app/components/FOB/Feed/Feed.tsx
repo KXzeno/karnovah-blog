@@ -40,6 +40,9 @@ function reducer(state: any, action: any) {
         cursor: state.posts[state.posts.length - 1].post_id,
       }
     }
+    case 'terminus': {
+      return { terminus: true };
+    }
   }
 }
 interface Post {
@@ -77,7 +80,9 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
 
     let [{ posts }, postsLeaf, newDataLeaf] = [state, state.posts.length - 1, newData.length - 1];
 
-    if (typeof newData === 'undefined' || (posts[postsLeaf].post_id === newData[newDataLeaf].post_id)) {
+    if ((posts[postsLeaf].post_id === newData[newDataLeaf].post_id)) {
+      // Unable to reset ref in this function, delegate to useEffect
+      dispatch({ type: 'terminus' });
       return;
       // throw new Error('No posts left.');
     }
@@ -91,6 +96,13 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
   }
 
   React.useEffect(() => {
+    // If reached end of posts, pause query by ref termination (delegated by getPosts)
+    if (state.terminus === true) {
+      termRef.current = null;
+      // Cannot return statements (void expressions) in effect, but terminates on 'never' type
+      return;
+    }
+
     // If server side rendering failed, load on client
     if (state && state.posts && state.posts.length === 0) {
       getPosts(state.cursor);
@@ -100,11 +112,12 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
     if (isVisible && state && state.posts && state.posts.length > 0) {
       getPosts(state.cursor);
     }
-  }, [isVisible]);
+  }, [isVisible, state.terminus]);
 
   let compiledRFC = React.useMemo(() => {
     return (
       <main className='home-page'>
+        <button type="button" onClick={() => console.log(state.posts)}>Test</button>
         {state && state.posts && state.posts.map((post: any, index: number) => {
           if (index === state.posts.length - 1) {
             return (
