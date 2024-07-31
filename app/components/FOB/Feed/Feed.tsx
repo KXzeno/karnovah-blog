@@ -41,7 +41,10 @@ function reducer(state: any, action: any) {
       }
     }
     case 'terminus': {
-      return { terminus: true };
+      return { 
+        terminus: true,
+        ...state
+      };
     }
   }
 }
@@ -67,6 +70,11 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
   let isVisible = useOnscreen(termRef, state && state.posts);
 
   async function getPosts(cursor: number) {
+    // Safety check to avoid query on unexpected renders
+    if (state.terminus === true) {
+      return;
+    }
+    // console.log('Queried.');
     let newData = await readPostAll({
       field: 'createdAt',
       value: 'desc',
@@ -96,6 +104,7 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
   }
 
   React.useEffect(() => {
+    // console.log('Passed.');
     // If reached end of posts, pause query by ref termination (delegated by getPosts)
     if (state.terminus === true) {
       termRef.current = null;
@@ -117,7 +126,6 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
   let compiledRFC = React.useMemo(() => {
     return (
       <main className='home-page'>
-        <button type="button" onClick={() => console.log(state.posts)}>Test</button>
         {state && state.posts && state.posts.map((post: any, index: number) => {
           if (index === state.posts.length - 1) {
             return (
