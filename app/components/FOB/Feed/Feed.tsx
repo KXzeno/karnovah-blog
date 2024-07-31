@@ -70,13 +70,15 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
     });
 
     if (typeof newData === 'undefined') {
-      throw new Error('No posts parsed.');
+      return;
+      // throw new Error('No posts parsed.');
     }
 
     let [{ posts }, postsLeaf, newDataLeaf] = [state, state.posts.length - 1, newData.length - 1];
 
     if (typeof newData === 'undefined' || (posts[postsLeaf].post_id === newData[newDataLeaf].post_id)) {
-      throw new Error('No posts left.');
+      return;
+      // throw new Error('No posts left.');
     }
 
     dispatch({ 
