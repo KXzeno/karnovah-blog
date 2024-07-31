@@ -12,18 +12,22 @@
   }
 
   .post-title {
-    @apply inline-block justify-self-start text-[#EB3678] text-2xl min-w-4 max-sm:text-xl;
+    @apply inline-block justify-self-start text-[#E5E1E6] hover:text-[#7D8ABC] text-2xl min-w-4 max-sm:text-xl underline underline-offset-[7px] decoration-blue-700;
   }
 
   .post-desc {
-    @apply text-[#E5E1E6] px-4 py-2 justify-self-center text-sm max-sm:text-pretty max-sm:w-[23.125rem];
+    @apply text-[#B6BBC4] px-4 py-2 justify-self-center text-sm max-sm:text-pretty max-sm:w-[23.125rem];
   }
 
   .post-date {
-    @apply inline-block text-[#E6E6E6] justify-self-end max-sm:text-xs;
+    @apply inline-block text-[#E6E6E6] justify-self-end max-sm:text-xs text-[#FFAF00];
   }
 
   .post-author {
     @apply text-[#E6E6E6]
+  }
+
+  section a {
+    @apply inline-block min-w-[3px] max-w-max;
   }
 }
