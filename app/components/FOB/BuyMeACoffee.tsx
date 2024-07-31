@@ -16,7 +16,7 @@ export default function BuyMeACoffeeWidget() {
       data-position="Right"
       data-x_margin="18"
       data-y_margin="18"
-      strategy="afterInteractive"
+      strategy="lazyOnload"
       onLoad={() => {
         // console.log(((evt as React.BaseSyntheticEvent).target as HTMLScriptElement));
         let e = document.createEvent('Event');
