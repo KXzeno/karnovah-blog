@@ -4,6 +4,8 @@ import './Feed.css';
 import { readPostAll, getInitialId } from '@A/PostActions';
 import Link from 'next/link';
 import useOnscreen from '@H/useOnscreen';
+import { useSearchParams } from 'next/navigation';
+import FilteredFeed from './FilteredFeed';
 
 interface Post {
   post_id: number;
@@ -24,9 +26,6 @@ interface StateDefaults {
 function reducer(state: any, action: any) {
   switch (action.type) {
     case 'posts': {
-      // if (!action.payload.posts) {
-      //   throw new Error('No payload parsed.');
-      // }
       return {
         ...state,
         posts: [...state.posts, ...action.payload.posts],
@@ -48,6 +47,7 @@ function reducer(state: any, action: any) {
     }
   }
 }
+
 interface Post {
   post_id: number;
   title: string;
@@ -64,7 +64,43 @@ interface FeedProps {
 }
 
 export default React.memo(function Feed({ initialData, initialCursor }: FeedProps) {
-  let [state, dispatch] = React.useReducer(reducer, { posts: [...initialData], cursor: initialCursor });
+  interface QueryParams {
+    orderBy?: {
+      [key: PropertyKey]: object | string | number;
+    }
+    where?: {
+      choice: {
+        not: number
+      }
+    }
+    cursor?: number;
+  }
+
+  let searchParams = useSearchParams();
+  let choiceSelected = searchParams.get('choice');
+  let choice: boolean = false;
+  let queryParams: QueryParams = {
+    orderBy: {
+      createdAt: 'desc',
+    }
+  }
+
+  if (choiceSelected && Number.parseInt(choiceSelected) === 1) {
+    choice = true;
+    queryParams = { ...queryParams, where: { choice: { not: 4 } } }
+    initialData = initialData.filter((post) => {
+      if (post.choice !== null && (post.choice > 0 && post.choice < 4)) {
+        return post;
+      }
+    });
+    initialCursor = initialData[initialData.length - 1].post_id;
+  }
+
+  let [state, dispatch] = React.useReducer(reducer, { 
+    posts: [...initialData],
+    cursor: initialCursor,
+    queryParams: queryParams 
+  });
 
   let termRef = React.useRef<HTMLElement | null>(null);
   let isVisible = useOnscreen(termRef, state.posts);
@@ -74,10 +110,9 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
     if (state.terminus === true) {
       return;
     }
-    // console.log('Queried.');
+
     let newData = await readPostAll({
-      field: 'createdAt',
-      value: 'desc',
+      ...state.queryParams,
       cursor: cursor,
     });
 
@@ -99,12 +134,12 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
       type: 'posts',
       payload: {
         posts: newData,
+        choice: choice,
       }
     });
   }
 
   React.useEffect(() => {
-    // console.log('Passed.');
     // If reached end of posts, pause query by ref termination (delegated by getPosts)
     if (state.terminus === true) {
       termRef.current = null;
@@ -141,7 +176,7 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
         {state.posts.map((post: any, index: number) => {
           if (index === state.posts.length - 1) {
             return (
-              <section ref={termRef} className={`post-ctr${post.choice < 4 ? `choice-${post.choice}` : ''}`} key={post.title}>
+              <section ref={termRef} className={`post-ctr ${post.choice < 4 ? `choice-${post.choice}` : ''}`} key={post.title}>
                 <Link href={`/${post.title}`}>
                   <h1 className='post-title'>{post.title}</h1>
                 </Link>
