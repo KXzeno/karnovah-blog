@@ -67,7 +67,7 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
   let [state, dispatch] = React.useReducer(reducer, { posts: [...initialData], cursor: initialCursor });
 
   let termRef = React.useRef<HTMLElement | null>(null);
-  let isVisible = useOnscreen(termRef, state && state.posts);
+  let isVisible = useOnscreen(termRef, state.posts);
 
   async function getPosts(cursor: number) {
     // Safety check to avoid query on unexpected renders
@@ -113,20 +113,32 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
     }
 
     // If server side rendering failed, load on client
-    if (state && state.posts && state.posts.length === 0) {
-      getPosts(state.cursor);
+    if (state.posts.length === 0) {
+      try {
+        +(async () => {
+          await getPosts(state.cursor);
+        })();
+      } catch (x) {
+        console.error(x);
+      }
     }
 
-    // Cursor pagination
-    if (isVisible && state && state.posts && state.posts.length > 0) {
-      getPosts(state.cursor);
+    // Cursor pagination (Default)
+    if (isVisible && state.posts.length > 0) {
+      try {
+        +(async () => {
+          await getPosts(state.cursor);
+        })();
+      } catch (x) {
+        console.error(x);
+      }
     }
   }, [isVisible, state.terminus]);
 
   let compiledRFC = React.useMemo(() => {
     return (
       <main className='home-page'>
-        {state && state.posts && state.posts.map((post: any, index: number) => {
+        {state.posts.map((post: any, index: number) => {
           if (index === state.posts.length - 1) {
             return (
               <section ref={termRef} className='post-ctr' key={post.title}>
