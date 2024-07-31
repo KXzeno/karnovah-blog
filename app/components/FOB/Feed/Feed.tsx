@@ -5,7 +5,6 @@ import { readPostAll, getInitialId } from '@A/PostActions';
 import Link from 'next/link';
 import useOnscreen from '@H/useOnscreen';
 import { useSearchParams } from 'next/navigation';
-import FilteredFeed from './FilteredFeed';
 
 interface Post {
   post_id: number;
