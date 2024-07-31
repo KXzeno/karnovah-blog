@@ -2,6 +2,7 @@
 
 import React, {Dispatch, SetStateAction} from 'react';
 import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import './MOB.css';
 import useToggle from '@H/use-toggle';
 import SubMenu from '@F/SubMenu';
@@ -10,6 +11,10 @@ import { LayoutGroup, motion } from 'framer-motion';
 
 export default function Nav() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  let [endpointAccessed, setEndpointAccessed] = React.useState<number>(0);
+
   // Left-hand annotation is redundant if typing by generics
   let [dollarSigns, setDollarSigns]: [string[] | string, Dispatch<SetStateAction<string[]>>] = React.useState<string[]>([
     '$',
@@ -55,14 +60,14 @@ export default function Nav() {
 
   let LINKS = [
     {
-      slug: 'recent',
+      slug: 'choice',
       label: 'Choice',
-      href: '/recent'
+      href: '/choice'
     },
     {
-      slug: 'posts',
+      slug: 'categories',
       label: 'Categories',
-      href: '/posts'
+      href: '/categories'
     },
     {
       slug: 'about',
@@ -81,16 +86,19 @@ export default function Nav() {
               key={slug}
               href={href}
               onMouseOver={() => setHoveredNavItem(slug)}
+              onClick={(e) => {
+                if (slug === 'choice') {
+                  e.preventDefault();
+                  setEndpointAccessed(prev => prev ^ 1);
+                  endpointAccessed === 1 ?
+                    router.push(`/?choice=${endpointAccessed}`, { scroll: false } ) :
+                    router.push('/', { scroll: false });
+                }
+              }}
               style={{
                 zIndex: hoveredNavItem === slug ? 1 : 2,
               }}
               className="nav-btn"
-              onClick={(e) => {
-                e.preventDefault();
-                let element = (e.target as HTMLElement);
-                let inner: string = element.outerText;
-                console.log(element.outerHTML);
-              }}
             >
               {label}
               {hoveredNavItem === slug && (
