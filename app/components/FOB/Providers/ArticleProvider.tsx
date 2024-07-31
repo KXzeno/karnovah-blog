@@ -1,8 +1,6 @@
 'use client';
 import React from 'react';
 
-import Nav from '@M/Nav';
-import Footer from '@M/Footer';
 import { Warning } from '@M/Icons';
 import ToC from '@M/ToC';
 
@@ -20,7 +18,6 @@ export default function ArticleProvider({
 
   return (
     <>
-      <Nav />
       <ArticleContext.Provider 
         value={{
           // Header, SubHeader, AddHeader, HeaderNote, PrimaryContent, RightMargin
@@ -35,7 +32,6 @@ export default function ArticleProvider({
           </div>
         </main>
       </ArticleContext.Provider>
-      <Footer />
     </>
   );
 }
