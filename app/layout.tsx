@@ -1,7 +1,10 @@
+import React from 'react';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { Urbanist, Inter, Cinzel, Diphylleia, Roboto, Merriweather, Spectral, DM_Sans, Quicksand, Dosis, Sono} from "next/font/google";
 import { cookies } from 'next/headers';
-import "./globals.css";
+
+import { Nav, Footer } from '@/components';
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap'});
 
@@ -88,8 +91,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${diphylleia.variable} ${cinzel.variable} ${inter.variable} ${urbanist.variable} ${roboto.variable} ${merriweather.variable} ${spectral.variable} ${dm_sans.variable} ${quicksand.variable} ${dosis.variable} ${sono.variable} font-sono`}>{children}
-      </body>
+        <body className={`${diphylleia.variable} ${cinzel.variable} ${inter.variable} ${urbanist.variable} ${roboto.variable} ${merriweather.variable} ${spectral.variable} ${dm_sans.variable} ${quicksand.variable} ${dosis.variable} ${sono.variable} font-sono`}>
+          <Nav />
+            {children}
+          <Footer />
+        </body>
     </html>
   );
 }
