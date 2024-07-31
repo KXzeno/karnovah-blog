@@ -31,6 +31,14 @@ const config: Config = {
       colors: {
         'onyx': '#352F44',
       },
+      keyframes: {
+        'low-prio': {
+          '100%':  { 'background-position': '0 30em' }
+        }
+      },
+      animation: {
+        glowA: 'low-prio 70s linear infinite'
+      }
     },
   },
   plugins: [],
