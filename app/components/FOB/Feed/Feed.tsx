@@ -2,6 +2,7 @@
 import React from 'react';
 import './Feed.css';
 import { readPostAll, getInitialId } from '@A/PostActions';
+import Link from 'next/link';
 import useOnscreen from '@H/useOnscreen';
 
 interface Post {
@@ -108,7 +109,9 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
           if (index === state.posts.length - 1) {
             return (
               <section ref={termRef} className='post-ctr' key={post.title}>
-                <h1 className='post-title'>{post.title}</h1>
+                <Link href={`/${post.title}`}>
+                  <h1 className='post-title'>{post.title}</h1>
+                </Link>
                 <p className='post-desc'>{post.description}</p>
                 <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
               </section>
@@ -116,7 +119,9 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
           } else {
             return (
               <section className='post-ctr' key={post.title}>
-                <h1 className='post-title'>{post.title}</h1>
+                <Link href={`/${post.title}`}>
+                  <h1 className='post-title'>{post.title}</h1>
+                </Link>
                 <p className='post-desc'>{post.description}</p>
                 <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
               </section>
