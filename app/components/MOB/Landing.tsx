@@ -26,7 +26,9 @@ export default async function Landing() {
 
   return (
     <>
-      <Feed initialData={initialData} initialCursor={initialCursor}/>
+      <React.Suspense>
+        <Feed initialData={initialData} initialCursor={initialCursor}/>
+      </React.Suspense>
     </>
   )
 }
