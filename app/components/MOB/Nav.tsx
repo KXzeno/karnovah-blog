@@ -2,7 +2,6 @@
 
 import React, {Dispatch, SetStateAction} from 'react';
 import { useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
 import './MOB.css';
 import useToggle from '@H/use-toggle';
 import SubMenu from '@F/SubMenu';
@@ -11,7 +10,6 @@ import { LayoutGroup, motion } from 'framer-motion';
 
 export default function Nav() {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   let [endpointAccessed, setEndpointAccessed] = React.useState<number>(0);
 
