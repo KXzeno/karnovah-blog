@@ -12,9 +12,7 @@ export default function Home(
 
   return (
     <React.Fragment>
-      <Nav />
       <Landing />
-      <Footer />
     </React.Fragment>
   );
 }
