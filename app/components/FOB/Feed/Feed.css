@@ -34,4 +34,27 @@
     @apply absolute text-xl translate-x-[-1.1rem] text-[#134B70];
   }
 
+  section.post-ctr.choice-3 a {
+    @apply bg-gradient-to-br from-indigo-500 from-30% via-blue-700 via-50% to-yellow-600 to-90% bg-clip-text animate-glowA;
+  }
+
+  section.post-ctr.choice-3 a h1.post-title {
+    @apply text-transparent;
+  }
+
+  section.post-ctr.choice-2 a h1.post-title {
+    @apply bg-gradient-to-br from-indigo-600 from-30% via-red-700 via-80% to-orange-800 to-100% bg-clip-text animate-glowA;
+  }
+
+  section.post-ctr.choice-2 a h1.post-title {
+    @apply text-transparent;
+  }
+
+  section.post-ctr.choice-1 a h1.post-title {
+    @apply bg-gradient-to-br from-violet-800 from-30% via-black via-[67%] to-slate-300 to-100% bg-clip-text animate-glowA;
+  }
+
+  section.post-ctr.choice-1 a h1.post-title {
+    @apply text-transparent;
+  }
 }
