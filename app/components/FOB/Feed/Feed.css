@@ -29,4 +29,9 @@
   section a {
     @apply inline-block min-w-[3px] max-w-max;
   }
+
+  .section-sym {
+    @apply absolute text-xl translate-x-[-1.1rem] text-[#134B70];
+  }
+
 }
