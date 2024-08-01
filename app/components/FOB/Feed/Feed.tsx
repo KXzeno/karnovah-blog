@@ -23,19 +23,59 @@ interface StateDefaults {
   dispatchCursor: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
-function reducer(state: any, action: any) {
+/** State and action requires manual static typing
+ * @see {@link https://react.dev/reference/react/useReducer}
+ * @author Kx */
+interface ReducerState {
+  posts: Post[];
+  queryParams?: QueryParams | undefined;
+  cursor: number;
+  terminus?: boolean | undefined;
+}
+
+type FinalState = ReducerState | CursorState | undefined;
+
+interface CursorState {
+  cursor: number;
+}
+
+interface ReducerAction {
+  type: 'posts' | 'cursor' | 'terminus' | undefined;
+  courier?: {
+    posts: Post[];
+    choice: boolean;
+  }
+}
+
+interface QueryParams {
+  orderBy?: {
+    [key: PropertyKey]: object | string | number;
+  }
+  where?: {
+    choice: {
+      not: number
+    }
+  }
+  cursor?: number;
+}
+
+
+function reducer(state: ReducerState, action: ReducerAction): ReducerState {
   switch (action.type) {
     case 'posts': {
-      return {
-        ...state,
-        posts: [...state.posts, ...action.payload.posts],
-        cursor: state.posts[state.posts.length - 1].post_id,
-      }
+      if (action.courier !== undefined) {
+        return {
+          ...state,
+          posts: [...state.posts, ...action.courier.posts],
+          cursor: state.posts[state.posts.length - 1].post_id,
+        }
+      } else { break; }
     }
     // Individual cursor setting
     case 'cursor': {
       if (!state || !state.posts || state.posts.length <= 0) throw new Error('No initial ID found.');
       return {
+        ...state,
         cursor: state.posts[state.posts.length - 1].post_id,
       }
     }
@@ -45,7 +85,11 @@ function reducer(state: any, action: any) {
         ...state
       };
     }
+    default: {
+      return { ...state };
+    }
   }
+  return { ...state };
 }
 
 interface Post {
@@ -64,18 +108,6 @@ interface FeedProps {
 }
 
 export default React.memo(function Feed({ initialData, initialCursor }: FeedProps) {
-  interface QueryParams {
-    orderBy?: {
-      [key: PropertyKey]: object | string | number;
-    }
-    where?: {
-      choice: {
-        not: number
-      }
-    }
-    cursor?: number;
-  }
-
   let router = useRouter();
   let searchParams = useSearchParams();
   let choiceSelected = searchParams.get('choice');
@@ -99,11 +131,13 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
     router.replace('/');
   }
 
-  let [state, dispatch] = React.useReducer(reducer, { 
+  let initialState: ReducerState = {
     posts: [...initialData],
     cursor: initialCursor,
     queryParams: queryParams 
-  });
+  }
+
+  let [state, dispatch] = React.useReducer<React.Reducer<ReducerState, ReducerAction>>(reducer, initialState);
 
   let termRef = React.useRef<HTMLElement | null>(null);
   let isVisible = useOnscreen(termRef, state.posts);
@@ -135,7 +169,7 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
 
     dispatch({ 
       type: 'posts',
-      payload: {
+      courier: {
         posts: newData,
         choice: choice,
       }
