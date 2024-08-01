@@ -74,6 +74,7 @@ export default function Nav() {
     }
   ];
 
+  // TODO: Remove endpointAccessed state when leaving the endpoint
   return (
     <>
       <nav id="nav-box" onMouseLeave={() => setHoveredNavItem(null)}>
@@ -89,8 +90,8 @@ export default function Nav() {
                   e.preventDefault();
                   setEndpointAccessed(prev => prev ^ 1);
                   endpointAccessed === 1 ?
-                    router.push(`/?choice=${endpointAccessed}`, { scroll: false } ) :
-                    router.push(`/?choice=${endpointAccessed}`, { scroll: false });
+                    router.replace(`/?choice=${endpointAccessed}`, { scroll: false }) :
+                    router.replace(`/?choice=${endpointAccessed}`, { scroll: false });
                 }
               }}
               style={{

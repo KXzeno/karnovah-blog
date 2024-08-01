@@ -96,7 +96,7 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
     });
     initialCursor = initialData[initialData.length - 1].post_id;
   } else if (choiceSelected && Number.parseInt(choiceSelected) === 0) {
-    router.push('/');
+    router.replace('/');
   }
 
   let [state, dispatch] = React.useReducer(reducer, { 
