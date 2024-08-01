@@ -12,7 +12,6 @@ export default function Nav() {
   const router = useRouter();
 
   let [endpointAccessed, setEndpointAccessed] = React.useState<number>(1);
-  let [routerFilled, setRouterFilled] = React.useState<boolean>(false);
 
   // Left-hand annotation is redundant if typing by generics
   let [dollarSigns, setDollarSigns]: [string[] | string, Dispatch<SetStateAction<string[]>>] = React.useState<string[]>([
@@ -87,24 +86,11 @@ export default function Nav() {
               onMouseOver={() => setHoveredNavItem(slug)}
               onClick={(e) => {
                 if (slug === 'choice') {
-                  if (routerFilled === false) {
-                    e.preventDefault();
-                    setRouterFilled(true);
-                    setEndpointAccessed(prev => prev ^ 1);
-                    endpointAccessed === 1 ?
-                      router.push(`/?choice=${endpointAccessed}`, { scroll: false } ) :
-                      router.back();
-                  } else if (routerFilled === true) {
-                    e.preventDefault();
-                    setEndpointAccessed(prev => prev ^ 1);
-                    endpointAccessed === 1 ?
-                      router.forward() :
-                      +(() => { 
-                      router.back();
-                      router.refresh();
-                      setRouterFilled(false);
-                    })();
-                  }
+                  e.preventDefault();
+                  setEndpointAccessed(prev => prev ^ 1);
+                  endpointAccessed === 1 ?
+                    router.push(`/?choice=${endpointAccessed}`, { scroll: false } ) :
+                    router.push(`/?choice=${endpointAccessed}`, { scroll: false });
                 }
               }}
               style={{
@@ -120,7 +106,7 @@ export default function Nav() {
                 />
               )}
             </Link>
-                                                ))}
+          ))}
         </LayoutGroup>
         <div className={`${dollarSigns.length !== 0 ? 'visible' : 'hidden'} absolute right-8 h-16 w-16`}>
           <LayoutGroup>
