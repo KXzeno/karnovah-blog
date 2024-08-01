@@ -5,6 +5,7 @@ import { readPostAll, getInitialId } from '@A/PostActions';
 import Link from 'next/link';
 import useOnscreen from '@H/useOnscreen';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 interface Post {
   post_id: number;
@@ -75,6 +76,7 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
     cursor?: number;
   }
 
+  let router = useRouter();
   let searchParams = useSearchParams();
   let choiceSelected = searchParams.get('choice');
   let choice: boolean = false;
@@ -137,6 +139,11 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
       }
     });
   }
+
+  // Prefetching most likely doesn't work as endpoints are not routes
+  React.useEffect(() => {
+    router.prefetch('/?choice=1');
+  }, []);
 
   React.useEffect(() => {
     // If reached end of posts, pause query by ref termination (delegated by getPosts)
