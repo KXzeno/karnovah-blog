@@ -99,7 +99,11 @@ export default function Nav() {
                     setEndpointAccessed(prev => prev ^ 1);
                     endpointAccessed === 1 ?
                       router.forward() :
+                      +(() => { 
                       router.back();
+                      router.refresh();
+                      setRouterFilled(false);
+                    })();
                   }
                 }
               }}
