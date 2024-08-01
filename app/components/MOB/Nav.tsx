@@ -11,7 +11,8 @@ import { LayoutGroup, motion } from 'framer-motion';
 export default function Nav() {
   const router = useRouter();
 
-  let [endpointAccessed, setEndpointAccessed] = React.useState<number>(0);
+  let [endpointAccessed, setEndpointAccessed] = React.useState<number>(1);
+  let [routerFilled, setRouterFilled] = React.useState<boolean>(false);
 
   // Left-hand annotation is redundant if typing by generics
   let [dollarSigns, setDollarSigns]: [string[] | string, Dispatch<SetStateAction<string[]>>] = React.useState<string[]>([
@@ -86,11 +87,20 @@ export default function Nav() {
               onMouseOver={() => setHoveredNavItem(slug)}
               onClick={(e) => {
                 if (slug === 'choice') {
-                  e.preventDefault();
-                  setEndpointAccessed(prev => prev ^ 1);
-                  endpointAccessed === 1 ?
-                    router.push(`/?choice=${endpointAccessed}`, { scroll: false } ) :
-                    router.push('/', { scroll: false });
+                  if (routerFilled === false) {
+                    e.preventDefault();
+                    setRouterFilled(true);
+                    setEndpointAccessed(prev => prev ^ 1);
+                    endpointAccessed === 1 ?
+                      router.push(`/?choice=${endpointAccessed}`, { scroll: false } ) :
+                      router.back();
+                  } else if (routerFilled === true) {
+                    e.preventDefault();
+                    setEndpointAccessed(prev => prev ^ 1);
+                    endpointAccessed === 1 ?
+                      router.forward() :
+                      router.back();
+                  }
                 }
               }}
               style={{
@@ -106,7 +116,7 @@ export default function Nav() {
                 />
               )}
             </Link>
-          ))}
+                                                ))}
         </LayoutGroup>
         <div className={`${dollarSigns.length !== 0 ? 'visible' : 'hidden'} absolute right-8 h-16 w-16`}>
           <LayoutGroup>
