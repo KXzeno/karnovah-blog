@@ -7,9 +7,12 @@ import useToggle from '@H/use-toggle';
 import SubMenu from '@F/SubMenu';
 import Link from 'next/link';
 import { LayoutGroup, motion } from 'framer-motion';
+import { useSearchParams } from 'next/navigation';
 
 export default function Nav() {
   const router = useRouter();
+  let searchParams = useSearchParams();
+  let endpoint = searchParams.entries();
 
   let [endpointAccessed, setEndpointAccessed] = React.useState<number>(1);
 
@@ -36,7 +39,6 @@ export default function Nav() {
     if (target && target.outerText) {
       let { outerText: value } = target;
     }
-    console.log(value);
     /** @deprecated
      * if (value) {
      *   return value === '▼' ? toggleSubMenu() : router.push(`${(value as string).toLowerCase()}`);
@@ -74,7 +76,9 @@ export default function Nav() {
     }
   ];
 
-  // TODO: Remove endpointAccessed state when leaving the endpoint
+  // TODO: ---> Remove endpointAccessed state when leaving the endpoint
+  //            And use state to move the footer :pleasestop:
+  //            Categories --> ???
   return (
     <>
       <nav id="nav-box" onMouseLeave={() => setHoveredNavItem(null)}>
@@ -92,6 +96,8 @@ export default function Nav() {
                   endpointAccessed === 1 ?
                     router.replace(`/?choice=${endpointAccessed}`, { scroll: false }) :
                     router.replace(`/?choice=${endpointAccessed}`, { scroll: false });
+                } else {
+                  setEndpointAccessed(1);
                 }
               }}
               style={{
@@ -109,7 +115,7 @@ export default function Nav() {
             </Link>
           ))}
         </LayoutGroup>
-        <div className={`${dollarSigns.length !== 0 ? 'visible' : 'hidden'} absolute right-8 h-16 w-16`}>
+        <div className={`${dollarSigns.length !== 0 ? 'visible' : 'hidden'} absolute right-8 h-16 w-16 text-inherit`}>
           <LayoutGroup>
             <motion.button 
               whileHover={{ scale:1.7 }}
