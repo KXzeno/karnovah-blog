@@ -22,6 +22,7 @@ public class RectifySchema {
         String content = contents.get(0);
         content = content.replaceAll("\\bSection\\b(?!\\s*([\\{\\[]))\\b", "sections");
         content = content.replaceAll("\\bCategory\\b(?!\\s*([\\{\\[]))\\b", "categories");
+        content = content.replaceAll("(Post\\s+)(Post\\s*\\[\\s*\\])", "posts $2");
         finalContent.append(content + "\n");
         contents.remove(0);
       }
