@@ -3,7 +3,7 @@
 
 @layer utilities {
   .home-page {
-    @apply relative flex flex-col min-h-[1164px] justify-items-center max-sm:gap-[1.7rem] sm:gap-[3rem] translate-y-8 mb-[11rem];
+    @apply relative flex flex-col justify-items-center max-sm:gap-[1.7rem] sm:gap-[3rem] translate-y-8 mb-[11rem];
   }
 
   .post-ctr {
