@@ -5,7 +5,6 @@ import './categories.css';
 
 export default async function Page() {
   let categories = await getByCategory();
-  console.log(categories);
 
   return (
     <>
