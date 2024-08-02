@@ -10,8 +10,12 @@
     @apply grid min-h-16 max-sm:max-w-[23rem] sm:max-w-[37rem] mx-auto sm:gap-2;
   }
 
-  .post-title {
+  .post-title-deco {
     @apply inline-block justify-self-start text-[#E5E1E6] hover:text-[#7D8ABC] text-2xl min-w-4 max-sm:text-xl underline underline-offset-[7px] decoration-blue-700;
+  }
+
+  .post-title-effect {
+    @apply hover:bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glowA hover:text-transparent;
   }
 
   .post-desc {
@@ -56,5 +60,11 @@
 
   section.post-ctr.choice-1 a h1.post-title {
     @apply text-transparent;
+  }
+}
+
+@layer components {
+  .post-title {
+    @apply post-title-deco post-title-effect;
   }
 }
