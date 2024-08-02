@@ -3,7 +3,7 @@
 
 @layer components {
   #nav-box {
-    @apply flex flex-auto flex-row min-w-max h-[5.3rem] text-center justify-center gap-16 items-center bg-[#18122B];
+    @apply flex flex-auto flex-row min-w-max h-[5.3rem] text-center justify-center gap-16 items-center bg-[#18122B] text-green-400;
   }
 
   nav#nav-box .nav-btn {
@@ -23,7 +23,7 @@
   }
 
   .footer-ctr {
-    @apply flex flex-row basis-1/6 relative place-items-center h-32 bg-gradient-to-b from-violet-950 to-indigo-900 basis-0 text-[#3f7300];
+    @apply flex flex-row basis-1/6 place-items-center h-32 bg-gradient-to-b from-violet-950 to-indigo-900 basis-0 text-[#3f7300] absolute bottom-0 w-full;
   }
 
   .footer-first-cell {
