@@ -1,0 +1,32 @@
+@tailwind utilities;
+@tailwind components;
+
+h1 {
+  @apply text-xs;
+}
+
+body {
+  @apply min-h-screen;
+}
+
+.footer-ctr {
+  @apply absolute bottom-0 w-full;
+}
+
+@layer utilities {
+  .catalog {
+    @apply relative grid grid-cols-1 max-w-max mx-auto min-h-[10rem] items-center;
+  }
+
+  .catalog ul li a {
+    @apply hover:bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glowA text-slate-500 hover:text-transparent;
+  }
+
+  .catalog ul li > span:nth-child(2) {
+    @apply px-2 align-[-2px] pr-3 text-red-500;
+  }
+
+  .catalog ul li > span:nth-child(3) {
+    @apply bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glowA text-transparent;
+  }
+}
