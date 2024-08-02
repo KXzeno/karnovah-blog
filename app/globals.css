@@ -51,11 +51,19 @@
   .right-margin {
     @apply max-md:collapse grid sticky justify-self-center self-start top-0 w-full grid-cols-1 place-items-center md:max-lg:text-base lg:text-[1.07rem] text-[#53565A];
   }
+
+  .body-augmented {
+    @apply relative flex flex-col min-h-screen
+  }
 }
 
 @layer utilities {
   main.body-layout {
     @apply md:grid relative grid-cols-[minmax(60%,70%),minmax(0%,30%)] text-[11px] mt-[3rem] place-items-center gap-[3rem] w-max mx-auto md:translate-x-[5rem];
+  }
+
+  .children-wrapper {
+    @apply pb-[7.3rem];
   }
 
   .body-layout > *:nth-child(1) {
