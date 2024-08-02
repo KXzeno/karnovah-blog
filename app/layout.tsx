@@ -91,11 +91,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-        <body className={`${diphylleia.variable} ${cinzel.variable} ${inter.variable} ${urbanist.variable} ${roboto.variable} ${merriweather.variable} ${spectral.variable} ${dm_sans.variable} ${quicksand.variable} ${dosis.variable} ${sono.variable} font-sono`}>
+      <body className={`${diphylleia.variable} ${cinzel.variable} ${inter.variable} ${urbanist.variable} ${roboto.variable} ${merriweather.variable} ${spectral.variable} ${dm_sans.variable} ${quicksand.variable} ${dosis.variable} ${sono.variable} font-sono body-augmented`}>
+        <div className='children-wrapper'>
           <Nav />
-            {children}
+          {children}
           <Footer />
-        </body>
+        </div>
+      </body>
     </html>
   );
 }
