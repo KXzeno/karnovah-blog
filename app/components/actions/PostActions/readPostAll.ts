@@ -22,6 +22,7 @@ interface Post {
 interface Category {
   category_id: number,
   name: string,
+  posts?: Post[],
 }
 
 export async function readPostAll(params?: SortParams): Promise<Post[] | undefined> {
@@ -67,7 +68,11 @@ export async function readPostAll(params?: SortParams): Promise<Post[] | undefin
 
 export async function getByCategory(): Promise<Category[] | undefined> {
   try {
-    let query: Category[] = await prisma.category.findMany();
+    let query: Category[] = await prisma.category.findMany({
+      include: {
+        posts: true,
+      }
+    });
     return query;
   } catch (x) {
     console.error(x);
