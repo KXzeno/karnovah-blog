@@ -34,9 +34,9 @@ export async function readPostAll(params?: SortParams): Promise<Post[] | undefin
         cursor: {
           post_id: params.cursor,
         },
-        // include: {
-        //   sections: true,
-        // },
+        include: {
+          categories: true,
+        },
       });
 
       let tailPost = query[query.length - 1];
@@ -51,6 +51,9 @@ export async function readPostAll(params?: SortParams): Promise<Post[] | undefin
         take: 7,
         orderBy: {
           createdAt: 'desc',
+        },
+        include: {
+          categories: true,
         }
       });
       let tailPost = query[query.length - 1];
