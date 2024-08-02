@@ -9,10 +9,6 @@ body {
   @apply min-h-screen;
 }
 
-.footer-ctr {
-  @apply absolute bottom-0 w-full;
-}
-
 @layer utilities {
   .catalog {
     @apply relative grid grid-cols-1 max-w-max mx-auto min-h-[10rem] items-center;
@@ -29,4 +25,5 @@ body {
   .catalog ul li > span:nth-child(3) {
     @apply bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glowA text-transparent;
   }
+
 }
