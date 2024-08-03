@@ -66,7 +66,23 @@ export async function readPostAll(params?: SortParams): Promise<Post[] | undefin
   }
 }
 
-export async function getByCategory(name?: string): Promise<Category[] | Category | null | undefined> {
+export async function getByCategory(): Promise<Category[] | null | undefined> {
+  try {
+    let query: Category[] = await prisma.category.findMany({
+      include: {
+        posts: true,
+      },
+      orderBy: {
+        name: 'asc'
+      },
+    });
+    return query;
+  } catch (x) {
+    console.error(x);
+  }
+}
+
+export async function getCategory(name: string): Promise<Category | null | undefined> {
   if (name !== undefined && typeof name === 'string') {
     try {
       let query: Category | null = await prisma.category.findUnique({
@@ -74,24 +90,17 @@ export async function getByCategory(name?: string): Promise<Category[] | Categor
           name: name,
         },
         include: {
-          posts: true,
-        }
+          posts: {
+            orderBy: {
+              createdAt: 'asc'
+            }
+          }
+        },
       })
       return query;
     } catch (x) {
       console.error(x);
     }
-  }
-
-  try {
-    let query: Category[] = await prisma.category.findMany({
-      include: {
-        posts: true,
-      }
-    });
-    return query;
-  } catch (x) {
-    console.error(x);
   }
 }
 
