@@ -18,7 +18,7 @@
     @apply text-animate md:translate-x-[0.2rem] max-md:mx-auto max-md:text-center;
   }
 
-  main > section:nth-child(2) {
+  .about-desc {
     @apply font-merriweather text-animate text-slate-300 text-center p-4 pt-8 text-sm md:p-32 lg:p-64 text-balance;
   }
 

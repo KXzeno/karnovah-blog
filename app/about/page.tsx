@@ -49,7 +49,7 @@ export default function About(): React.ReactNode {
       </picture>
       <section>
         <div>
-          <p>Indirect impact is my preferred medium of influence, and as much as I value the company of silence, having it as feedback renders my empathetic gestures a disservice. To that reason, I made this retreat to exposit uncontained thoughts and serve nascency to an upcoming enterprise.</p>
+          <p className='about-desc'>Indirect impact is my preferred medium of influence, and as much as I value the company of silence, having it as feedback renders my empathetic gestures a disservice. To that reason, I made this retreat to exposit uncontained thoughts and serve nascency to an upcoming enterprise.</p>
         </div>
       </section>
     </main>
