@@ -41,16 +41,18 @@ export async function readPost(title: string) {
   for (let i = 0; i < words.length; i++) {
     let word = words[i];
     // Handle cases where words should stay lowercased
-    if (!(i!== words.length - 1 && word.match(/\b(?:of|is|at|on)\b/))) {
+    if (!(i !== words.length - 1 && word.match(/\b(?:of|is|at|on)\b/) !== null)) {
       let firstLetter = words[i][0].toUpperCase();
       let otherLetters = word.slice(1, word.length);
-      titleBuilder.push(`${firstLetter}${otherLetters}`)
+      titleBuilder.push(`${firstLetter}${otherLetters}`);
       continue;
     }
     titleBuilder.push(word);
   }
 
-  title = titleBuilder[0];
+  title = titleBuilder.reduce((accumulator, currVal) => {
+    return `${accumulator} ${currVal}`;
+  });
 
   try {
     let db = await prisma.post.findUnique({ 
