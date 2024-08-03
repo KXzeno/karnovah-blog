@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
+@layer base {
+  main {
+    @apply flex flex-col min-h-max items-center pt-8;
+  }
+  
+  main > picture:nth-child(1) {
+    @apply relative md:inline-flex md:flex-row items-center text-sm px-4;
+  }
+
+  main > picture:nth-child(1) > div {
+    @apply md:min-w-[1.3rem];
+  }
+}
+
+@layer utilities {
+  #insert {
+    @apply rounded-full w-[7rem] md:float-left max-md:mx-auto;
+  }
+
+  main > picture:nth-child(1) > p:nth-child(4) {
+    @apply text-animate max-md:text-center max-md:pt-4 tracking-[-0.07em];
+  }
+
+  main > picture > p > button > em {
+    @apply text-inherit underline decoration-slate-300 decoration-dotted;
+  }
+
+  picture > p:nth-child(2) {
+    @apply text-animate md:translate-x-[0.2rem] max-md:mx-auto max-md:text-center;
+  }
+
+  main > section:nth-child(2) {
+    @apply font-merriweather text-animate text-slate-300 text-center p-4 pt-8 text-sm;
+  }
+}
+
+@layer components {
+  .text-animate {
+    @apply bg-gradient-to-tl from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glowA text-transparent;
+  }
+}
