@@ -1,5 +1,5 @@
-import { readPost, readPostAll } from './PostActions/';
+import { readPost, readPostAll, getCategory, getByCategory } from './PostActions/';
 
 export {
-  readPost, readPostAll,
+  readPost, readPostAll, getCategory, getByCategory
 }
