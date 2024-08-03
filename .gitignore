@@ -20,6 +20,7 @@
 .DS_Store
 *.pem
 /app/_future/*
+/placeholders/*
 
 # debug
 npm-debug.log*
