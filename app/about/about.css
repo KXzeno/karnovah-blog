@@ -19,7 +19,7 @@
   }
 
   .about-desc {
-    @apply font-merriweather text-animate text-slate-300 text-center p-4 pt-8 text-sm md:p-32 lg:p-64 text-balance;
+    @apply font-merriweather text-animate text-center p-4 pt-8 text-sm md:p-32 lg:p-64 text-balance lg:text-lg;
   }
 
   main {
@@ -27,7 +27,7 @@
   }
 
   main > picture:nth-child(1) {
-    @apply relative md:inline-flex md:flex-row items-center text-sm px-4;
+    @apply relative md:inline-flex md:flex-row items-center text-sm px-4 md:px-16 lg:text-base;
   }
 
   main > picture:nth-child(1) > div {
@@ -38,6 +38,6 @@
 
 @layer components {
   .text-animate {
-    @apply bg-gradient-to-tl from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glowA text-transparent;
+    @apply bg-gradient-to-tl from-slate-200 from-30% via-slate-700 via-30% to-slate-300 to-[37%] bg-clip-text animate-glowA text-transparent;
   }
 }
