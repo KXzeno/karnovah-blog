@@ -16,7 +16,7 @@ export default function PostsInCategory({ category }: { category: unknown }) {
             let title = post.title;
             let date = post.createdAt.toISOString().split('T')[0];
             return (
-              <li>
+              <li key={title}>
                 <time>{`${date}`}</time>
                 <span>&#11116;</span>
                 <Link href={`/${title.toLowerCase()}`}>{`${title}`}</Link>
