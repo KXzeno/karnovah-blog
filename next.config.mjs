@@ -6,6 +6,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'cdn.buymeacoffee.com',
         port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.postimg.cc',
+        port: '',
       }
     ]
   }
