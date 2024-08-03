@@ -1,11 +1,12 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { getByCategory } from '@A/PostActions/readPostAll';
+import { getCategory } from '@A/PostActions';
+import PostsInCategory from '@M/PostsInCategory';
 
 export default async function Category({ params }: { params: { slug: string }}): Promise<React.ReactNode> {
   let slug = params.slug.toLowerCase();
-  let cat = await getByCategory(slug);
-  if (cat === null) {
+  let cat = await getCategory(slug);
+  if (cat === null || cat === undefined) {
     // No need for return keyword; returns a 'never' type
     return notFound();
   }
@@ -17,7 +18,7 @@ export default async function Category({ params }: { params: { slug: string }}):
    */
   return (
     <React.Suspense>
-      {slug}
+      <PostsInCategory category={cat} />
     </React.Suspense>
   );
 }
