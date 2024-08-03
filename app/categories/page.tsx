@@ -14,7 +14,7 @@ export default async function Page() {
           return (
             <li key={item.name}>
               <Link href={`/categories/${item.name}`}>{`${item.name}`}</Link>
-              <span>&#11116;</span>
+              <span>—</span>
               <span>{`${item.posts !== undefined ? item.posts.length : 0}`}</span>
             </li>
           )})

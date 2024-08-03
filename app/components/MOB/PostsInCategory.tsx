@@ -18,7 +18,7 @@ export default function PostsInCategory({ category }: { category: unknown }) {
             return (
               <li key={title}>
                 <time>{`${date}`}</time>
-                <span>&#11116;</span>
+                <span>—</span>
                 <Link href={`/${title.toLowerCase()}`}>{`${title}`}</Link>
               </li>
             )
