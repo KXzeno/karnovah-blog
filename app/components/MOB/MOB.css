@@ -2,6 +2,10 @@
 @tailwind utilities;
 
 @layer components {
+  .hover-effect {
+    @apply hover:bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glowA hover:text-transparent;
+  }
+
   #nav-box {
     @apply flex flex-auto flex-row min-w-max h-[5.3rem] text-center justify-center gap-16 items-center bg-[#18122B] text-green-400;
   }
@@ -64,5 +68,25 @@
 
   .footer-second-cell > div:nth-child(2) a {
     @apply hover:text-[#69c000];
+  }
+
+  .cat-wrapper {
+    @apply flex flex-col w-screen items-center translate-y-[7rem];
+  }
+
+  .cat-wrapper section {
+    @apply grid grid-cols-1;
+  }
+
+  .cat-wrapper section ul li span {
+    @apply px-2 pl-1 text-red-500;
+  }
+
+  .cat-wrapper section ul li a {
+    @apply hover-effect text-slate-500;
+  }
+
+  .cat-wrapper section ul li time {
+    @apply text-[#FFAF00];
   }
 }
