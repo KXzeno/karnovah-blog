@@ -1,17 +1,13 @@
 @tailwind utilities;
 @tailwind components;
 
-h1 {
-  @apply text-xs;
-}
-
-body {
-  @apply min-h-screen;
-}
-
 @layer utilities {
   .catalog {
     @apply relative grid grid-cols-1 max-w-max mx-auto min-h-[10rem] items-center;
+  }
+
+  .catalog ul li {
+    @apply flex flex-row;
   }
 
   .catalog ul li a {
@@ -19,11 +15,10 @@ body {
   }
 
   .catalog ul li > span:nth-child(2) {
-    @apply px-2 align-[-2px] pr-3 text-red-500;
+    @apply px-2 align-[-2px] text-red-500;
   }
 
   .catalog ul li > span:nth-child(3) {
     @apply bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glowA text-transparent;
   }
-
 }
