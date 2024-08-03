@@ -72,6 +72,9 @@ export async function getByCategory(name?: string): Promise<Category[] | Categor
       let query: Category | null = await prisma.category.findUnique({
         where: {
           name: name,
+        },
+        include: {
+          posts: true,
         }
       })
       return query;
