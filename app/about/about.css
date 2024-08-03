@@ -19,7 +19,7 @@
   }
 
   main > section:nth-child(2) {
-    @apply font-merriweather text-animate text-slate-300 text-center p-4 pt-8 text-sm;
+    @apply font-merriweather text-animate text-slate-300 text-center p-4 pt-8 text-sm md:p-32 lg:p-64 text-balance;
   }
 
   main {
