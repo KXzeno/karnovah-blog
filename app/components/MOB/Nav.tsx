@@ -7,12 +7,9 @@ import useToggle from '@H/use-toggle';
 import SubMenu from '@F/SubMenu';
 import Link from 'next/link';
 import { LayoutGroup, motion } from 'framer-motion';
-import { useSearchParams } from 'next/navigation';
 
 export default function Nav() {
   const router = useRouter();
-  let searchParams = useSearchParams();
-  let endpoint = searchParams.entries();
 
   let [endpointAccessed, setEndpointAccessed] = React.useState<number>(1);
 
