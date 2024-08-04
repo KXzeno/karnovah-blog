@@ -34,10 +34,15 @@ const config: Config = {
       keyframes: {
         'low-prio': {
           '100%':  { 'background-position': '0 30em' }
+        },
+        'revolver' : {
+          'from': { 'transform': 'rotate(0deg)' },
+          'to': { 'transform': 'rotate(90deg)' }
         }
       },
       animation: {
-        glowA: 'low-prio 70s linear infinite'
+        glowA: 'low-prio 70s linear infinite',
+        revolver: 'revolver 1s infinite'
       }
     },
   },
