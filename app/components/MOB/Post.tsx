@@ -36,6 +36,7 @@ function project(sections: Section[]): React.ReactNode {
   let nodeG: React.ReactNode[] = [];
   // Iterate through section body
   for (let i = 0; i < sections.length; i++) {
+    // TODO: Handle case of multiple aside elements
     // Well-define 'header' using nullish coalescence  
     let hdr = sections[i].header ?? sections[i].subheader;
     // If header, push as RFC; if subheader, push as RFC with prop
@@ -64,13 +65,32 @@ export default async function Post({ param }: { param: string }): Promise<React.
   if (post === null || post === undefined) notFound();
   // LOCAL: @ts-expect-error
   let sections: Array<Section> = post.sections;
+  let primAside: { type: string | undefined, content: string | undefined };
+  if (sections[0].aside[0] && sections[0].content[0]) {
+    primAside = {
+      type: sections[0].aside.shift(),
+      content: sections[0].content.shift(), 
+    };
+  } else { return; }
 
   return (
     <ArticleProvider>
       <Header>
         {post.title}
       </Header>
-      <SubHeader>
+      <SubHeader
+        AddHeader={
+          <AddHeader
+            HeaderNote={
+              <HeaderNote>
+                <Warning />
+              </HeaderNote>
+            }
+          >
+            {primAside.content}
+          </AddHeader>
+        }
+      >
         {/* LOCAL: @ts-expect-error */}
         {post.subtitle}
       </SubHeader>
