@@ -118,7 +118,7 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
     }
   }
 
-  if (choiceSelected && Number.parseInt(choiceSelected) === 1) {
+  if (choiceSelected && Number.parseInt(choiceSelected) === 1 && initialData.length > 1) {
     choice = true;
     queryParams = { ...queryParams, where: { choice: { not: 4 } } }
     initialData = initialData.filter((post) => {
