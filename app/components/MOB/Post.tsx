@@ -72,7 +72,7 @@ export default async function Post({ param }: { param: string }): Promise<React.
       </Header>
       <SubHeader>
         {/* LOCAL: @ts-expect-error */}
-        {post.description}
+        {post.subtitle}
       </SubHeader>
       <PrimaryContent>
         {project(sections)}
