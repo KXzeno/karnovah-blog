@@ -83,7 +83,7 @@ export default async function Post({ param }: { param: string }): Promise<React.
           <AddHeader
             HeaderNote={
               <HeaderNote>
-                <Warning />
+                <Warning type={`${primAside.type}`}/>
               </HeaderNote>
             }
           >
@@ -97,6 +97,15 @@ export default async function Post({ param }: { param: string }): Promise<React.
       <PrimaryContent>
         {project(sections)}
       </PrimaryContent>
+      {/* TODO: Inline aside
+      <AddHeader HeaderNote={
+        <HeaderNote>
+          <Warning />
+        </HeaderNote>
+        }>
+        Nani
+      </AddHeader>
+        */}
     </ArticleProvider>
   );
 }
