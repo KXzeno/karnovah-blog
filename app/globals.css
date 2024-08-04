@@ -91,7 +91,7 @@
   }
 
   .add-header {
-    @apply relative bg-[#232D3F] rounded-[2px] p-4 m-2 rounded-tl-[11px] border-l-2 border-[#E0E722] text-[#E0E722] lg:text-[13px];
+    @apply relative bg-[#232D3F] rounded-[2px] p-4 m-2 rounded-tl-[11px] border-l-2 border-[#433D8B] text-[#c743ff] lg:text-[13px];
   }
 
   .header-note {
