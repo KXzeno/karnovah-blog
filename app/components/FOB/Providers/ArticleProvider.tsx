@@ -54,9 +54,7 @@ export function SubHeader({ children, AddHeader }: {children: React.ReactNode, A
       <div>
         <h2>{children}</h2>
       </div>
-      <div>
-        {AddHeader}
-      </div>
+      {AddHeader}
     </hgroup>
   );
 }
