@@ -114,8 +114,8 @@
     @apply relative;
   }
 
-  hgroup > div:nth-child(2) > div:nth-child(2) {
-    @apply -translate-y-[4.37rem];
+  hgroup > div:nth-child(3) {
+    @apply translate-y-[3.43rem];
   } 
 
   .header-note {
