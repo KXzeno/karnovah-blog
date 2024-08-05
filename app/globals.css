@@ -91,15 +91,11 @@
   }
 
   .add-header {
-    @apply relative bg-[#232D3F] rounded-[2px] p-4 m-2 rounded-tl-[11px] border-l-2 border-[#433D8B] text-[#c743ff] lg:text-[13px] text-xs;
+    @apply relative bg-[#232D3F] rounded-[2px] p-4 m-2 rounded-tl-[11px] border-l-2 border-[#433D8B] text-[#c743ff] lg:text-[13px] text-xs font-spectral;
     -webkit-mask-image: radial-gradient(circle at top left, transparent 1.07rem, black 1%);
     -webkit-mask-position: top left;
     -webkit-mask-size: 100%;
     -webkit-mask-repeat: no-repeat;
-  }
-
-  .add-header p {
-    @apply h-max;
   }
 
   .add-header-mask {
@@ -111,7 +107,7 @@
   }
 
   section div section div {
-    @apply relative py-[1rem];
+    @apply relative py-[1rem] font-spectral;
   }
 
   hgroup div:nth-child(2) {
@@ -123,11 +119,11 @@
   } 
 
   .header-note {
-    @apply w-8 h-8 z-10 absolute inline-flex top-0 left-0 absolute -translate-x-[0.3rem] -translate-y-[0.8rem] rounded-br-[1.3rem];
+    @apply w-8 h-8 z-10 absolute inline-flex top-0 left-0 absolute -translate-x-[0.3rem] -translate-y-[1.3rem] rounded-br-[1.3rem];
   }
 
   .primary-content {
-    @apply text-[#E5E1E6] text-base max-sm:text-[11px] sm:max-md:text-[13px];
+    @apply text-[#E5E1E6] text-base max-sm:text-[11px] sm:max-md:text-[13px] font-dosis;
   }
 
   .curr-head {
@@ -143,7 +139,7 @@
   }
 
   section div section p {
-    @apply group-[.curr-head]:curr-head font-dosis;
+    @apply group-[.curr-head]:curr-head;
   }
 
   .text-balance {
