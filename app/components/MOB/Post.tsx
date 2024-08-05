@@ -36,7 +36,6 @@ function project(sections: Section[]): React.ReactNode {
   let nodeG: React.ReactNode[] = [];
   // Iterate through section body
   for (let i = 0; i < sections.length; i++) {
-    // TODO: Handle case of multiple aside elements
     // Well-define 'header' using nullish coalescence  
     let hdr = sections[i].header ?? sections[i].subheader;
     // If header, push as RFC; if subheader, push as RFC with prop
@@ -44,7 +43,30 @@ function project(sections: Section[]): React.ReactNode {
       nodeG.push(<Section>{hdr}</Section>) :
       nodeG.push(<Section as='subsec'>{hdr}</Section>);
     // Flatten all paragraphs and map transform each to React nodes
-    let contents = sections[i].content.flatMap((par, i) => (<p key={i}>{par}</p>));
+    let contents = sections[i].content.flatMap((par, index) => {
+      if (sections[i].aside[0] && index + 1 === Number.parseInt(sections[i].aside[0].split(/\$/)[1])) {
+        let content = sections[i].content[index + 1];
+        let asideType: string = (sections[i].aside.shift() as string).split(/\$/)[0];
+        sections[i].content[index + 1] = '';
+        return (
+          <>
+            <p key={i}>{par}</p>
+            <div>
+              <AddHeader HeaderNote={
+                <HeaderNote>
+                  <Warning type={asideType}/>
+                </HeaderNote>
+                }>
+                {content}
+              </AddHeader>
+            </div>
+          </>
+        )
+      }
+      if (par.length > 0) {
+        return (<p key={i}>{par}</p>);
+      }
+    });
     nodeG.push(<section key={hdr}>{[...contents]}</section>);
   }
   /** Return spread of React node array,
@@ -71,6 +93,14 @@ export default async function Post({ param }: { param: string }): Promise<React.
       type: sections[0].aside.shift(),
       content: sections[0].content.shift(), 
     };
+    /** Adjust index of next aside
+     *
+     * Cannot parse pattern ($&) as Number, returns NaN
+     * @see {@link {https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace}}
+     */
+    if (sections[0].aside[0]) {
+      sections[0].aside[0] = sections[0].aside[0].replace(/\d$/, `${sections[0].content.length - 1}`);
+    }
   } else { return; }
 
   return (
@@ -97,15 +127,6 @@ export default async function Post({ param }: { param: string }): Promise<React.
       <PrimaryContent>
         {project(sections)}
       </PrimaryContent>
-      {/* TODO: Inline aside
-      <AddHeader HeaderNote={
-        <HeaderNote>
-          <Warning />
-        </HeaderNote>
-        }>
-        Nani
-      </AddHeader>
-        */}
     </ArticleProvider>
   );
 }
