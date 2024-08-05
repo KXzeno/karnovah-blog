@@ -11,7 +11,7 @@
   }
 
   main > picture > p > button > em {
-    @apply text-inherit underline decoration-slate-300 decoration-dotted;
+    @apply text-inherit underline decoration-slate-300 decoration-dotted cursor-help;
   }
 
   picture > p:nth-child(2) {
