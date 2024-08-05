@@ -27,7 +27,7 @@ export default function Akhundelar(): React.ReactNode {
           <AddHeader
             HeaderNote={
               <HeaderNote>
-                <Warning />
+                <Warning type={'any'}/>
               </HeaderNote>
             }
           >
