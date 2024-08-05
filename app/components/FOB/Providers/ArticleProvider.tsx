@@ -55,17 +55,21 @@ export function SubHeader({ children, AddHeader }: {children: React.ReactNode, A
       <div>
         <h2>{children}</h2>
       </div>
-      {AddHeader}
+      <div>
+        {AddHeader}
+      </div>
     </hgroup>
   );
 }
 
 export function AddHeader({ children, HeaderNote }: {children: React.ReactNode, HeaderNote?: React.ReactNode }) {
   return (
-    <aside className="add-header">
-      <p>{children}</p>
+    <>
+      <aside className="add-header">
+        <p>{children}</p>
+      </aside>
       {HeaderNote}
-    </aside>
+    </>
   );
 }
 
@@ -82,7 +86,7 @@ export function PrimaryContent({ children }: {children: React.ReactNode }) {
     <div>
       <section className="primary-content">
         <div>
-            {children}
+          {children}
         </div>
       </section>
     </div>
