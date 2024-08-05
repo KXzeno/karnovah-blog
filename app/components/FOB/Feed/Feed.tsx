@@ -126,7 +126,12 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
         return post;
       }
     });
-    initialCursor = initialData[initialData.length - 1].post_id;
+    try {
+      initialCursor = initialData[initialData.length - 1].post_id;
+    } catch (x) {
+      console.error(x);
+      router.replace('/');
+    }
   } else if (choiceSelected && Number.parseInt(choiceSelected) === 0) {
     router.replace('/');
   }
