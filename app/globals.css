@@ -91,7 +91,7 @@
   }
 
   .add-header {
-    @apply relative bg-[#232D3F] rounded-[2px] p-4 m-2 rounded-tl-[11px] border-l-2 border-[#433D8B] text-[#c743ff] lg:text-[13px] text-xs font-spectral;
+    @apply relative bg-[#232D3F] rounded-[2px] p-4 m-2 rounded-tl-[11px] border-l-2 border-[#433D8B] text-[#c743ff] lg:text-[13px] sm:max-md:text-xs md:text-sm font-spectral;
     -webkit-mask-image: radial-gradient(circle at top left, transparent 1.07rem, black 1%);
     -webkit-mask-position: top left;
     -webkit-mask-size: 100%;
@@ -108,6 +108,10 @@
 
   section div section div {
     @apply relative py-[1rem] font-spectral;
+  }
+
+  .primary-content section > p {
+    @apply p-4;
   }
 
   hgroup div:nth-child(2) {
