@@ -37,7 +37,7 @@ export function Warning({ className, type }: WarningProps) {
       return (
         <div className='h-12 w-12 -translate-y-[0.11rem] -translate-x-[0.13rem]'>
           <svg 
-            className={`fill-[#433D8B] stroke-[#62438C] animate-[revolver_1s_ease-in-out_infinite] ${className}`}
+            className={`fill-[#433D8B] stroke-[#25383C] animate-[revolver_1s_ease-in-out_infinite] ${className}`}
             xmlns="http://www.w3.org/2000/svg" 
             shape-rendering="geometricPrecision" 
             text-rendering="geometricPrecision" 
