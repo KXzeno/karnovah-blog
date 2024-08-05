@@ -92,10 +92,34 @@
 
   .add-header {
     @apply relative bg-[#232D3F] rounded-[2px] p-4 m-2 rounded-tl-[11px] border-l-2 border-[#433D8B] text-[#c743ff] lg:text-[13px];
+    -webkit-mask-image: radial-gradient(circle at top left, transparent 1.07rem, black 1%);
+    -webkit-mask-position: top left;
+    -webkit-mask-size: 100%;
+    -webkit-mask-repeat: no-repeat;
   }
 
+  .add-header-mask {
+    @apply absolute h-16 w-16 border-2 border-white z-20 bg-inherit;
+    -webkit-mask-image: radial-gradient(circle, transparent 50%, black 51%);
+    -webkit-mask-position: top left;
+    -webkit-mask-size: 100%;
+    -webkit-mask-repeat: no-repeat;
+  }
+
+  section div section div {
+    @apply relative;
+  }
+
+  hgroup div:nth-child(2) {
+    @apply relative;
+  }
+
+  hgroup > div:nth-child(2) > div:nth-child(2) {
+    @apply -translate-y-[4.37rem];
+  } 
+
   .header-note {
-    @apply w-8 h-8 z-10 bg-[#1F2022] absolute inline-flex top-0 left-0 absolute -translate-x-[0.8rem] -translate-y-[0.8rem] rounded-br-[1.3rem]
+    @apply w-8 h-8 z-10 absolute inline-flex top-0 left-0 absolute -translate-x-[0.3rem] -translate-y-[0.8rem] rounded-br-[1.3rem];
   }
 
   .primary-content {
