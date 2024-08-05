@@ -73,9 +73,6 @@ export default function Nav() {
     }
   ];
 
-  // TODO: ---> Remove endpointAccessed state when leaving the endpoint
-  //            And use state to move the footer :pleasestop:
-  //            Categories --> ???
   return (
     <>
       <nav id="nav-box" onMouseLeave={() => setHoveredNavItem(null)}>

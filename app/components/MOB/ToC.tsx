@@ -102,7 +102,6 @@ export default function TableOfContents(): React.ReactNode {
     };
   }, [tocList, setArrData, indexer]);
 
-  // TODO: See React type for inference
   let data = React.useMemo(() => {
     // if (arrData.length > Object.keys(tocList).length) {
     //   arrData.splice(Object.keys(tocList).length);

@@ -5,8 +5,6 @@ export default function PostsInCategory({ category }: { category: unknown }) {
   // @ts-expect-error
   let posts = category.posts;
 
-  // TODO: dash-case url and titles when handling server side
-
   return (
     <main className='cat-wrapper'>
       <section>

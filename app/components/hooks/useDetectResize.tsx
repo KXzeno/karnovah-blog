@@ -40,8 +40,4 @@ export default function useDetectResize(breakpoint: number = 768): SymboledObjec
     [widthSymbol]: screenWidth,
     [breakpointCrossedSymbol]: isWidth,
   };
-  // TODO: Give a generator function that handles array of breakpoints
-  // function() {
-  //   console.log('test');
-  // }
 }

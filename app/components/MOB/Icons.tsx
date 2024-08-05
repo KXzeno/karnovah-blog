@@ -11,7 +11,6 @@ interface WarningProps {
   className?: string | undefined;
   type: string | undefined;
 }
-// TODO: Framer Motion
 export function Warning({ className, type }: WarningProps) {
   switch (type) {
     case '2nd' :{
