@@ -37,7 +37,7 @@ export default function About(): React.ReactNode {
         <Image id='insert' src='https://i.postimg.cc/fLZb7vHm/2024-08-03-00-40-14.png' alt='author-pfp' width={310} height={310} />
         <p>Kx</p>
         <div />
-        <p>Aspiring Software Engineer, Science Fantasy Novelist, Self-help Author, and Fantasist—
+        <p>Aspiring Software Engineer, Science and Progression Fantasy Novelist, Self-help Author, and Fantasist—
           <button 
             type="button"
             onClick={(e) => dispatch({ type: 'phrase', courier: { phrase: (e.target as HTMLButtonElement).outerText } })}
