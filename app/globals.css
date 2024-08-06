@@ -119,7 +119,7 @@
   }
 
   hgroup > div:nth-child(3) {
-    @apply translate-y-[3.43rem];
+    @apply translate-y-[3.43rem] max-sm:translate-y-[5.17rem];
   } 
 
   .header-note {
