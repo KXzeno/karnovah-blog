@@ -118,8 +118,8 @@
     @apply relative;
   }
 
-  hgroup > div:nth-child(3) {
-    @apply translate-y-[3.43rem] max-sm:translate-y-[5.17rem];
+  hgroup > div:nth-child(2) > div:nth-child(2).header-note {
+    @apply absolute -translate-y-[0.83rem];
   } 
 
   .header-note {
