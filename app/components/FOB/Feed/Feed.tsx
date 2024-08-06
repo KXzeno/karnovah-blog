@@ -221,10 +221,13 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
     return (
       <main className='home-page'>
         {state.posts.map((post: any, index: number) => {
+          let volatileURL;
+          // Clear commas, spaces and double quotes
+          let compressedURL = post.title.toLowerCase().replaceAll(/\,\s|\s/g, '-').replaceAll(/\'|\"/g, '');
           if (index === state.posts.length - 1) {
             return (
               <section ref={termRef} className={`post-ctr ${post.choice < 4 ? `choice-${post.choice}` : ''}`} key={post.title}>
-                <Link href={`/${post.title.toLowerCase().replaceAll(/\s/g, '-')}`}>
+                <Link href={compressedURL}>
                   <h1 className='post-title'>{post.title}</h1>
                 </Link>
                 <p className='post-desc'>{post.description}</p>
@@ -235,7 +238,7 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
             return (
               <section className={`post-ctr${post.choice < 4 ? ` choice-${post.choice}` : ''}`} key={post.title}>
                 <span className='section-sym hidden'>§</span>
-                <Link href={`/${post.title.toLowerCase().replaceAll(/\s/g, '-')}`}
+                <Link href={compressedURL}
                   onPointerOver={(e) => {
                     let elem = e.target as HTMLElement;
                     if (!elem) return;
