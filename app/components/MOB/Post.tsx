@@ -45,9 +45,29 @@ function project(sections: Section[]): React.ReactNode {
     // Flatten all paragraphs and map transform each to React nodes
     let contents = sections[i].content.flatMap((par, index) => {
       if (sections[i].aside[0] && index + 1 === Number.parseInt(sections[i].aside[0].split(/\$/)[1])) {
-        let content = sections[i].content[index + 1];
+        let content: React.ReactNode[] | string = sections[i].content[index + 1];
         let asideType: string = (sections[i].aside.shift() as string).split(/\$/)[0].toLowerCase();
         sections[i].content[index + 1] = '';
+        let frags = content.split(/(?:\<(\S+)\>)/);
+        // Implement lesser ver. of styling algorithm below
+        if (frags.length > 1) {
+          let newContent = new SinglyLinkedList<string | React.ReactNode>();
+          for (let i = 2; i < frags.length; i += 4) {
+            newContent.addLast(frags[i - 2]);
+            let Style = frags[i - 1] as keyof JSX.IntrinsicElements;
+            newContent.addLast(<Style>{frags[i]}</Style>)
+            if ((i + 4) > frags.length && i < frags.length - 1) {
+              newContent.addLast(frags[frags.length - 1]);
+            }
+          }
+          let final: React.ReactNode[] = [];
+          while (!newContent.isEmpty()) {
+            final.push(<>{newContent.removeFirst()}</>);
+          }
+          content = final;
+        } else {
+          content = [<>{content}</>];
+        }
         return (
           <>
             <p key={i}>{par}</p>
@@ -60,7 +80,7 @@ function project(sections: Section[]): React.ReactNode {
                       type={asideType}/>
                   </HeaderNote>
                 }>
-                {content}
+                {...content as React.ReactNode[]}
               </AddHeader>
             </div>
           </>
@@ -79,6 +99,7 @@ function project(sections: Section[]): React.ReactNode {
        * @see {@link https://www.rexegg.com/regex-style.php}
        */
       if (par.length > 0) {
+        // TODO: Handle bold font and migrate algorithm logic to function for reusability and adaptability
         let enriched = new SinglyLinkedList<string | React.ReactNode>();
         let enrich = par.split(/(?:\<(\S+)\>)/);
         if (enrich && enrich.length > 2) {
@@ -123,11 +144,33 @@ export default async function Post({ param }: { param: string }): Promise<React.
   if (post === null || post === undefined) notFound();
   // LOCAL: @ts-expect-error
   let sections: Array<Section> = post.sections;
-  let primAside: { type: string | undefined, content: string | undefined };
+  let primAside: { type: string | undefined, content: React.ReactNode[] | string | undefined };
   if (sections[0].aside[0] && sections[0].content[0]) {
+    let content: React.ReactNode[] | string = sections[0].content[0];
+    sections[0].content.shift();
+    let frags = content.split(/(?:\<(\S+)\>)/);
+    let newContent = new SinglyLinkedList<React.ReactNode | string>();
+    if (frags.length > 1) {
+      for (let i = 2; i < frags.length; i += 4) {
+        newContent.addLast(frags[i - 2]);
+        let Style = frags[i - 1] as keyof JSX.IntrinsicElements;
+        newContent.addLast(<Style>{frags[i]}</Style>);
+        if (i < frags.length - 1 && (i + 4) > frags.length) {
+          newContent.addLast(frags[frags.length - 1]);
+        }
+      }
+      let cache: React.ReactNode[] = [];
+      while (!newContent.isEmpty()) {
+        cache.push(<>{newContent.removeFirst()}</>);
+      }
+      content = cache;
+    } else {
+      content = [<>{frags[0]}</>];
+    }
+
     primAside = {
       type: sections[0].aside.shift(),
-      content: sections[0].content.shift(), 
+      content: [...content], 
     };
     /** Adjust index of next aside
      *
