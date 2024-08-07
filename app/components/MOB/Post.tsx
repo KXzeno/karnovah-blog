@@ -46,16 +46,19 @@ function project(sections: Section[]): React.ReactNode {
     let contents = sections[i].content.flatMap((par, index) => {
       if (sections[i].aside[0] && index + 1 === Number.parseInt(sections[i].aside[0].split(/\$/)[1])) {
         let content = sections[i].content[index + 1];
-        let asideType: string = (sections[i].aside.shift() as string).split(/\$/)[0];
+        let asideType: string = (sections[i].aside.shift() as string).split(/\$/)[0].toLowerCase();
         sections[i].content[index + 1] = '';
         return (
           <>
             <p key={i}>{par}</p>
             <div>
-              <AddHeader HeaderNote={
-                <HeaderNote>
-                  <Warning type={asideType}/>
-                </HeaderNote>
+              <AddHeader 
+                type={asideType}
+                HeaderNote={
+                  <HeaderNote>
+                    <Warning 
+                      type={asideType}/>
+                  </HeaderNote>
                 }>
                 {content}
               </AddHeader>
