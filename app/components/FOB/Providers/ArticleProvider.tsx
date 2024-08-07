@@ -61,10 +61,10 @@ export function SubHeader({ children, AddHeader }: {children: React.ReactNode, A
   );
 }
 
-export function AddHeader({ children, HeaderNote }: {children: React.ReactNode, HeaderNote?: React.ReactNode }) {
+export function AddHeader({ children, HeaderNote, type }: {children: React.ReactNode, HeaderNote: React.ReactNode, type?: string }) {
   return (
     <>
-      <aside className="add-header">
+      <aside className={`add-header${(type && type.padStart(type.length + 1)) ?? ''}`}>
         <p>{children}</p>
       </aside>
       {HeaderNote}
