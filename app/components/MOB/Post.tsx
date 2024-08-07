@@ -10,7 +10,7 @@ import ArticleProvider, {
 } from '@P/ArticleProvider';
 import Section from '@M/Section';
 import { readPost } from '@A/PostActions';
-import { SinglyLinkedList } from '../../../utils/SinglyLinkedList';
+import { SinglyLinkedList } from '@U/SinglyLinkedList';
 
 interface Section {
   section_id: number;
@@ -66,8 +66,41 @@ function project(sections: Section[]): React.ReactNode {
           </>
         )
       }
+      /** @description
+       * (?:...|...) -> non-capturing group doesn't store
+       * matched group to memory; also doesn't "capture" the pattern
+       * which is also non-captured by default without the capture
+       * group syntax (...). Capturing is required to be recognized
+       * in JS operations such as `.split`, where (x) will be stored
+       * in between split elements. I suppose you can insert capture
+       * groups in a non-capture group. Word is the whole regexp is one
+       * capture group, we transform it to matches which boils down to
+       * the part we want to capture or just use the matches for expressions
+       * @see {@link https://www.rexegg.com/regex-style.php}
+       */
       if (par.length > 0) {
-        return (<p key={i}>{par}</p>);
+        let enriched = new SinglyLinkedList<string | React.ReactNode>();
+        let enrich = par.split(/(?:\<(\S+)\>)/);
+        if (enrich && enrich.length > 2) {
+         for (let i = 2; i < enrich.length; i += 4) {
+           /** @see {@link https://www.typescriptlang.org/docs/handbook/2/keyof-types.html#handbook-content}
+            *  keyof creates a union type of a type's keys
+            */
+           let Style = enrich[i - 1] as keyof JSX.IntrinsicElements;
+           enriched.addLast(enrich[i - 2]);
+           enriched.addLast(<Style>{enrich[i]}</Style>);
+           if ((i + 4) > enrich.length && i < enrich.length - 1) {
+             enriched.addLast(enrich[enrich.length - 1]);
+           }
+         }
+        } else {
+          enriched.addLast(enrich[0]);
+        }
+        let node: React.ReactNode[] = [];
+        while (!enriched.isEmpty()) {
+          node.push(<>{enriched.removeFirst()}</>);
+        }
+        return (<p key={i}>{[...node]}</p>);
       }
     });
     nodeG.push(<section key={hdr}>{[...contents]}</section>);
