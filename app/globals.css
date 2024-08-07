@@ -55,6 +55,14 @@
   .body-augmented {
     @apply relative flex flex-col min-h-screen
   }
+
+  .add-header {
+    @apply relative bg-[#232D3F] rounded-[2px] p-4 m-2 rounded-tl-[11px] border-l-2 lg:text-[13px] border-[#433D8B] text-[#c743ff] sm:max-md:text-xs md:text-sm font-spectral;
+    -webkit-mask-image: radial-gradient(circle at top left, transparent 1.07rem, black 1%);
+    -webkit-mask-position: top left;
+    -webkit-mask-size: 100%;
+    -webkit-mask-repeat: no-repeat;
+  }
 }
 
 @layer utilities {
@@ -90,12 +98,12 @@
     @apply max-w-max md:translate-x-[73px] max-sm:mx-auto;
   }
 
-  .add-header {
-    @apply relative bg-[#232D3F] rounded-[2px] p-4 m-2 rounded-tl-[11px] border-l-2 border-[#433D8B] text-[#c743ff] lg:text-[13px] sm:max-md:text-xs md:text-sm font-spectral;
-    -webkit-mask-image: radial-gradient(circle at top left, transparent 1.07rem, black 1%);
-    -webkit-mask-position: top left;
-    -webkit-mask-size: 100%;
-    -webkit-mask-repeat: no-repeat;
+  .add-header.siege {
+    @apply border-[#C80036] text-[#C80036];
+  }
+
+  .siege * {
+    @apply border-[#C80036] text-[#C80036];
   }
 
   .add-header-mask {
