@@ -2,34 +2,6 @@
 
 import { prisma } from "@/prisma";
 
-interface Post {
-  post_id: number;
-  title: string;
-  createdAt: Date;
-  published: boolean;
-  subtitle: string;
-  description: string;
-  sections: Array<Section>;
-  categories: Category[];
-  choice: number | null,
-}
-
-interface Section {
-  section_id: number;
-  header: string | null;
-  postId: number;
-  subheader: string | null;
-  content: string[];
-  img: string[];
-  aside: string[];
-}
-
-interface Category {
-  category_id: number;
-  name: string;
-  posts: Post[]
-}
-
 interface Match {
   [key: number]: any;
   position: number;
