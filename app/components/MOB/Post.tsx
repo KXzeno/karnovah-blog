@@ -12,16 +12,6 @@ import Section from '@M/Section';
 import { readPost } from '@A/PostActions';
 import { SinglyLinkedList } from '@U/SinglyLinkedList';
 
-interface Section {
-  section_id: number;
-  header: string | null;
-  postId: number;
-  subheader: string | null;
-  content: string[];
-  img: string[];
-  aside: string[];
-}
-
 /**
  * O(n) execution for mapping queried Post data to elements,
  * each iteration handles an array property using flatmap which 
@@ -31,24 +21,31 @@ interface Section {
  * @returns {React.ReactNode} A spreaded array of React nodes
  * @author Kx
  */
-function project(sections: Section[]): React.ReactNode {
+function project(sections: unknown[]): React.ReactNode {
   // Initialize return val
   let nodeG: React.ReactNode[] = [];
   // Iterate through section body
   for (let i = 0; i < sections.length; i++) {
     // Well-define 'header' using nullish coalescence  
+    // @ts-expect-error
     let hdr = sections[i].header ?? sections[i].subheader;
     // If header, push as RFC; if subheader, push as RFC with prop
+    // @ts-expect-error
     (hdr === sections[i].header) ?
       nodeG.push(<Section>{hdr}</Section>) :
       nodeG.push(<Section as='subsec'>{hdr}</Section>);
     // Flatten all paragraphs and map transform each to React nodes
+    // @ts-expect-error
     let contents = sections[i].content.flatMap((par, index) => {
+      // @ts-expect-error
       if (sections[i].aside[0] && index + 1 === Number.parseInt(sections[i].aside[0].split(/\$/)[1])) {
+        // @ts-expect-error
         let content: React.ReactNode[] | string = sections[i].content[index + 1];
+        // @ts-expect-error
         let asideType: string = (sections[i].aside.shift() as string).split(/\$/)[0].toLowerCase();
+        // @ts-expect-error
         sections[i].content[index + 1] = '';
-        let frags = content.split(/(?:\<(\S+)\>)/);
+        let frags = (content as string).split(/(?:\<(\S+)\>)/);
         // Implement lesser ver. of styling algorithm below
         if (frags.length > 1) {
           let newContent = new SinglyLinkedList<string | React.ReactNode>();
@@ -103,17 +100,17 @@ function project(sections: Section[]): React.ReactNode {
         let enriched = new SinglyLinkedList<string | React.ReactNode>();
         let enrich = par.split(/(?:\<(\S+)\>)/);
         if (enrich && enrich.length > 2) {
-         for (let i = 2; i < enrich.length; i += 4) {
-           /** @see {@link https://www.typescriptlang.org/docs/handbook/2/keyof-types.html#handbook-content}
-            *  keyof creates a union type of a type's keys
-            */
-           let Style = enrich[i - 1] as keyof JSX.IntrinsicElements;
-           enriched.addLast(enrich[i - 2]);
-           enriched.addLast(<Style>{enrich[i]}</Style>);
-           if ((i + 4) > enrich.length && i < enrich.length - 1) {
-             enriched.addLast(enrich[enrich.length - 1]);
-           }
-         }
+          for (let i = 2; i < enrich.length; i += 4) {
+            /** @see {@link https://www.typescriptlang.org/docs/handbook/2/keyof-types.html#handbook-content}
+             *  keyof creates a union type of a type's keys
+             */
+            let Style = enrich[i - 1] as keyof JSX.IntrinsicElements;
+            enriched.addLast(enrich[i - 2]);
+            enriched.addLast(<Style>{enrich[i]}</Style>);
+            if ((i + 4) > enrich.length && i < enrich.length - 1) {
+              enriched.addLast(enrich[enrich.length - 1]);
+            }
+          }
         } else {
           enriched.addLast(enrich[0]);
         }
@@ -143,12 +140,15 @@ export default async function Post({ param }: { param: string }): Promise<React.
   let post = await readPost(param);
   if (post === null || post === undefined) notFound();
   // LOCAL: @ts-expect-error
-  let sections: Array<Section> = post.sections;
+  let sections: Array<unknown> = post.sections;
   let primAside: { type: string | undefined, content: React.ReactNode[] | string | undefined };
+  // @ts-expect-error
   if (sections[0].aside[0] && sections[0].content[0]) {
+    // @ts-expect-error
     let content: React.ReactNode[] | string = sections[0].content[0];
+    // @ts-expect-error
     sections[0].content.shift();
-    let frags = content.split(/(?:\<(\S+)\>)/);
+    let frags = (content as string).split(/(?:\<(\S+)\>)/);
     let newContent = new SinglyLinkedList<React.ReactNode | string>();
     if (frags.length > 1) {
       for (let i = 2; i < frags.length; i += 4) {
@@ -169,6 +169,7 @@ export default async function Post({ param }: { param: string }): Promise<React.
     }
 
     primAside = {
+      // @ts-expect-error
       type: sections[0].aside.shift(),
       content: [...content], 
     };
@@ -177,7 +178,9 @@ export default async function Post({ param }: { param: string }): Promise<React.
      * Cannot parse pattern ($&) as Number, returns NaN
      * @see {@link {https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace}}
      */
+    // @ts-expect-error
     if (sections[0].aside[0]) {
+      // @ts-expect-error
       sections[0].aside[0] = sections[0].aside[0].replace(/\d$/, `${sections[0].content.length - 1}`);
     }
   } else { return; }
