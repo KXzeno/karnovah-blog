@@ -45,12 +45,9 @@ function project(sections: unknown[]): React.ReactNode {
         let asideType: string = (sections[i].aside.shift() as string).split(/\$/)[0].toLowerCase();
         // @ts-expect-error
         sections[i].content[index + 1] = '';
-        // @ts-expect-error
-        console.log(content);
         let frags = (content as string).split(/(?:(?<=\S+[\b\S+][\W{1}|\=][\W{1}|"'{1}]))(.+)(?:\W{1}|[\"\']{1})/);
         // Implement lesser ver. of styling algorithm below
         if (frags.length > 1) {
-          console.log('bruh');
           let newContent = new SinglyLinkedList<string | React.ReactNode>();
           for (let i = 2; i < frags.length; i += 4) {
             newContent.addLast(frags[i - 2]);
@@ -74,9 +71,52 @@ function project(sections: unknown[]): React.ReactNode {
         } else {
           content = [<>{content}</>];
         }
+        let newPar: React.ReactNode | undefined = undefined; 
+        if (par.length > 0) {
+          let enriched = new SinglyLinkedList<string | React.ReactNode>();
+          /** Fixed using lazy delimiters on greedies 
+           * Previously, character class `...[\S\s]+['"]` is greedy in that it matches
+           * until the last ' or "
+           * @see {@link https://www.rexegg.com/regex-quantifiers.php#lazytrap}
+           * @see {@link https://www.rexegg.com/regex-quantifiers.php}
+           */
+          let enrich = par.split(/(?:\<(\S+\sclassName\W['"][\S\s]+?['"]|\S+)\>)/);
+          if (enrich && enrich.length > 2) {
+            for (let i = 2; i < enrich.length; i += 4) {
+              /** @see {@link https://www.typescriptlang.org/docs/handbook/2/keyof-types.html#handbook-content}
+               *  keyof creates a union type of a type's keys
+               */
+              let Style = enrich[i - 1] as keyof JSX.IntrinsicElements;
+              // Compiler prefers undefined over null?
+              let optClass: { className: string | undefined } = { className: undefined };
+              enriched.addLast(enrich[i - 2]);
+              console.log(`${i}: ${enrich[i-2]}\n${i}: ${enrich[i-1]}\n${i}: ${enrich[i]}\n`);
+              if (Style.search(/(?:\S+[\s])/) !== -1) {
+                // Do word boundaries only work in character classes?
+                // Second personally made unguided sorta-complex regexp
+                // Wrapping `.+` in capture group causes two matches, is it able to override default?
+                // FIXME: Handle multiple bold inputs
+                let searchIndex = Style.match(/(?:(?<=\S+[\b\S+][\W{1}|\=][\W{1}|"'{1}]))(.+)(?:\W{1}|[\"\']{1})/);
+                optClass.className = (searchIndex && searchIndex[1]) ?? undefined;
+                Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof JSX.IntrinsicElements;
+              }
+              enriched.addLast(<Style {...optClass}>{enrich[i]}</Style>);
+              if ((i + 4) > enrich.length && i < enrich.length - 1) {
+                enriched.addLast(enrich[enrich.length - 1]);
+              }
+            }
+          } else {
+            enriched.addLast(enrich[0]);
+          }
+          let node: React.ReactNode[] = [];
+          while (!enriched.isEmpty()) {
+            node.push(<>{enriched.removeFirst()}</>);
+          }
+          newPar = (<p key={i}>{[...node]}</p>);
+        }
         return (
           <>
-            <p key={i}>{par}</p>
+            {newPar ?? <p key={i}>{par}</p>}
             <div>
               <AddHeader 
                 type={asideType}
@@ -104,6 +144,7 @@ function project(sections: unknown[]): React.ReactNode {
        * the part we want to capture or just use the matches for expressions
        * @see {@link https://www.rexegg.com/regex-style.php}
        */
+      // FIXME: Par not reached
       if (par.length > 0) {
         let enriched = new SinglyLinkedList<string | React.ReactNode>();
         let enrich = par.split(/(?:\<(\S+|\S+\sclassName\W['"][\S\s]+['"]{1})\>)/);
