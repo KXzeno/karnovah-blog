@@ -96,17 +96,28 @@ function project(sections: unknown[]): React.ReactNode {
        * @see {@link https://www.rexegg.com/regex-style.php}
        */
       if (par.length > 0) {
-        // TODO: Handle bold font and migrate algorithm logic to function for reusability and adaptability
         let enriched = new SinglyLinkedList<string | React.ReactNode>();
-        let enrich = par.split(/(?:\<(\S+)\>)/);
+        let enrich = par.split(/(?:\<(\S+|\S+\sclassName\W['"][\S\s]+['"]{1})\>)/);
         if (enrich && enrich.length > 2) {
           for (let i = 2; i < enrich.length; i += 4) {
             /** @see {@link https://www.typescriptlang.org/docs/handbook/2/keyof-types.html#handbook-content}
              *  keyof creates a union type of a type's keys
              */
             let Style = enrich[i - 1] as keyof JSX.IntrinsicElements;
+            // Compiler prefers undefined over null?
+            let optClass: { className: string | undefined } = { className: undefined };
             enriched.addLast(enrich[i - 2]);
-            enriched.addLast(<Style>{enrich[i]}</Style>);
+            // console.log(`${i}: ${enrich[i-2]}\n${i}: ${enrich[i-1]}\n${i}: ${enrich[i]}\n`);
+            if (Style.search(/(?:\S+[\s])/) !== -1) {
+              // Do word boundaries only work in character classes?
+              // Second personally made unguided sorta-complex regexp
+              // Wrapping `.+` in capture group causes two matches, is it able to override default?
+              // FIXME: Handle multiple bold inputs
+              let searchIndex = Style.match(/(?:(?<=\S+[\b\S+][\W{1}|\=][\W{1}|"'{1}]))(.+)(?:\W{1}|[\"\']{1})/);
+              optClass.className = (searchIndex && searchIndex[1]) ?? undefined;
+              Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof JSX.IntrinsicElements;
+            }
+            enriched.addLast(<Style {...optClass}>{enrich[i]}</Style>);
             if ((i + 4) > enrich.length && i < enrich.length - 1) {
               enriched.addLast(enrich[enrich.length - 1]);
             }
