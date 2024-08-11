@@ -45,14 +45,23 @@ function project(sections: unknown[]): React.ReactNode {
         let asideType: string = (sections[i].aside.shift() as string).split(/\$/)[0].toLowerCase();
         // @ts-expect-error
         sections[i].content[index + 1] = '';
-        let frags = (content as string).split(/(?:\<(\S+)\>)/);
+        // @ts-expect-error
+        console.log(content);
+        let frags = (content as string).split(/(?:(?<=\S+[\b\S+][\W{1}|\=][\W{1}|"'{1}]))(.+)(?:\W{1}|[\"\']{1})/);
         // Implement lesser ver. of styling algorithm below
         if (frags.length > 1) {
+          console.log('bruh');
           let newContent = new SinglyLinkedList<string | React.ReactNode>();
           for (let i = 2; i < frags.length; i += 4) {
             newContent.addLast(frags[i - 2]);
             let Style = frags[i - 1] as keyof JSX.IntrinsicElements;
-            newContent.addLast(<Style>{frags[i]}</Style>)
+            let optClass: { className: string | undefined } = { className: undefined };
+            if (Style.search(/(?:\S+[\s])/) !== -1) {
+              let searchIndex = Style.match(/(?:(?<=\S+[\b\S+][\W{1}|\=][\W{1}|"'{1}]))(.+)(?:\W{1}|[\"\']{1})/);
+              optClass.className = (searchIndex && searchIndex[1]) ?? undefined;
+              Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof JSX.IntrinsicElements;
+            }
+            newContent.addLast(<Style {...optClass}>{frags[i]}</Style>)
             if ((i + 4) > frags.length && i < frags.length - 1) {
               newContent.addLast(frags[frags.length - 1]);
             }
@@ -107,7 +116,7 @@ function project(sections: unknown[]): React.ReactNode {
             // Compiler prefers undefined over null?
             let optClass: { className: string | undefined } = { className: undefined };
             enriched.addLast(enrich[i - 2]);
-            // console.log(`${i}: ${enrich[i-2]}\n${i}: ${enrich[i-1]}\n${i}: ${enrich[i]}\n`);
+            console.log(`${i}: ${enrich[i-2]}\n${i}: ${enrich[i-1]}\n${i}: ${enrich[i]}\n`);
             if (Style.search(/(?:\S+[\s])/) !== -1) {
               // Do word boundaries only work in character classes?
               // Second personally made unguided sorta-complex regexp
@@ -159,13 +168,23 @@ export default async function Post({ param }: { param: string }): Promise<React.
     let content: React.ReactNode[] | string = sections[0].content[0];
     // @ts-expect-error
     sections[0].content.shift();
-    let frags = (content as string).split(/(?:\<(\S+)\>)/);
+    let frags = (content as string).split(/(?:\<(\S+|\S+\sclassName\W['"][\S\s]+['"]{1})\>)/);
     let newContent = new SinglyLinkedList<React.ReactNode | string>();
     if (frags.length > 1) {
       for (let i = 2; i < frags.length; i += 4) {
         newContent.addLast(frags[i - 2]);
         let Style = frags[i - 1] as keyof JSX.IntrinsicElements;
-        newContent.addLast(<Style>{frags[i]}</Style>);
+        let optClass: { className: string | undefined } = { className: undefined };
+        if (Style.search(/(?:\S+[\s])/) !== -1) {
+          // Do word boundaries only work in character classes?
+          // Second personally made unguided sorta-complex regexp
+          // Wrapping `.+` in capture group causes two matches, is it able to override default?
+          // FIXME: Handle multiple bold inputs
+          let searchIndex = Style.match(/(?:(?<=\S+[\b\S+][\W{1}|\=][\W{1}|"'{1}]))(.+)(?:\W{1}|[\"\']{1})/);
+          optClass.className = (searchIndex && searchIndex[1]) ?? undefined;
+          Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof JSX.IntrinsicElements;
+        }
+        newContent.addLast(<Style {...optClass}>{frags[i]}</Style>);
         if (i < frags.length - 1 && (i + 4) > frags.length) {
           newContent.addLast(frags[frags.length - 1]);
         }
