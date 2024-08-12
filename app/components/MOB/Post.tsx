@@ -19,7 +19,8 @@ import { SinglyLinkedList } from '@U/SinglyLinkedList';
  * @author Kx
  */
 function semanticTransform(content: React.ReactNode[] | string): React.ReactNode[] | void {
-  let frags = (content as string).split(/(?:(?<=\S+[\b\S+][\W{1}|\=][\W{1}|"'{1}]))(.+)(?:\W{1}|[\"\']{1})/);
+  let frags = (content as string).split(/(?:\<(\S+\sclassName\W['"][\S\s]+?['"]|\S+)\>)/);
+  console.log(frags);
   // Implement lesser ver. of styling algorithm below
   if (frags.length > 1) {
     let newContent = new SinglyLinkedList<string | React.ReactNode>();
@@ -32,7 +33,7 @@ function semanticTransform(content: React.ReactNode[] | string): React.ReactNode
         optClass.className = (searchIndex && searchIndex[1]) ?? undefined;
         Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof JSX.IntrinsicElements;
       }
-      newContent.addLast(<Style {...optClass}>{frags[i]}</Style>)
+      newContent.addLast(<Style className={optClass.className}>{frags[i]}</Style>)
       if ((i + 4) > frags.length && i < frags.length - 1) {
         newContent.addLast(frags[frags.length - 1]);
       }
@@ -42,9 +43,9 @@ function semanticTransform(content: React.ReactNode[] | string): React.ReactNode
     while (!newContent.isEmpty()) {
       cache.push(<>{newContent.removeFirst()}</>);
     }
-    content = cache;
+    return content = cache;
   } else {
-    content = [<>{content}</>];
+    return content = [<>{content}</>];
   }
 }
 
@@ -96,7 +97,7 @@ function semanticMultilineTransform(par: string, key?: string | number): React.R
           optClass.className = (searchIndex && searchIndex[1]) ?? undefined;
           Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof JSX.IntrinsicElements;
         }
-        enriched.addLast(<Style {...optClass}>{enrich[i]}</Style>);
+        enriched.addLast(<Style className={optClass.className}>{enrich[i]}</Style>);
         if ((i + 4) > enrich.length && i < enrich.length - 1) {
           enriched.addLast(enrich[enrich.length - 1]);
         }
@@ -197,35 +198,9 @@ export default async function Post({ param }: { param: string }): Promise<React.
   // @ts-expect-error
   if (sections[0].aside[0] && sections[0].content[0]) {
     // @ts-expect-error
-    let content: React.ReactNode[] | string = sections[0].content[0];
+    let content: React.ReactNode[] = semanticTransform(sections[0].content[0]);
     // @ts-expect-error
     sections[0].content.shift();
-    let frags = (content as string).split(/(?:\<(\S+|\S+\sclassName\W['"][\S\s]+['"]{1})\>)/);
-    let newContent = new SinglyLinkedList<React.ReactNode | string>();
-    if (frags.length > 1) {
-      for (let i = 2; i < frags.length; i += 4) {
-        newContent.addLast(frags[i - 2]);
-        let Style = frags[i - 1] as keyof JSX.IntrinsicElements;
-        let optClass: { className: string | undefined } = { className: undefined };
-        if (Style.search(/(?:\S+[\s])/) !== -1) {
-          let searchIndex = Style.match(/(?:(?<=\S+[\b\S+][\W{1}|\=][\W{1}|"'{1}]))(.+)(?:\W{1}|[\"\']{1})/);
-          optClass.className = (searchIndex && searchIndex[1]) ?? undefined;
-          Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof JSX.IntrinsicElements;
-        }
-        newContent.addLast(<Style {...optClass}>{frags[i]}</Style>);
-        if (i < frags.length - 1 && (i + 4) > frags.length) {
-          newContent.addLast(frags[frags.length - 1]);
-        }
-      }
-      let cache: React.ReactNode[] = [];
-      while (!newContent.isEmpty()) {
-        cache.push(<>{newContent.removeFirst()}</>);
-      }
-      content = cache;
-    } else {
-      content = [<>{frags[0]}</>];
-    }
-
     primAside = {
       // @ts-expect-error
       type: sections[0].aside.shift(),
