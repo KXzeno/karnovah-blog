@@ -7,7 +7,7 @@
   }
 
   #nav-box {
-    @apply flex flex-auto flex-row min-w-max h-[5.3rem] text-center justify-center gap-16 items-center bg-[#18122B] text-green-400;
+    @apply flex flex-auto flex-row min-w-max h-[5.3rem] text-center justify-center gap-16 items-center bg-[#18122B] text-green-400 max-md:text-[13px];
   }
 
   nav#nav-box .nav-btn {
