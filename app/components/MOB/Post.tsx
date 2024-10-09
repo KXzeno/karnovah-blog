@@ -13,6 +13,109 @@ import { readPost } from '@A/PostActions';
 import { SinglyLinkedList } from '@U/SinglyLinkedList';
 
 /**
+ * Transform consumer semantics to HTML
+ * @param {React.ReactNode[] | string} content - Array of Elements, pending string by default for manipulation
+ * @returns {React.ReactNode[] | void} compiled ReactNodes or content transformation
+ * @author Kx
+ */
+function semanticTransform(content: React.ReactNode[] | string): React.ReactNode[] | void {
+  let frags = (content as string).split(/(?:\<(\S+\sclassName\W['"][\S\s]+?['"]|\S+)\>)/);
+  console.log(frags);
+  // Implement lesser ver. of styling algorithm below
+  if (frags.length > 1) {
+    let newContent = new SinglyLinkedList<string | React.ReactNode>();
+    for (let i = 2; i < frags.length; i += 4) {
+      newContent.addLast(frags[i - 2]);
+      let Style = frags[i - 1] as keyof JSX.IntrinsicElements;
+      let optClass: { className: string | undefined } = { className: undefined };
+      if (Style.search(/(?:\S+[\s])/) !== -1) {
+        let searchIndex = Style.match(/(?:(?<=\S+[\b\S+][\W{1}|\=][\W{1}|"'{1}]))(.+)(?:\W{1}|[\"\']{1})/);
+        optClass.className = (searchIndex && searchIndex[1]) ?? undefined;
+        Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof JSX.IntrinsicElements;
+      }
+      newContent.addLast(<Style className={optClass.className}>{frags[i]}</Style>)
+      if ((i + 4) > frags.length && i < frags.length - 1) {
+        newContent.addLast(frags[frags.length - 1]);
+      }
+    }
+    // Stream newContent to cache and reference by content
+    let cache: React.ReactNode[] = [];
+    while (!newContent.isEmpty()) {
+      cache.push(<>{newContent.removeFirst()}</>);
+    }
+    return content = cache;
+  } else {
+    return content = [<>{content}</>];
+  }
+}
+
+/**
+ * Transform consumer paragraph semantics to HTML
+ * @param {string} par - paragraph to split into multiple lines for parsing
+ * @param {string | number} key - optional attribute for React to identify in virtual DOM
+ * @returns {React.ReactNode | undefined} string-modified React node or undefined
+ * @author Kx
+ */
+function semanticMultilineTransform(par: string, key?: string | number): React.ReactNode | undefined {
+  let newPar: React.ReactNode | undefined = undefined; 
+  if (par.length > 0) {
+    let enriched = new SinglyLinkedList<string | React.ReactNode>();
+    /** Fixed using lazy delimiters on greedies 
+     * Previously, character class `...[\S\s]+['"]` is greedy in that it matches
+     * until the last ' or "
+     * @see {@link https://www.rexegg.com/regex-quantifiers.php#lazytrap}
+     * @see {@link https://www.rexegg.com/regex-quantifiers.php}
+     */
+    let enrich = par.split(/(?:\<(\S+\sclassName\W['"][\S\s]+?['"]|\S+)\>)/);
+    if (enrich && enrich.length > 2) {
+      for (let i = 2; i < enrich.length; i += 4) {
+        /** @see {@link https://www.typescriptlang.org/docs/handbook/2/keyof-types.html#handbook-content}
+         *  keyof creates a union type of a type's keys
+         */
+        let Style = enrich[i - 1] as keyof JSX.IntrinsicElements;
+        // Compiler prefers undefined over null?
+        let optClass: { className: string | undefined } = { className: undefined };
+        enriched.addLast(enrich[i - 2]);
+        // console.log(`${i}: ${enrich[i-2]}\n${i}: ${enrich[i-1]}\n${i}: ${enrich[i]}\n`);
+        if (Style.search(/(?:\S+[\s])/) !== -1) {
+          /** @description
+           * (?:...|...) -> non-capturing group doesn't store
+           * matched group to memory; also doesn't "capture" the pattern
+           * which is also non-captured by default without the capture
+           * group syntax (...). Capturing is required to be recognized
+           * in JS operations such as `.split`, where (x) will be stored
+           * in between split elements. I suppose you can insert capture
+           * groups in a non-capture group. Word is the whole regexp is one
+           * capture group, we transform it to matches which boils down to
+           * the part we want to capture or just use the matches for expressions
+           * @see {@link https://www.rexegg.com/regex-style.php}
+           * Do word boundaries only work in character classes?
+           * Second personally made unguided sorta-complex regexp
+           * Wrapping `.+` in capture group causes two matches, is it able to override default? 
+           */
+          let searchIndex = Style.match(/(?:(?<=\S+[\b\S+][\W{1}|\=][\W{1}|"'{1}]))(.+)(?:\W{1}|[\"\']{1})/);
+          optClass.className = (searchIndex && searchIndex[1]) ?? undefined;
+          Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof JSX.IntrinsicElements;
+        }
+        enriched.addLast(<Style className={optClass.className}>{enrich[i]}</Style>);
+        if ((i + 4) > enrich.length && i < enrich.length - 1) {
+          enriched.addLast(enrich[enrich.length - 1]);
+        }
+      }
+    } else {
+      enriched.addLast(enrich[0]);
+    }
+    let node: React.ReactNode[] = [];
+    while (!enriched.isEmpty()) {
+      node.push(<>{enriched.removeFirst()}</>);
+    }
+    return newPar = (<p key={key}>{[...node]}</p>);
+  }
+  // Undefined
+  return newPar;
+}
+
+/**
  * O(n) execution for mapping queried Post data to elements,
  * each iteration handles an array property using flatmap which 
  * potentially performs up to O(n(log(n)))
@@ -38,6 +141,7 @@ function project(sections: unknown[]): React.ReactNode {
     // @ts-expect-error
     let contents = sections[i].content.flatMap((par, index) => {
       // @ts-expect-error
+      // Handle aside-first case
       if (sections[i].aside[0] && index + 1 === Number.parseInt(sections[i].aside[0].split(/\$/)[1])) {
         // @ts-expect-error
         let content: React.ReactNode[] | string = sections[i].content[index + 1];
@@ -45,29 +149,13 @@ function project(sections: unknown[]): React.ReactNode {
         let asideType: string = (sections[i].aside.shift() as string).split(/\$/)[0].toLowerCase();
         // @ts-expect-error
         sections[i].content[index + 1] = '';
-        let frags = (content as string).split(/(?:\<(\S+)\>)/);
-        // Implement lesser ver. of styling algorithm below
-        if (frags.length > 1) {
-          let newContent = new SinglyLinkedList<string | React.ReactNode>();
-          for (let i = 2; i < frags.length; i += 4) {
-            newContent.addLast(frags[i - 2]);
-            let Style = frags[i - 1] as keyof JSX.IntrinsicElements;
-            newContent.addLast(<Style>{frags[i]}</Style>)
-            if ((i + 4) > frags.length && i < frags.length - 1) {
-              newContent.addLast(frags[frags.length - 1]);
-            }
-          }
-          let final: React.ReactNode[] = [];
-          while (!newContent.isEmpty()) {
-            final.push(<>{newContent.removeFirst()}</>);
-          }
-          content = final;
-        } else {
-          content = [<>{content}</>];
-        }
+
+        semanticTransform(content);
+        let newPar = semanticMultilineTransform(par, i);
+
         return (
           <>
-            <p key={i}>{par}</p>
+            {newPar ?? <p key={i}>{par}</p>}
             <div>
               <AddHeader 
                 type={asideType}
@@ -83,43 +171,8 @@ function project(sections: unknown[]): React.ReactNode {
           </>
         )
       }
-      /** @description
-       * (?:...|...) -> non-capturing group doesn't store
-       * matched group to memory; also doesn't "capture" the pattern
-       * which is also non-captured by default without the capture
-       * group syntax (...). Capturing is required to be recognized
-       * in JS operations such as `.split`, where (x) will be stored
-       * in between split elements. I suppose you can insert capture
-       * groups in a non-capture group. Word is the whole regexp is one
-       * capture group, we transform it to matches which boils down to
-       * the part we want to capture or just use the matches for expressions
-       * @see {@link https://www.rexegg.com/regex-style.php}
-       */
-      if (par.length > 0) {
-        // TODO: Handle bold font and migrate algorithm logic to function for reusability and adaptability
-        let enriched = new SinglyLinkedList<string | React.ReactNode>();
-        let enrich = par.split(/(?:\<(\S+)\>)/);
-        if (enrich && enrich.length > 2) {
-          for (let i = 2; i < enrich.length; i += 4) {
-            /** @see {@link https://www.typescriptlang.org/docs/handbook/2/keyof-types.html#handbook-content}
-             *  keyof creates a union type of a type's keys
-             */
-            let Style = enrich[i - 1] as keyof JSX.IntrinsicElements;
-            enriched.addLast(enrich[i - 2]);
-            enriched.addLast(<Style>{enrich[i]}</Style>);
-            if ((i + 4) > enrich.length && i < enrich.length - 1) {
-              enriched.addLast(enrich[enrich.length - 1]);
-            }
-          }
-        } else {
-          enriched.addLast(enrich[0]);
-        }
-        let node: React.ReactNode[] = [];
-        while (!enriched.isEmpty()) {
-          node.push(<>{enriched.removeFirst()}</>);
-        }
-        return (<p key={i}>{[...node]}</p>);
-      }
+      // Default
+      return semanticMultilineTransform(par, i);
     });
     nodeG.push(<section key={hdr}>{[...contents]}</section>);
   }
@@ -145,29 +198,9 @@ export default async function Post({ param }: { param: string }): Promise<React.
   // @ts-expect-error
   if (sections[0].aside[0] && sections[0].content[0]) {
     // @ts-expect-error
-    let content: React.ReactNode[] | string = sections[0].content[0];
+    let content: React.ReactNode[] = semanticTransform(sections[0].content[0]);
     // @ts-expect-error
     sections[0].content.shift();
-    let frags = (content as string).split(/(?:\<(\S+)\>)/);
-    let newContent = new SinglyLinkedList<React.ReactNode | string>();
-    if (frags.length > 1) {
-      for (let i = 2; i < frags.length; i += 4) {
-        newContent.addLast(frags[i - 2]);
-        let Style = frags[i - 1] as keyof JSX.IntrinsicElements;
-        newContent.addLast(<Style>{frags[i]}</Style>);
-        if (i < frags.length - 1 && (i + 4) > frags.length) {
-          newContent.addLast(frags[frags.length - 1]);
-        }
-      }
-      let cache: React.ReactNode[] = [];
-      while (!newContent.isEmpty()) {
-        cache.push(<>{newContent.removeFirst()}</>);
-      }
-      content = cache;
-    } else {
-      content = [<>{frags[0]}</>];
-    }
-
     primAside = {
       // @ts-expect-error
       type: sections[0].aside.shift(),
