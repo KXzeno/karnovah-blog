@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,20 +23,50 @@
     ],
     "baseUrl": "app/",
     "paths": {
-      "@/components": ["./components/index.ts"],
-      "@/actions": ["./components/actions/index.ts"],
-      "@/utils": ["../utils/index.ts"],
-      "@/prisma": ["../prisma/index.ts"],
-      "@U/*": ["../utils/*"],
-      "@M/*": ["./components/MOB/*"],
-      "@F/*": ["./components/FOB/*"],
-      "@H/*": ["./components/hooks/*"],
-      "@P/*": ["./components/FOB/Providers/*"],
-      "@/actions": ["./components/actions/index.ts"],
-      "@A/*": ["./components/actions/*"],
-      "@authors/*": ["./components/Fob/authors/*"],
-    }
+      "@/components": [
+        "./components/index.ts"
+      ],
+      "@/actions": [
+        "./components/actions/index.ts"
+      ],
+      "@/utils": [
+        "../utils/index.ts"
+      ],
+      "@/prisma": [
+        "../prisma/index.ts"
+      ],
+      "@U/*": [
+        "../utils/*"
+      ],
+      "@M/*": [
+        "./components/MOB/*"
+      ],
+      "@F/*": [
+        "./components/FOB/*"
+      ],
+      "@H/*": [
+        "./components/hooks/*"
+      ],
+      "@P/*": [
+        "./components/FOB/Providers/*"
+      ],
+      "@A/*": [
+        "./components/actions/*"
+      ],
+      "@authors/*": [
+        "./components/Fob/authors/*"
+      ]
+    },
+    "target": "ES2017"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "app/_future"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "app/_future"
+  ]
 }
