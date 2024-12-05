@@ -3,10 +3,10 @@ import { Post } from '@/components';
 import './not-found';
 import { notFound } from 'next/navigation';
 
-type PageProps = Promise<{ params: { id: string } }>;
+type PageProps = Promise<{ id: string }>;
 
-export default async function Blog(pageProps: PageProps): Promise<React.ReactNode> {
-  let id = pageProps.then(res => res.params.id);
+export default async function Blog(params: PageProps): Promise<React.ReactNode> {
+  let { id } = await params;
   if (typeof id === "string") {
     return (
       <>
