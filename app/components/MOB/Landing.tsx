@@ -22,7 +22,7 @@ interface Post {
 
 export default async function Landing() {
   let initialData: Post[] | undefined = await readPostAll({ orderBy: { createdAt: 'desc' } });
-  revalidatePath('/');
+  // revalidatePath('/');
   if (!initialData) {
     throw new Error('Query for posts failed.');
   }
