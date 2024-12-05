@@ -1,10 +1,10 @@
 import { ResolvingMetadata } from "next";
 
-export async function generateMetadata(
-  { params, searchParams }: { params: Promise<{ slug: string }>, searchParams: object }, 
-  parent: ResolvingMetadata) {
+type PageProps = Promise<{ params: { slug: string }, searchParams: object }>;
+
+export async function generateMetadata(pageProps: PageProps, parent: ResolvingMetadata) {
     // read route params
-    const slug = params.then(res => res.slug);
+    const slug = pageProps.then(res => res.params.slug);
 
     if (typeof slug === "string") {
 
