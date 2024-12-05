@@ -1,5 +1,7 @@
 import React from 'react';
 import { Post } from '@/components';
+import './not-found';
+import { notFound } from 'next/navigation';
 
 type PageProps = Promise<{ params: { id: string } }>;
 
@@ -11,5 +13,7 @@ export default async function Blog(pageProps: PageProps): Promise<React.ReactNod
         <Post param={id}/>
       </>
     );
+  } else {
+    notFound();
   }
 }

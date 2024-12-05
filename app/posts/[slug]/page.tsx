@@ -1,4 +1,5 @@
 import { ResolvingMetadata } from "next";
+import { notFound } from "next/navigation";
 
 type PageProps = Promise<{ params: { slug: string }, searchParams: object }>;
 
@@ -22,6 +23,8 @@ export async function generateMetadata(pageProps: PageProps, parent: ResolvingMe
            },
          */
       }
+    } else {
+      notFound();
     }
 
   }
