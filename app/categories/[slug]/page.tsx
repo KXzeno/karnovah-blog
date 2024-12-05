@@ -3,9 +3,9 @@ import { notFound } from 'next/navigation';
 import { getCategory } from '@A/PostActions';
 import PostsInCategory from '@M/PostsInCategory';
 
-type PageProps = Promise<{ slug: string }>;
+type Params = Promise<{ slug: string }>;
 
-export default async function Category(params: PageProps): Promise<React.ReactNode> {
+export default async function Category({ params }: { params: Params }): Promise<React.ReactNode> {
   let { slug } = await params;
   if (typeof slug === "string") {
     let cat = await getCategory(slug);

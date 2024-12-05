@@ -1,9 +1,9 @@
 import { ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 
-type PageProps = Promise<{slug: string, searchParams: object }>;
+type Params = Promise<{slug: string, searchParams: object }>;
 
-export async function generateMetadata(params: PageProps, parent: ResolvingMetadata) {
+export async function generateMetadata({ params }: { params: Params }, parent: ResolvingMetadata) {
     // read route params
     const { slug } = await params;
 
