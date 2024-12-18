@@ -79,43 +79,42 @@ export default function Nav() {
         <LayoutGroup>
           { /* => { EXPRESSION = return manually } */ }
           {LINKS.map(({ slug, label, href }) => ( 
-            <>
-              <Link
-                key={slug}
-                href={href}
-                onMouseOver={() => setHoveredNavItem(slug)}
-                onClick={(e) => {
-                  if (slug === 'choice') {
-                    e.preventDefault();
-                    setEndpointAccessed(prev => prev ^ 1);
-                    endpointAccessed === 1 ?
-                      router.replace(`/?choice=${endpointAccessed}`, { scroll: false }) :
-                      router.replace(`/?choice=${endpointAccessed}`, { scroll: false });
-                  } else {
-                    setEndpointAccessed(1);
-                  }
-                }}
-                style={{
-                  zIndex: hoveredNavItem === slug ? 1 : 2,
-                }}
-                className="nav-btn"
-              >
-                {label}
-                {hoveredNavItem === slug && (
-                  <div className='flex flex-row w-full justify-center -translate-y-[0.2rem]'>
-                    <motion.div 
-                      // FIXME: Loses original location when transferring motion to other navitem with -translate-y-[...]
-                      // TODO: Reduce framer-motion reliance; use vanilla keyframes and animations
-                      className='absolute w-2 border-[#FF204E] border-t-2' 
-                      initial={{ width: '0' }}
-                      animate={{ width: '100%' }}
-                      transition={{ duration: 0.3 }}
-                      layoutId={id}
-                    />
-                  </div>
-                )}
-              </Link>
-            </>))}
+            <Link
+              key={slug}
+              href={href}
+              onMouseOver={() => setHoveredNavItem(slug)}
+              onClick={(e) => {
+                if (slug === 'choice') {
+                  e.preventDefault();
+                  setEndpointAccessed(prev => prev ^ 1);
+                  endpointAccessed === 1 ?
+                    router.replace(`/?choice=${endpointAccessed}`, { scroll: false }) :
+                    router.replace(`/?choice=${endpointAccessed}`, { scroll: false });
+                } else {
+                  setEndpointAccessed(1);
+                }
+              }}
+              style={{
+                zIndex: hoveredNavItem === slug ? 1 : 2,
+              }}
+              className="nav-btn"
+            >
+              {label}
+              {hoveredNavItem === slug && (
+                <div className='flex flex-row w-full justify-center -translate-y-[0.2rem]'>
+                  <motion.div 
+                    // FIXME: Loses original location when transferring motion to other navitem with -translate-y-[...]
+                    // TODO: Reduce framer-motion reliance; use vanilla keyframes and animations
+                    className='absolute w-2 border-[#FF204E] border-t-2' 
+                    initial={{ width: '0' }}
+                    animate={{ width: '100%' }}
+                    transition={{ duration: 0.3 }}
+                    layoutId={id}
+                  />
+                </div>
+              )}
+            </Link>
+                                                ))}
         </LayoutGroup>
         <div className={`${dollarSigns.length !== 0 ? 'visible' : 'hidden'} absolute right-8 h-16 w-16 text-inherit`}>
           <LayoutGroup>
