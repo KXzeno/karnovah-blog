@@ -39,11 +39,11 @@ export function Warning({ className, type }: WarningProps) {
           <svg 
             className={`fill-[#C80036] stroke-[#C63C51] animate-[revolver_1s_ease-in-out_infinite] siege ${className}`}
             xmlns="http://www.w3.org/2000/svg" 
-            shape-rendering="geometricPrecision" 
-            text-rendering="geometricPrecision" 
-            image-rendering="optimizeQuality" 
-            fill-rule="evenodd" 
-            clip-rule="evenodd" 
+            shapeRendering="geometricPrecision" 
+            textRendering="geometricPrecision" 
+            imageRendering="optimizeQuality" 
+            fillRule="evenodd" 
+            clipRule="evenodd" 
             viewBox="0 0 512 512"
             strokeWidth='4'
             strokeLinecap='round'
@@ -59,11 +59,11 @@ export function Warning({ className, type }: WarningProps) {
           <svg 
             className={`fill-[#433D8B] stroke-[#25383C] animate-[revolver_1s_ease-in-out_infinite] ${className}`}
             xmlns="http://www.w3.org/2000/svg" 
-            shape-rendering="geometricPrecision" 
-            text-rendering="geometricPrecision" 
-            image-rendering="optimizeQuality" 
-            fill-rule="evenodd" 
-            clip-rule="evenodd" 
+            shapeRendering="geometricPrecision" 
+            textRendering="geometricPrecision" 
+            imageRendering="optimizeQuality" 
+            fillRule="evenodd" 
+            clipRule="evenodd" 
             viewBox="0 0 512 512"
             strokeWidth='4'
             strokeLinecap='round'
