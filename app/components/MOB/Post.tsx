@@ -174,7 +174,7 @@ function project(sections: unknown[]): React.ReactNode {
       // Default
       return semanticMultilineTransform(par, i);
     });
-    nodeG.push(<section key={hdr}>{[...contents]}</section>);
+    nodeG.push(<section key={`${hdr}-${i}`}>{[...contents]}</section>);
   }
   /** Return spread of React node array,
    * @privateRemarks
