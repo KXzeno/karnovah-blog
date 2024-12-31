@@ -40,11 +40,11 @@
 
 🗡 Refactor whole module system using class wrappers
 
-🗡 Add polling or 
-
 🗡 Add polling or some dynamic query upon database change only (perhaps dashboard related)
 
 🗡 Recreate dashboard to be more intuitive
+
+🗡 Implement Java-based websocket server as alternative to dashboard HTTP updates
 
 🗡 Realize [Karnovah](https://github.com/KXzeno/Karnovah)
 
