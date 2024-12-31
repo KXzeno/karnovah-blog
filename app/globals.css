@@ -106,6 +106,14 @@
     @apply border-[#C80036] text-[#C80036];
   }
 
+  .add-header.poised {
+    @apply border-[#FFF574] text-[#FFF574];
+  }
+
+  .poised * {
+    @apply border-[#FFF574] text-[#FFF574];
+  }
+
   .add-header-mask {
     @apply absolute h-16 w-16 border-2 border-white z-20 bg-inherit;
     -webkit-mask-image: radial-gradient(circle, transparent 50%, black 51%);
