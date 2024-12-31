@@ -133,7 +133,6 @@ export async function readPost(title: string) {
           titleFrags[i + 1] = titleFrags[i + 1].concat(',');
         }
         newTitle = titleFrags.join(' ');
-        console.log(newTitle);
         if (i === titleFrags.length - 2) {
           queriedPost = await prisma.post.findMany({ 
             include: {
