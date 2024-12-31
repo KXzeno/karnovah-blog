@@ -38,6 +38,9 @@ export async function readPostAll(params?: SortParams): Promise<Post[] | undefin
         include: {
           categories: true,
         },
+        where: {
+          published: true,
+        }
       });
 
       let tailPost = query[query.length - 1];
@@ -46,7 +49,7 @@ export async function readPostAll(params?: SortParams): Promise<Post[] | undefin
     } catch (error) {
       console.error(error);
     }
-  } else if (params && !params.cursor){
+  } else if (params && !params.cursor) {
     try {
       let query = await prisma.post.findMany({ 
         take: 7,
@@ -55,10 +58,15 @@ export async function readPostAll(params?: SortParams): Promise<Post[] | undefin
         },
         include: {
           categories: true,
+        },
+        where: {
+          published: true,
         }
       });
       let tailPost = query[query.length - 1];
-      if (params) { params.cursor = tailPost.post_id; }
+      if (params && tailPost) { 
+        params.cursor = tailPost.post_id;
+      }
       return query;
     } catch (error) {
       console.error(error);
