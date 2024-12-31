@@ -223,7 +223,9 @@ export default async function Post({ param }: { param: string }): Promise<React.
       // @ts-expect-error
       sections[0].aside[0] = sections[0].aside[0].replace(/\d$/, `${sections[0].content.length - 1}`);
     }
-  } else { return; }
+  } else { 
+    return;
+  }
 
   return (
     <ArticleProvider>
@@ -231,11 +233,12 @@ export default async function Post({ param }: { param: string }): Promise<React.
         {post.title}
       </Header>
       <SubHeader
-        AddHeader={
+        AddHeader={ primAside &&
           <AddHeader
+            type={`${primAside.type?.replace(/\$\d$/, '')}`}
             HeaderNote={
               <HeaderNote>
-                <Warning type={`${primAside.type}`}/>
+                <Warning type={`${primAside.type?.replace(/\$\d$/, '')}`}/>
               </HeaderNote>
             }
           >
