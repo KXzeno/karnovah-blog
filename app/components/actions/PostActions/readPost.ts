@@ -122,22 +122,32 @@ export async function readPost(title: string) {
       let newTitle: string;
       for (let i = 0; i < titleFrags.length; i++) {
         const DEC = titleFrags[i].charCodeAt(0);
-        const NEXT_DEC = titleFrags[i + 1].charCodeAt(0);
+        let NEXT_DEC;
+        if (i <= titleFrags.length - 2) {
+          NEXT_DEC = titleFrags[i + 1].charCodeAt(0);
+        } else {
+          // TODO: Implement better checks for NEXT_DEC
+          NEXT_DEC = 97;
+        }
         if ((DEC >= 65 && DEC <= 90 && i !== titleFrags.length - 1) && (NEXT_DEC >= 97 && NEXT_DEC <= 122)) {
           titleFrags[i + 1] = titleFrags[i + 1].concat(',');
         }
         newTitle = titleFrags.join(' ');
+        console.log(newTitle);
         if (i === titleFrags.length - 2) {
-          queriedPost = await prisma.post.findUnique({ 
+          queriedPost = await prisma.post.findMany({ 
             include: {
               sections: true,
             },
             where: {
-              title: newTitle,
+              title: {
+                contains: newTitle,
+                mode: 'insensitive'
+              }
             }
           });
           if (!(queriedPost === null)) {
-            return queriedPost;
+            return queriedPost[0];
           }
         }
       }
@@ -145,6 +155,5 @@ export async function readPost(title: string) {
   } catch (error) {
     console.error(error);
   }
-
 }
 
