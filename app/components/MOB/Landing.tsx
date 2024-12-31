@@ -43,13 +43,15 @@ export default async function Landing() {
 
   return (
     initialCursor && initialData ?
-    <>
-      <React.Suspense>
-        <Feed initialData={initialData} initialCursor={initialCursor}/>
-      </React.Suspense>
-    </> :
-    <>
-      <Feed initialData={initialData} initialCursor={0} />
-    </>
+      <>
+        <React.Suspense>
+          <Feed initialData={initialData} initialCursor={initialCursor}/>
+        </React.Suspense>
+      </> :
+      <>
+        <React.Suspense>
+          <Feed initialData={initialData} initialCursor={0} />
+        </React.Suspense>
+      </>
   )
 }
