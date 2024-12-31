@@ -165,7 +165,7 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
 
     let [{ posts }, postsLeaf, newDataLeaf] = [state, state.posts.length - 1, newData.length - 1];
 
-    if ((posts[postsLeaf].post_id === newData[newDataLeaf].post_id)) {
+    if (newData[newDataLeaf] && (posts[postsLeaf].post_id === newData[newDataLeaf].post_id)) {
       // Unable to reset ref in this function, delegate to useEffect
       dispatch({ type: 'terminus' });
       return;
