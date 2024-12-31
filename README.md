@@ -36,7 +36,15 @@
 #### Hitlist
 🗡 Implement authentication → users can interact with posts
 
-🗡 Add functionality to navigation bar
+🗡 Redo functionality to navigation bar
+
+🗡 Refactor whole module system using class wrappers
+
+🗡 Add polling or 
+
+🗡 Add polling or some dynamic query upon database change only (perhaps dashboard related)
+
+🗡 Recreate dashboard to be more intuitive
 
 🗡 Realize [Karnovah](https://github.com/KXzeno/Karnovah)
 
