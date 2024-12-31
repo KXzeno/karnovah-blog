@@ -21,19 +21,35 @@ interface Post {
 // Robust fix: compare updated date and creation date
 
 export default async function Landing() {
-  let initialData: Post[] | undefined = await readPostAll({ orderBy: { createdAt: 'desc' } });
+  let initialData: Post[] | null = await readPostAll({ orderBy: { createdAt: 'desc' } }) ?? null;
+  let initialCursor: number | null = null;
   // revalidatePath('/');
-  if (!initialData) {
-    throw new Error('Query for posts failed.');
+  if (!initialData || initialData.length <= 0) {
+    initialCursor = null;
+    initialData = [{
+      post_id: 0,
+      title: 'Zero Query',
+      createdAt: new Date(),
+      published: true,
+      subtitle: 'No posts have queried',
+      description: 'If you see this, either there are no posts to be queried from the database or none of them are marked published.',
+      choice: 2 
+    }] as Post[];
+    console.log('Query for posts failed.');
+  } else {
+    initialCursor = initialData[initialData.length - 1].post_id;
   }
 
-  let initialCursor = initialData[initialData.length - 1].post_id;
 
   return (
+    initialCursor && initialData ?
     <>
       <React.Suspense>
         <Feed initialData={initialData} initialCursor={initialCursor}/>
       </React.Suspense>
+    </> :
+    <>
+      <Feed initialData={initialData} initialCursor={0} />
     </>
   )
 }
