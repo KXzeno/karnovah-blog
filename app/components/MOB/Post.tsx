@@ -19,8 +19,8 @@ import { SinglyLinkedList } from '@U/SinglyLinkedList';
  * @author Kx
  */
 function semanticTransform(content: React.ReactNode[] | string): React.ReactNode[] | void {
-  let frags = (content as string).split(/(?:\<(\S+\sclassName\W['"][\S\s]+?['"]|\S+)\>)/);
-  console.log(frags);
+  let frags = (content as string).split(/(?:\<([\w\s]+\W['"][\S\s]+?['"]|\S+)\>)/);
+  // console.log(frags);
   // Implement lesser ver. of styling algorithm below
   if (frags.length > 1) {
     let newContent = new SinglyLinkedList<string | React.ReactNode>();
@@ -28,10 +28,14 @@ function semanticTransform(content: React.ReactNode[] | string): React.ReactNode
       newContent.addLast(frags[i - 2]);
       let Style = frags[i - 1] as keyof JSX.IntrinsicElements;
       let optClass: { className: string | undefined } = { className: undefined };
+      let optRef: { href: string | undefined } = { href: undefined };
       if (Style.search(/(?:\S+[\s])/) !== -1) {
+        // TODO: Modify regex to tolerate links
         let searchIndex = Style.match(/(?:(?<=\S+[\b\S+][\W{1}|\=][\W{1}|"'{1}]))(.+)(?:\W{1}|[\"\']{1})/);
+        console.log(searchIndex, searchIndex[1]);
         optClass.className = (searchIndex && searchIndex[1]) ?? undefined;
         Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof JSX.IntrinsicElements;
+        console.log(Style);
       }
       newContent.addLast(<Style className={optClass.className}>{frags[i]}</Style>)
       if ((i + 4) > frags.length && i < frags.length - 1) {
