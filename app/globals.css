@@ -127,7 +127,7 @@
   }
 
   section p a {
-    @apply text-blue-300;
+    @apply text-blue-300 hover:text-blue-600;
   }
 
   .primary-content section > p {
