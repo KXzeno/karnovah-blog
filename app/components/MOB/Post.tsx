@@ -73,15 +73,19 @@ function semanticMultilineTransform(par: string): React.ReactNode | undefined {
      * @see {@link https://www.rexegg.com/regex-quantifiers.php#lazytrap}
      * @see {@link https://www.rexegg.com/regex-quantifiers.php}
      */
-    let enrich = par.split(/(?:\<(\S+\sclassName\W['"][\S\s]+?['"]|\S+)\>)/);
+    let enrich = par.split(/(?:\<([\S\s]+?)\>)/);
     if (enrich && enrich.length > 2) {
       for (let i = 2; i < enrich.length; i += 4) {
         /** @see {@link https://www.typescriptlang.org/docs/handbook/2/keyof-types.html#handbook-content}
          *  keyof creates a union type of a type's keys
          */
         let Style = enrich[i - 1] as keyof JSX.IntrinsicElements;
+        console.log(Style);
         // Compiler prefers undefined over null?
+        let classFields = Style.match(/(?<=className\=\')[\s\w\d\S]+(?=\')/);
+        let hrefField = Style.match(/(?<=href\=\')[\w\s.:/\\\?]+(?=\')/);
         let optClass: { className: string | undefined } = { className: undefined };
+        let optRef: { href: string | undefined, target: string | undefined } = { href: undefined, target: undefined };
         enriched.addLast(enrich[i - 2]);
         // console.log(`${i}: ${enrich[i-2]}\n${i}: ${enrich[i-1]}\n${i}: ${enrich[i]}\n`);
         if (Style.search(/(?:\S+[\s])/) !== -1) {
@@ -100,11 +104,11 @@ function semanticMultilineTransform(par: string): React.ReactNode | undefined {
            * Second personally made unguided sorta-complex regexp
            * Wrapping `.+` in capture group causes two matches, is it able to override default? 
            */
-          let searchIndex = Style.match(/(?:(?<=\S+[\b\S+][\W{1}|\=][\W{1}|"'{1}]))(.+)(?:\W{1}|[\"\']{1})/);
-          optClass.className = (searchIndex && searchIndex[1]) ?? undefined;
+          optClass.className = (classFields && classFields[0]) ?? undefined;
+          optRef.href = (hrefField && hrefField[0]) ?? undefined;
           Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof JSX.IntrinsicElements;
         }
-        enriched.addLast(<Style className={optClass.className}>{enrich[i]}</Style>);
+        enriched.addLast(<Style href={optRef.href} target={optRef.target} className={optClass.className}>{enrich[i]}</Style>);
         if ((i + 4) > enrich.length && i < enrich.length - 1) {
           enriched.addLast(enrich[enrich.length - 1]);
         }
@@ -255,4 +259,5 @@ export default async function Post({ param }: { param: string }): Promise<React.
     </ArticleProvider>
   );
 }
+
 
