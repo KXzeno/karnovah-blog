@@ -126,6 +126,10 @@
     @apply relative py-[1rem] font-spectral;
   }
 
+  section p a {
+    @apply text-blue-300;
+  }
+
   .primary-content section > p {
     @apply p-4;
   }
