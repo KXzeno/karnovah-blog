@@ -63,7 +63,7 @@ function semanticTransform(content: React.ReactNode[] | string): React.ReactNode
  * @returns {React.ReactNode | undefined} string-modified React node or undefined
  * @author Kx
  */
-function semanticMultilineTransform(par: string, key?: string | number): React.ReactNode | undefined {
+function semanticMultilineTransform(par: string): React.ReactNode | undefined {
   let newPar: React.ReactNode | undefined = undefined; 
   if (par.length > 0) {
     let enriched = new SinglyLinkedList<string | React.ReactNode>();
@@ -116,7 +116,7 @@ function semanticMultilineTransform(par: string, key?: string | number): React.R
     while (!enriched.isEmpty()) {
       node.push(<>{enriched.removeFirst()}</>);
     }
-    return newPar = (<p key={key}>{[...node]}</p>);
+    return newPar = (<p>{[...node]}</p>);
   }
   // Undefined
   return newPar;
@@ -158,11 +158,11 @@ function project(sections: unknown[]): React.ReactNode {
         sections[i].content[index + 1] = '';
 
         semanticTransform(content);
-        let newPar = semanticMultilineTransform(par, i);
+        let newPar = semanticMultilineTransform(par);
 
         return (
           <>
-            {newPar ?? <p key={i}>{par}</p>}
+            {newPar ?? <p key={`${hdr}-${i}`}>{par}</p>}
             <div>
               <AddHeader 
                 type={asideType}
@@ -179,7 +179,7 @@ function project(sections: unknown[]): React.ReactNode {
         )
       }
       // Default
-      return semanticMultilineTransform(par, i);
+      return semanticMultilineTransform(par);
     });
     nodeG.push(<section key={`${hdr}-${i}`}>{[...contents]}</section>);
   }
