@@ -16,16 +16,18 @@ enum Lang {
     Reserved: RegExp;
     Escaped?: RegExp;
     MethodInvocation?: RegExp;
-    String?: RegExp;
+    String?: RegExp; // Do
     BaseVal?: RegExp;
-    Paren?: RegExp;
-    Braces?: RegExp;
-    BinaryOp?: RegExp;
+    Paren?: RegExp; // Do
+    Braces?: RegExp; // Do
+    BinaryOp?: RegExp; // Do
     Module?: RegExp;
+    Identifier: RegExp; // Do
   }
 
   const LuaRgx: LuaRgx = {
     Reserved: /\blocal\b|\bif\b|\bthen\b/g,
+    Identifier: new RegExp(/(?<=\blocal\s)([\w]+\b)/, 'g'),
   }
 
   function mapChildren(children: React.ReactElement[]) {
