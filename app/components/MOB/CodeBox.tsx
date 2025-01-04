@@ -12,10 +12,40 @@ enum Lang {
   Powershell = "POWERSHELL",
 }
 
+  type LuaRgx = {
+    Reserved: RegExp;
+    Escaped?: RegExp;
+    MethodInvocation?: RegExp;
+    String?: RegExp;
+    BaseVal?: RegExp;
+    Paren?: RegExp;
+    Braces?: RegExp;
+    BinaryOp?: RegExp;
+    Module?: RegExp;
+  }
+
+  const LuaRgx: LuaRgx = {
+    Reserved: /local/g,
+  }
+
   function mapChildren(children: React.ReactElement[]) {
     let termChildren: React.ReactElement[] = [];
 
     for (let i = 0; i < (children as React.ReactElement[]).length; i++) {
+      let { children: content, className: classes }: { children: string, className: string } = children[i].props;
+      let matches: RegExpStringIterator<RegExpExecArray> = content?.matchAll(LuaRgx.Reserved);
+      if (matches) {
+        let Reserved: React.ReactElement[] = [];
+        // TODO: Refine substring logic and make dynamic inserter for newNode
+        let pruned = content.replaceAll(LuaRgx.Reserved, '');
+        for (let match of matches) {
+          Reserved.push(<span className='text-purple-400'>{match[0]}</span>);
+        }
+        let newNode = <code className='text-inherit font-dosis'>{Reserved[0]}{pruned}</code>
+        termChildren.push(<span className='px-2 select-none'>{i + 1}</span>);
+        termChildren.push(newNode);
+        continue;
+      }
       termChildren.push(<span className='px-2 select-none'>{i + 1}</span>);
       termChildren.push(children[i]);
     }
