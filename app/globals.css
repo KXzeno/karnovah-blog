@@ -170,6 +170,34 @@
     @apply group-[.curr-head]:curr-head;
   }
 
+  .code-box {
+    @apply text-green-300 text-xs bg-[#000000] w-full border-2;
+  }
+
+  .code-box > .file-type {
+    @apply border-double border-b-2 p-[1.7px] pl-2 mb-4 -mt-4;
+  }
+
+  .code-box > .code-multiline {
+    @apply grid grid-cols-[max-content_1fr] p-0 text-[0.61rem];
+  }
+
+  .code-box > .code-multiline > .code-line-index {
+    @apply px-2 select-none
+  }
+
+  .code-box > .code-multiline > code {
+    @apply text-inherit font-dosis;
+  }
+
+  .code-box > .code-multiline > code > span.reserved {
+    @apply text-[#FF9D23];
+  }
+
+  .code-box > .code-multiline > code > span.identifier {
+    @apply text-[#F8FAFC];
+  }
+
   .text-balance {
     text-wrap: balance;
   }
