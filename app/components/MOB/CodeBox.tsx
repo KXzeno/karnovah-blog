@@ -87,16 +87,16 @@ enum Lang {
       }
       termChildren.push(<span key={`index-${i + 1}`} className='code-line-index'>{i + 1}</span>);
       if (volatileMarks.length > 0) {
-        console.log(volatileMarks);
+        // console.log(volatileMarks);
         let disjoints = getRangeDisjoint(volatileMarks);
-        console.log(disjoints);
+        // console.log(disjoints);
         let totalElem: number = volatileMarks.length + disjoints.length;
         let mins: number[] = [];
 
         disjoints.forEach(disjoint => mins.push(disjoint[0]));
         volatileMarks.forEach(mark => mins.push(mark.start));
 
-        console.log(`UNSORTED MINS: ${mins}`);
+        // console.log(`UNSORTED MINS: ${mins}`);
         mins.sort((p, n) => p - n);
 
         let volatileNodes: React.ReactElement[] = [];
@@ -104,22 +104,23 @@ enum Lang {
         let lbRange: [[number, number]] = [[0, 0]];
 
         for (let i = 0; i < totalElem; i++) {
-          console.log(`Last used: [${lbRange[0][0]}, ${lbRange[0][1]}]`);
+          // console.log(`Last used: [${lbRange[0][0]}, ${lbRange[0][1]}]`);
           let pendingAugment: boolean = !disjoints.some(range => range[0] === mins[0]);
-          console.log('DISJOINTS: ' + disjoints);
+          // console.log('DISJOINTS: ' + disjoints);
           if (pendingAugment) {
             // console.log(`${i}, this element should be augmented.`);
             let targetMark = volatileMarks.find(marked => marked.start === mins[0]);
-            console.log("MINS: " + mins);
-            console.log("VOLATILE: ", volatileMarks);
-            console.log("TARGET: " + targetMark);
+            // console.log("MINS: " + mins);
+            // console.log("VOLATILE: ", volatileMarks);
+            // console.log("TARGET: " + targetMark);
             if (!targetMark) {
               return;
             }
 
             // \s|\w
-            if (lbRange[0][0] !== targetMark.start) {
-              volatileNodes.push(<>{content.substring(targetMark.start - 1, targetMark.start)}</>);
+            if (lbRange[0][1] !== targetMark.start) {
+              let char: string = content.charAt(lbRange[0][1]);
+              volatileNodes.push(<>{char}</>);
             }
 
             volatileNodes.push(
@@ -127,6 +128,7 @@ enum Lang {
                 {`${content.substring(targetMark.start, targetMark.end)}`}
               </span>
             );
+            console.log(`Last used: [${lbRange[0][0]}, ${lbRange[0][1]}]`);
             lbRange[0] = [targetMark.start, targetMark.end];
           } else {
             console.log(`Last used: [${lbRange[0][0]}, ${lbRange[0][1]}]`);
@@ -138,8 +140,9 @@ enum Lang {
             }
 
             // \s | \w
-            if (lbRange[0][0] !== targetDisjointed[0]) {
-              volatileNodes.push(<>{content.substring(targetDisjointed[0] - 1, targetDisjointed[0])}</>);
+            if (lbRange[0][1] !== targetDisjointed[0]) {
+              let char: string = content.charAt(lbRange[0][1]);
+              volatileNodes.push(<>{char}</>);
             }
 
             volatileNodes.push(
