@@ -36,7 +36,7 @@ const LuaRgx: LuaRgx = {
   Reserved: /\blocal\b|\bif\b|\bthen\b/g,
   Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)/g,
   BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B/g,
-  Braces: /((?=.*\))\()|((?<=\(.*)\))/g,
+  Braces: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)/g,
   String: /(?<=\').+(?=\')/g,
 }
 
@@ -47,13 +47,15 @@ function getRangeDisjoint(marks: Array<VolatileMarks>) {
   let disjoints: Array<[number, number]> = [];
   for (let i = 0; i < marks.length; i++) {
     if (i === 0) {
+      // console.log('PASSED');
       if (marks[i].start !== 0) {
         disjoints.push([0, marks[0].start]);
         // Ensure rest of string on lines with 1 mark
-        if (marks.length === 1) {
-          disjoints.push([marks[i].end + 1, Number.MAX_SAFE_INTEGER]);
-        }
-        continue;
+      }
+      if (marks.length === 1) {
+        // console.log('PASSED AGAIN');
+        disjoints.push([marks[i].end + 1, Number.MAX_SAFE_INTEGER]);
+        return disjoints;
       }
       continue;
     }
@@ -108,6 +110,10 @@ function mapChildren(children: React.ReactElement[]): React.ReactNode {
     if (volatileMarks.length > 0) {
       // console.log(volatileMarks);
       let disjoints = getRangeDisjoint(volatileMarks);
+      if (i === 3) {
+        // console.log(content);
+        // console.log(`DISJOINT COUNT: ${disjoints.length}`);
+      }
       // console.log(disjoints);
       let totalElem: number = volatileMarks.length + disjoints.length;
       let mins: number[] = [];
