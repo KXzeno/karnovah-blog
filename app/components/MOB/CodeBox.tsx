@@ -16,10 +16,10 @@ enum Lang {
     Reserved: RegExp;
     Escaped?: RegExp;
     MethodInvocation?: RegExp;
-    String?: RegExp; // Do
+    String: RegExp;
     BaseVal?: RegExp;
     Paren?: RegExp; // Do
-    Braces?: RegExp; // Do
+    Braces: RegExp;
     BinaryOp: RegExp; 
     Module?: RegExp;
     Identifier: RegExp;
@@ -36,23 +36,27 @@ enum Lang {
     Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)/g,
     BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B/g,
     Braces: /((?=.*\))\()|((?<=\(.*)\))/g,
+    String: /(?<=\').+(?=\')/g,
   }
 
   function getRangeDisjoint(marks: Array<VolatileMarks>) {
     // Sort marks to avoid reference-based initializition cohflict
     marks = marks.sort((mark1, mark2) => mark1.start - mark2.start);
-    console.log(marks);
+    // console.log(marks);
     let disjoints: Array<[number, number]> = [];
     for (let i = 0; i < marks.length; i++) {
       if (i === 0) {
         if (marks[i].start !== 0) {
           disjoints.push([0, marks[0].start]);
+          // Ensure rest of string on lines with 1 mark
+          if (marks.length === 1) {
+            disjoints.push([marks[i].end + 1, Number.MAX_SAFE_INTEGER]);
+          }
           continue;
         }
         continue;
       }
       if (!(marks[i - 1].end + 1 === marks[i].start)) {
-        console.log([marks[i - 1].end, marks[i].start - 1]);
         disjoints.push([marks[i - 1].end, marks[i].start - 1]);
       }
 
@@ -60,6 +64,7 @@ enum Lang {
         disjoints.push([marks[i].end + 1, Number.MAX_SAFE_INTEGER]);
       }
     }
+    // Ensure rest of string
     // console.log(`Range Disjoints: ${disjoints}`);
     return disjoints;
   }
@@ -108,7 +113,6 @@ enum Lang {
         let lbRange: [[number, number]] = [[0, 0]];
 
         for (let i = 0; i < totalElem; i++) {
-          // console.log(`Last used: [${lbRange[0][0]}, ${lbRange[0][1]}]`);
           let pendingAugment: boolean = !disjoints.some(range => range[0] === mins[0]);
           // console.log('DISJOINTS: ' + disjoints);
           if (pendingAugment) {
