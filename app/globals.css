@@ -198,6 +198,10 @@
     @apply text-[#F8FAFC];
   }
 
+  .code-box > .code-multiline > code > span.binaryop {
+    @apply text-[#FF6500];
+  }
+
   .text-balance {
     text-wrap: balance;
   }
