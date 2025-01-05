@@ -20,18 +20,9 @@ enum Lang {
     BaseVal?: RegExp;
     Paren?: RegExp; // Do
     Braces?: RegExp; // Do
-    BinaryOp?: RegExp; // Do
+    BinaryOp: RegExp; 
     Module?: RegExp;
-    Identifier: RegExp; // Do
-  }
-
-  type NodeAugmenter = {
-    childProps: {
-      content: string;
-      classes?: string;
-    },
-    elemId: string;
-    rgx: RegExp;
+    Identifier: RegExp;
   }
 
   type VolatileMarks = {
@@ -42,11 +33,9 @@ enum Lang {
 
   const LuaRgx: LuaRgx = {
     Reserved: /\blocal\b|\bif\b|\bthen\b/g,
-    Identifier: new RegExp(/(?<=\blocal\s)([\w]+\b)/, 'g'),
-  }
-
-  function nodeAugmentByMatch({ childProps, elemId, rgx }: NodeAugmenter) {
-
+    Identifier: /(?<=\blocal\s)([\w]+\b)/g,
+    BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B/g,
+    // Braces: /((?=.*\))\()|((?<=\(.*)\))/g,
   }
 
   function getRangeDisjoint(marks: Array<VolatileMarks>) {
@@ -54,7 +43,7 @@ enum Lang {
     for (let i = 0; i < marks.length; i++) {
       if (i === 0) {
         if (marks[i].start !== 0) {
-          disjoints.push([0, marks[0].start + 1]);
+          disjoints.push([0, marks[0].start]);
           continue;
         }
         continue;
@@ -75,14 +64,6 @@ enum Lang {
     let volatileMarks: VolatileMarks[] = [];
     for (let i = 0; i < (children as React.ReactElement[]).length; i++) {
       let { children: content, className: classes }: { children: string, className: string } = children[i].props;
-      /** TODO: Dynamically iterate over possible matches
-       * FIXME: termChildren should only be mutated after the final match
-       * FIXME: Due to above, duplicate lines are made
-       * - Instead of manipulating the node on iteration, make substr marker via
-       * matched index + matched length
-       * - The final op in this control flow will deal with the manipulation and forward
-       * to termChildren
-       */ 
       let luaRgxProps = Object.entries(LuaRgx);
       for (let [id, rgx] of luaRgxProps) {
         // if (rgx !== LuaRgx.Reserved) {
@@ -105,7 +86,9 @@ enum Lang {
       }
       termChildren.push(<span key={`index-${i + 1}`} className='code-line-index'>{i + 1}</span>);
       if (volatileMarks.length > 0) {
+        console.log(volatileMarks);
         let disjoints = getRangeDisjoint(volatileMarks);
+        console.log(disjoints);
         let totalElem: number = volatileMarks.length + disjoints.length;
         let mins: number[] = [];
 
@@ -115,31 +98,51 @@ enum Lang {
         mins.sort((p, n) => p - n);
 
         let volatileNodes: React.ReactElement[] = [];
+        // Check previously used range for \s validation
+        let lbRange: [[number, number]] = [[0, 0]];
 
         for (let i = 0; i < totalElem; i++) {
+          console.log(`Last used: [${lbRange[0][0]}, ${lbRange[0][1]}]`);
           let pendingAugment: boolean = disjoints.some(range => range[0] !== mins[0]);
           if (pendingAugment) {
-            console.log(`${i}, this element should be augmented.`);
+            // console.log(`${i}, this element should be augmented.`);
             let targetMark = volatileMarks.find(marked => marked.start === mins[0]);
+
             if (!targetMark) {
               return;
             }
+
+            // \s
+            if (lbRange[0][0] !== targetMark.start) {
+              volatileNodes.push(<> </>);
+            }
+
             volatileNodes.push(
               <span className={`${targetMark.mark.toLowerCase()}`}>
-                {`${content.substring(targetMark.start, targetMark.end)} `}
+                {`${content.substring(targetMark.start, targetMark.end)}`}
               </span>
             );
+            lbRange[0] = [targetMark.start, targetMark.end];
           } else {
-            console.log(`${i}, this element should be unfiltered.`);
+            console.log(`Last used: [${lbRange[0][0]}, ${lbRange[0][1]}]`);
+            // console.log(`${i}, this element should be unfiltered.`);
             let targetDisjointed = disjoints.find(disjointed => disjointed[0] === mins[0]);
+
             if (!targetDisjointed) {
               return;
             }
+
+            // \s
+            if (lbRange[0][0] !== targetDisjointed[0]) {
+              volatileNodes.push(<> </>);
+            }
+
             volatileNodes.push(
               <>
                 {content.substring(targetDisjointed[0], targetDisjointed[1])}
               </>
             );
+            lbRange[0] = [targetDisjointed[0], targetDisjointed[1]];
           }
           mins.shift();
         }
