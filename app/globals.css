@@ -175,7 +175,15 @@
   }
 
   .code-box > .file-type {
-    @apply border-double border-b-2 p-[1.7px] pl-2 mb-4 -mt-4;
+    @apply flex flex-row border-double border-b-2 p-[1.7px] pl-2 mb-4 -mt-4;
+  }
+
+  .file-type > span {
+    @apply grow;
+  }
+
+  .file-type > span:nth-child(2) {
+    @apply text-right pr-2;
   }
 
   .code-box > .code-multiline {
