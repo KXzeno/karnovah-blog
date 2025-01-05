@@ -75,6 +75,15 @@ function mapChildren(children: React.ReactElement[]): React.ReactNode {
   let volatileMarks: VolatileMarks[] = [];
   for (let i = 0; i < (children as React.ReactElement[]).length; i++) {
     let { children: content, className: classes }: { children: string, className: string } = children[i].props;
+    let tabs: string | null = children[i].props['data-tab'] || null;
+    if (tabs) {
+      let stop = typeof tabs === 'number' ? tabs : Number.parseInt(tabs) * 4;
+      tabs = '';
+      while (tabs.length !== stop) {
+        tabs = tabs.replace(/(.*)/, " $1");
+      }
+    }
+
     let luaRgxProps = Object.entries(LuaRgx);
     for (let [id, rgx] of luaRgxProps) {
       // if (rgx !== LuaRgx.Reserved) {
@@ -162,10 +171,10 @@ function mapChildren(children: React.ReactElement[]): React.ReactNode {
         }
         mins.shift();
       }
-      termChildren.push(<code key={`line-${i + 1}`}>{...volatileNodes}</code>);
+      termChildren.push(<code key={`line-${i + 1}`}>{tabs}{...volatileNodes}</code>);
       volatileNodes = [];
     } else {
-      termChildren.push(<code key={`line-${i + 1}`}>{content}</code>);
+      termChildren.push(<code key={`line-${i + 1}`}>{tabs}{content}</code>);
     }
     volatileMarks = [];
   }
