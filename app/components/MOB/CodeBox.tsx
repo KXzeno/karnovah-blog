@@ -202,7 +202,7 @@ let initialState: ReducerState = {
 };
 
 export default function CodeBox({ children, lang, fileName }: CodeBoxProps) {
-  let [state, dispatch] = React.useReducer(reducer, initialState);
+  let [state, dispatch] = React.useReducer<React.Reducer<ReducerState, ReducerAction>>(reducer, initialState);
 
   React.useEffect(() => {
     // On mount, add code to state for blob + clipboard API
