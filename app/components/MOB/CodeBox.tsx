@@ -49,7 +49,8 @@ enum Lang {
         continue;
       }
       if (!(marks[i - 1].end + 1 === marks[i].start)) {
-        disjoints.push([marks[i - 1].end + 1, marks[i].start - 1]);
+
+        disjoints.push([marks[i - 1].end, marks[i].start - 1]);
       }
       if (i === marks.length - 1) {
         disjoints.push([marks[i].end + 1, Number.MAX_SAFE_INTEGER]);
@@ -112,9 +113,9 @@ enum Lang {
               return;
             }
 
-            // \s
+            // \s|\w
             if (lbRange[0][0] !== targetMark.start) {
-              volatileNodes.push(<> </>);
+              volatileNodes.push(<>{content.substring(targetMark.start - 1, targetMark.start)}</>);
             }
 
             volatileNodes.push(
@@ -132,9 +133,9 @@ enum Lang {
               return;
             }
 
-            // \s
+            // \s | \w
             if (lbRange[0][0] !== targetDisjointed[0]) {
-              volatileNodes.push(<> </>);
+              volatileNodes.push(<>{content.substring(targetDisjointed[0] - 1, targetDisjointed[0])}</>);
             }
 
             volatileNodes.push(
