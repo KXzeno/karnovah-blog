@@ -33,12 +33,15 @@ enum Lang {
 
   const LuaRgx: LuaRgx = {
     Reserved: /\blocal\b|\bif\b|\bthen\b/g,
-    Identifier: /(?<=\blocal\s)([\w]+\b)/g,
+    Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)/g,
     BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B/g,
     Braces: /((?=.*\))\()|((?<=\(.*)\))/g,
   }
 
   function getRangeDisjoint(marks: Array<VolatileMarks>) {
+    // Sort marks to avoid reference-based initializition cohflict
+    marks = marks.sort((mark1, mark2) => mark1.start - mark2.start);
+    console.log(marks);
     let disjoints: Array<[number, number]> = [];
     for (let i = 0; i < marks.length; i++) {
       if (i === 0) {
@@ -49,9 +52,10 @@ enum Lang {
         continue;
       }
       if (!(marks[i - 1].end + 1 === marks[i].start)) {
-
+        console.log([marks[i - 1].end, marks[i].start - 1]);
         disjoints.push([marks[i - 1].end, marks[i].start - 1]);
       }
+
       if (i === marks.length - 1) {
         disjoints.push([marks[i].end + 1, Number.MAX_SAFE_INTEGER]);
       }
@@ -128,10 +132,10 @@ enum Lang {
                 {`${content.substring(targetMark.start, targetMark.end)}`}
               </span>
             );
-            console.log(`Last used: [${lbRange[0][0]}, ${lbRange[0][1]}]`);
+            // console.log(`Last used: [${lbRange[0][0]}, ${lbRange[0][1]}]`);
             lbRange[0] = [targetMark.start, targetMark.end];
           } else {
-            console.log(`Last used: [${lbRange[0][0]}, ${lbRange[0][1]}]`);
+            // console.log(`Last used: [${lbRange[0][0]}, ${lbRange[0][1]}]`);
             // console.log(`${i}, this element should be unfiltered.`);
             let targetDisjointed = disjoints.find(disjointed => disjointed[0] === mins[0]);
 
@@ -144,7 +148,6 @@ enum Lang {
               let char: string = content.charAt(lbRange[0][1]);
               volatileNodes.push(<>{char}</>);
             }
-
             volatileNodes.push(
               <>
                 {content.substring(targetDisjointed[0], targetDisjointed[1])}
