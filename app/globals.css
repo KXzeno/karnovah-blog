@@ -203,7 +203,11 @@
   }
 
   .code-multiline > code > span.braces {
-    @apply text-[#F8FAFC];
+    @apply text-[#C5D3E8];
+  }
+
+  .code-multiline > code > span.string {
+    @apply text-[#608BC1]
   }
 
   .text-balance {
