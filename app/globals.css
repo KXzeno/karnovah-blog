@@ -202,6 +202,10 @@
     @apply text-[#FF6500];
   }
 
+  .code-multiline > code > span.braces {
+    @apply text-[#F8FAFC];
+  }
+
   .text-balance {
     text-wrap: balance;
   }
