@@ -195,7 +195,7 @@
   }
 
   .code-box > .code-multiline > code {
-    @apply text-inherit font-dosis;
+    @apply text-inherit font-dosis whitespace-pre;
   }
 
   .code-box > .code-multiline > code > span.reserved {
