@@ -19,7 +19,7 @@ type LuaRgx = {
   MethodInvocation?: RegExp;
   String: RegExp;
   BaseVal?: RegExp;
-  Paren?: RegExp; // Do
+  Paren: RegExp; // Do
   Braces: RegExp;
   BinaryOp: RegExp; 
   Module?: RegExp;
@@ -33,11 +33,12 @@ type VolatileMarks = {
 };
 
 const LuaRgx: LuaRgx = {
-  Reserved: /\blocal\b|\bif\b|\bthen\b/g,
-  Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)/g,
+  Reserved: /\blocal\b|\bif\b|\bthen\b|function\b|\bend\b/g,
+  Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)/g,
   BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B/g,
-  Braces: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)/g,
+  Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)$/g,
   String: /(?<=\').+(?=\')/g,
+  Braces: /[\{\}]/g,
 }
 
 function getRangeDisjoint(marks: Array<VolatileMarks>) {
@@ -59,7 +60,7 @@ function getRangeDisjoint(marks: Array<VolatileMarks>) {
       }
       continue;
     }
-    if (!(marks[i - 1].end + 1 === marks[i].start)) {
+    if (marks[i - 1].end + 1 !== marks[i].start && marks[i - 1].end !== marks[i].start) {
       disjoints.push([marks[i - 1].end, marks[i].start - 1]);
     }
 
@@ -110,10 +111,6 @@ function mapChildren(children: React.ReactElement[]): React.ReactNode {
     if (volatileMarks.length > 0) {
       // console.log(volatileMarks);
       let disjoints = getRangeDisjoint(volatileMarks);
-      if (i === 3) {
-        // console.log(content);
-        // console.log(`DISJOINT COUNT: ${disjoints.length}`);
-      }
       // console.log(disjoints);
       let totalElem: number = volatileMarks.length + disjoints.length;
       let mins: number[] = [];
