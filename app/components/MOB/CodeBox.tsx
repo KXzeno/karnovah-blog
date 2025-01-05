@@ -216,10 +216,17 @@ export default function CodeBox({ children, lang, fileName }: CodeBoxProps) {
   React.useEffect(() => {
     // On mount, add code to state for blob + clipboard API
     (children as React.ReactNode as React.ReactElement[]).forEach(child => {
+      let content = child.props.children;
+      if (Object.keys(child.props).includes('data-tab')) {
+        let stop = content.length + Number.parseInt(child.props['data-tab']) * 4;
+        while (content.length !== stop) {
+          content = content.replace(/(.*)/, " $1");
+        }
+      }
       dispatch({
         type: 'code',
         courier: {
-          code: child.props.children ?? '\r',
+          code: content ?? '\r',
         }
       })
     });
