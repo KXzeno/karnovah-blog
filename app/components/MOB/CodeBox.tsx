@@ -25,49 +25,130 @@ enum Lang {
     Identifier: RegExp; // Do
   }
 
+  type NodeAugmenter = {
+    childProps: {
+      content: string;
+      classes?: string;
+    },
+    elemId: string;
+    rgx: RegExp;
+  }
+
+  type VolatileMarks = {
+    mark: string;
+    start: number;
+    end: number;
+  };
+
   const LuaRgx: LuaRgx = {
     Reserved: /\blocal\b|\bif\b|\bthen\b/g,
     Identifier: new RegExp(/(?<=\blocal\s)([\w]+\b)/, 'g'),
   }
 
-  function mapChildren(children: React.ReactElement[]) {
-    let termChildren: React.ReactElement[] = [];
+  function nodeAugmentByMatch({ childProps, elemId, rgx }: NodeAugmenter) {
 
-    for (let i = 0; i < (children as React.ReactElement[]).length; i++) {
-      let { children: content, className: classes }: { children: string, className: string } = children[i].props;
-      // Create RegExp array of matches
-      let matches: RegExpStringIterator<RegExpExecArray> = content?.matchAll(LuaRgx.Reserved);
-      if (matches) {
-        // Prepare final node transformation
-        let carrier: React.ReactElement[] = [];
-        // Split html content by match
-        let fragmented: string[] = content.split(LuaRgx.Reserved);
-        for (let match of matches) {
-          // If index 0 contains content, append it to carrier node
-          while (fragmented[0].length !== 0) {
-            carrier.push(<>{fragmented.shift()}</>);
-            fragmented.shift();
-          }
-          // If index 0 does not contain content, it is a keyword
-          // Map it as a styled span element and append to carrier node
-          carrier.push(<span key={fragmented.length} className='text-purple-400'>{match[0]}</span>);
-          fragmented.shift();
-          // Ensure iterable deletion
-          matches.drop(1);
+  }
+
+  function getRangeDisjoint(marks: Array<VolatileMarks>) {
+    let disjoints: Array<[number, number]> = [];
+    for (let i = 0; i < marks.length; i++) {
+      if (i === 0) {
+        if (marks[i].start !== 0) {
+          disjoints.push([0, marks[0].start + 1]);
+          continue;
         }
-        // Append all unchecked content to carrier node
-        while (fragmented.length !== 0) {
-          carrier.push(<>{fragmented.shift()}</>);
-        }
-        let newNode: React.ReactNode = <code className='text-inherit font-dosis'> {...carrier}</code>
-        // Create auto-index on mapped node
-        termChildren.push(<span className='px-2 select-none'>{i + 1}</span>);
-        termChildren.push(newNode);
         continue;
       }
-      // Create auto-index
-      termChildren.push(<span className='px-2 select-none'>{i + 1}</span>);
-      termChildren.push(children[i]);
+      if (!(marks[i - 1].end + 1 === marks[i].start)) {
+        disjoints.push([marks[i - 1].end + 1, marks[i].start - 1]);
+      }
+      if (i === marks.length - 1) {
+        disjoints.push([marks[i].end + 1, Number.MAX_SAFE_INTEGER]);
+      }
+    }
+    // console.log(`Range Disjoints: ${disjoints}`);
+    return disjoints;
+  }
+
+  function mapChildren(children: React.ReactElement[]): React.ReactNode {
+    let termChildren: React.ReactElement[] = [];
+    let volatileMarks: VolatileMarks[] = [];
+    for (let i = 0; i < (children as React.ReactElement[]).length; i++) {
+      let { children: content, className: classes }: { children: string, className: string } = children[i].props;
+      /** TODO: Dynamically iterate over possible matches
+       * FIXME: termChildren should only be mutated after the final match
+       * FIXME: Due to above, duplicate lines are made
+       * - Instead of manipulating the node on iteration, make substr marker via
+       * matched index + matched length
+       * - The final op in this control flow will deal with the manipulation and forward
+       * to termChildren
+       */ 
+      let luaRgxProps = Object.entries(LuaRgx);
+      for (let [id, rgx] of luaRgxProps) {
+        // if (rgx !== LuaRgx.Reserved) {
+        //   continue;
+        // }
+        let matches: RegExpStringIterator<RegExpExecArray> | null;
+        // New line
+        if (content == null) {
+          matches = null;
+        } else {
+          // Create RegExp array of matches if valid
+          matches = content.matchAll(rgx);
+        }
+
+        if (content && matches) {
+          for (let match of matches) {
+            volatileMarks.push({ mark: id, start: match.index, end: match.index + match['0'].length });
+          }
+        }
+      }
+      termChildren.push(<span key={`index-${i + 1}`} className='code-line-index'>{i + 1}</span>);
+      if (volatileMarks.length > 0) {
+        let disjoints = getRangeDisjoint(volatileMarks);
+        let totalElem: number = volatileMarks.length + disjoints.length;
+        let mins: number[] = [];
+
+        disjoints.forEach(disjoint => mins.push(disjoint[0]));
+        volatileMarks.forEach(mark => mins.push(mark.start));
+
+        mins.sort((p, n) => p - n);
+
+        let volatileNodes: React.ReactElement[] = [];
+
+        for (let i = 0; i < totalElem; i++) {
+          let pendingAugment: boolean = disjoints.some(range => range[0] !== mins[0]);
+          if (pendingAugment) {
+            console.log(`${i}, this element should be augmented.`);
+            let targetMark = volatileMarks.find(marked => marked.start === mins[0]);
+            if (!targetMark) {
+              return;
+            }
+            volatileNodes.push(
+              <span className={`${targetMark.mark.toLowerCase()}`}>
+                {`${content.substring(targetMark.start, targetMark.end)} `}
+              </span>
+            );
+          } else {
+            console.log(`${i}, this element should be unfiltered.`);
+            let targetDisjointed = disjoints.find(disjointed => disjointed[0] === mins[0]);
+            if (!targetDisjointed) {
+              return;
+            }
+            volatileNodes.push(
+              <>
+                {content.substring(targetDisjointed[0], targetDisjointed[1])}
+              </>
+            );
+          }
+          mins.shift();
+        }
+        termChildren.push(<code key={`line-${i + 1}`}>{...volatileNodes}</code>);
+        volatileNodes = [];
+      } else {
+        termChildren.push(<code key={`line-${i + 1}`}>{content}</code>);
+      }
+      volatileMarks = [];
     }
     return termChildren;
   }
@@ -75,11 +156,11 @@ enum Lang {
   export default function CodeBox({ children, lang, fileName }: CodeBoxProps) {
     return (
       lang === Lang.Lua && 
-        <div className='text-green-300 text-xs bg-[#000000] w-full border-2'>
-          <div className='border-double border-b-2 p-[1.7px] pl-2 mb-4 -mt-4'>
+        <div className='code-box'>
+          <div className='file-type'>
             <span>{fileName}</span>
           </div>
-          <div className='grid grid-cols-[max-content_1fr] p-0 text-[0.61rem]'>
+          <div className='code-multiline'>
             {mapChildren(children as React.ReactElement[])}
           </div>
         </div>
