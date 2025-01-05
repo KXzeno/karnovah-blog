@@ -35,7 +35,7 @@ enum Lang {
     Reserved: /\blocal\b|\bif\b|\bthen\b/g,
     Identifier: /(?<=\blocal\s)([\w]+\b)/g,
     BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B/g,
-    // Braces: /((?=.*\))\()|((?<=\(.*)\))/g,
+    Braces: /((?=.*\))\()|((?<=\(.*)\))/g,
   }
 
   function getRangeDisjoint(marks: Array<VolatileMarks>) {
@@ -96,6 +96,7 @@ enum Lang {
         disjoints.forEach(disjoint => mins.push(disjoint[0]));
         volatileMarks.forEach(mark => mins.push(mark.start));
 
+        console.log(`UNSORTED MINS: ${mins}`);
         mins.sort((p, n) => p - n);
 
         let volatileNodes: React.ReactElement[] = [];
@@ -104,11 +105,14 @@ enum Lang {
 
         for (let i = 0; i < totalElem; i++) {
           console.log(`Last used: [${lbRange[0][0]}, ${lbRange[0][1]}]`);
-          let pendingAugment: boolean = disjoints.some(range => range[0] !== mins[0]);
+          let pendingAugment: boolean = !disjoints.some(range => range[0] === mins[0]);
+          console.log('DISJOINTS: ' + disjoints);
           if (pendingAugment) {
             // console.log(`${i}, this element should be augmented.`);
             let targetMark = volatileMarks.find(marked => marked.start === mins[0]);
-
+            console.log("MINS: " + mins);
+            console.log("VOLATILE: ", volatileMarks);
+            console.log("TARGET: " + targetMark);
             if (!targetMark) {
               return;
             }
