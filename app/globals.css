@@ -106,6 +106,10 @@
     @apply border-[#C80036] text-[#C80036];
   }
 
+  .add-header.siege > p > a {
+    @apply text-blue-500 hover:text-blue-700;
+  }
+
   .add-header.poised {
     @apply border-[#FFF574] text-[#FFF574];
   }
@@ -220,6 +224,10 @@
 
   .code-multiline > code > span.string {
     @apply text-[#608BC1]
+  }
+
+  .code-multiline > code > span.delimiter {
+    @apply text-[#F8FAFC];
   }
 
   .text-balance {
