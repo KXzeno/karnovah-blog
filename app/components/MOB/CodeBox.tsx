@@ -7,7 +7,7 @@ type CodeBoxProps = {
   fileName: string;
 }
 
-enum Lang {
+export enum Lang {
   Vimscript = "VIMSCRIPT",
   Lua = "LUA",
   Powershell = "POWERSHELL",
