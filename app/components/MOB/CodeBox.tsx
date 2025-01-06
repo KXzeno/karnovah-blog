@@ -22,6 +22,7 @@ type LuaRgx = {
   Paren: RegExp; // Do
   Braces: RegExp;
   BinaryOp: RegExp; 
+  Delimiter: RegExp;
   Module?: RegExp;
   Identifier: RegExp;
 }
@@ -33,12 +34,14 @@ type VolatileMarks = {
 };
 
 const LuaRgx: LuaRgx = {
-  Reserved: /\blocal\b|\bif\b|\bthen\b|function\b|\bend\b/g,
+  Reserved: /\blocal\b|\bif\b|\bthen\b|function\b|end(?=\,|$)/g,
   Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)/g,
   BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B/g,
   Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)$/g,
-  String: /(?<=\').+(?=\')/g,
-  Braces: /[\{\}]/g,
+  // String: /(?<=\').+(?=\')/g,
+  String: /(?:\'|\").+(?:\'|\")/g,
+  Braces: /[\{\}\[\]]/g,
+  Delimiter: /\.|\,/g
 }
 
 function getRangeDisjoint(marks: Array<VolatileMarks>) {
