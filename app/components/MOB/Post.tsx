@@ -11,6 +11,8 @@ import ArticleProvider, {
 import Section from '@M/Section';
 import { readPost } from '@A/PostActions';
 import { SinglyLinkedList } from '@U/SinglyLinkedList';
+import CodeBox from './CodeBox';
+import { Lang } from './CodeBox';
 
 /**
  * Transform consumer semantics to HTML
@@ -80,7 +82,7 @@ function semanticMultilineTransform(par: string): React.ReactNode | undefined {
          *  keyof creates a union type of a type's keys
          */
         let Style = enrich[i - 1] as keyof JSX.IntrinsicElements;
-        console.log(Style);
+        // console.log(Style);
         // Compiler prefers undefined over null?
         let classFields = Style.match(/(?<=className\=\')[\s\w\d\S]+(?=\')/);
         let hrefField = Style.match(/(?<=href\=\')[:/.\s\w\%\_\&\=\d\?\-]+(?=\')/);
@@ -136,9 +138,10 @@ function semanticMultilineTransform(par: string): React.ReactNode | undefined {
  * @author Kx
  */
 function project(sections: unknown[]): React.ReactNode {
-  // Initialize return val
   let nodeG: React.ReactNode[] = [];
+  let semanticChanges: number = 0;
   // Iterate through section body
+  let codeCache: string[] = [];
   for (let i = 0; i < sections.length; i++) {
     // Well-define 'header' using nullish coalescence  
     // @ts-expect-error
@@ -182,6 +185,43 @@ function project(sections: unknown[]): React.ReactNode {
           </>
         )
       }
+
+      // @ts-expect-error
+      if (sections[i].code.length > 0) {
+        // FIXME: Uncertain if this will affect load orders that are not aside --> code block.
+        // @ts-expect-error
+        let codeIndex = sections[i].code[0].split(/(?<=\$)([\d]+)$/)[1];
+        if (codeIndex === index + 1 || (nodeG.length + index + 1)) {
+          let lines: string[] | React.ReactNode = [];
+          let match: RegExp = new RegExp(`(?<=\\$)(${codeIndex})$`);
+          // TODO: CREATE FILE NAME API
+          let fileName;
+          // @ts-expect-error
+          let lang = sections[i].code[0].match(/(.+(?=\$))/)[0];
+          // @ts-expect-error
+          sections[i].code.shift();
+          // @ts-expect-error
+          while (sections[i].code[0] && sections[i].code[0].match(match)) {
+            // @ts-expect-error
+            lines.push(sections[i].code.shift().replace(/\$[\d]+$/, ''));
+          }
+          lines = (lines as string[]).map(line => {
+            if (line.match(/(?:^\\{1,2})/)) {
+              if (line.match(/(?:^\\{2})/)) {
+                return <code></code>;
+              } else if (line.match(/(?:^\\{1}\d+)/)) {
+                let tabs = line.match(/(?<=\\)(\d+)/)![0];
+                let newLine = line.replace(/^([\\]+[\d]+\b)/, '').trimStart();
+                return <code data-tab={tabs}>{`${newLine}`}</code>
+              }
+            }
+            return <code>{`${line}`}</code>
+          });
+          // FIXME: Refer to l97; create dynamic filename...
+          return <CodeBox fileName={fileName ?? 'init.lua'} lang={lang.toUpperCase()}>{lines as React.ReactNode}</CodeBox>
+        }
+      }
+
       // Default
       return semanticMultilineTransform(par);
     });
