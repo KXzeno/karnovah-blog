@@ -1,5 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
+
 import { Warning } from '@M/Icons';
 import ArticleProvider, { 
   Header,
@@ -12,7 +13,6 @@ import Section from '@M/Section';
 import { readPost } from '@A/PostActions';
 import { SinglyLinkedList } from '@U/SinglyLinkedList';
 import CodeBox from './CodeBox';
-import { Lang } from './CodeBox';
 
 /**
  * Transform consumer semantics to HTML
@@ -253,8 +253,7 @@ function project(sections: unknown[]): React.ReactNode {
   return [...nodeG];
 }
 
-export default async function Post({ param }: { param: string }): Promise<React.AwaitedReactNode> {
-  let post = await readPost(param);
+export default async function Post({ post }: { post: Awaited<ReturnType<typeof readPost>> }): Promise<React.AwaitedReactNode> {
   if (post === null || post === undefined) notFound();
   // LOCAL: @ts-expect-error
   let sections: Array<unknown> = post.sections;
