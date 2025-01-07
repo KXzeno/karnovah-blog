@@ -205,17 +205,17 @@ function project(sections: unknown[]): React.ReactNode {
             // @ts-expect-error
             lines.push(sections[i].code.shift().replace(/\$[\d]+$/, ''));
           }
-          lines = (lines as string[]).map(line => {
+          lines = (lines as string[]).map((line, lineIndex) => {
             if (line.match(/(?:^\\{1,2})/)) {
               if (line.match(/(?:^\\{2})/)) {
-                return <code></code>;
+                return <code key={`${codeIndex}-${lineIndex}`}></code>;
               } else if (line.match(/(?:^\\{1}\d+)/)) {
                 let tabs = line.match(/(?<=\\)(\d+)/)![0];
                 let newLine = line.replace(/^([\\]+[\d]+\b)/, '').trimStart();
-                return <code data-tab={tabs}>{`${newLine}`}</code>
+                return <code key={`${codeIndex}-${lineIndex}`} data-tab={tabs}>{`${newLine}`}</code>
               }
             }
-            return <code>{`${line}`}</code>
+            return <code key={`${codeIndex}-${lineIndex}`}>{`${line}`}</code>
           });
           // FIXME: Refer to l97; create dynamic filename...
           return <CodeBox fileName={fileName ?? 'init.lua'} lang={lang.toUpperCase()}>{lines as React.ReactNode}</CodeBox>
