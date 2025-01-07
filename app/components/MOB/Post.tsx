@@ -33,7 +33,7 @@ function semanticTransform(content: React.ReactNode[] | string): React.ReactNode
       let optRef: { href: string | undefined, target: string | undefined } = { href: undefined, target: undefined };
       if (Style.search(/(?:\S+[\s])/) !== -1) {
         let classFields = Style.match(/(?<=className\=\')[\s\w\d\S]+(?=\')/);
-        let hrefField = Style.match(/(?<=href\=\')[:/.\s\w\%\_\&\=\d\?\-]+(?=\')/);
+        let hrefField = Style.match(/(?<=href\=\')[:/.\s\w\%\_\&\=\d\?\-\#]+(?=\')/);
         optClass.className = (classFields && classFields[0]) ?? undefined;
         optRef.href = (hrefField && hrefField[0]) ?? undefined;
         if (optRef.href) {
@@ -85,7 +85,7 @@ function semanticMultilineTransform(par: string, options?: { fragmented?: boolea
         // console.log(Style);
         // Compiler prefers undefined over null?
         let classFields = Style.match(/(?<=className\=\')[\s\w\d\S]+(?=\')/);
-        let hrefField = Style.match(/(?<=href\=\')[:/.\s\w\%\_\&\=\d\?\-]+(?=\')/);
+        let hrefField = Style.match(/(?<=href\=\')[:/.\s\w\%\_\&\=\d\?\-\#]+(?=\')/);
         let optClass: { className: string | undefined } = { className: undefined };
         let optRef: { href: string | undefined, target: string | undefined } = { href: undefined, target: undefined };
         enriched.addLast(enrich[i - 2]);
