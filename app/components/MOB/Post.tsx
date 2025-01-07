@@ -192,7 +192,7 @@ function project(sections: unknown[]): React.ReactNode {
         // @ts-expect-error
         let codeIndex = sections[i].code[0].split(/(?<=\$)([\d]+)$/)[1];
         if (codeIndex === index + 1 || (nodeG.length + index + 1)) {
-          let lines: string[] | React.ReactNode = [];
+          let lines: string[] | React.ReactElement[] | React.ReactNode = [];
           let match: RegExp = new RegExp(`(?<=\\$)(${codeIndex})$`);
           // TODO: CREATE FILE NAME API
           let fileName;
@@ -217,8 +217,14 @@ function project(sections: unknown[]): React.ReactNode {
             }
             return <code key={`${codeIndex}-${lineIndex}`}>{`${line}`}</code>
           });
+          let newPar = semanticMultilineTransform(par);
           // FIXME: Refer to l97; create dynamic filename...
-          return <CodeBox fileName={fileName ?? 'init.lua'} lang={lang.toUpperCase()}>{lines as React.ReactNode}</CodeBox>
+          return (
+            <>
+              {newPar}
+              <CodeBox key={`codebox-${codeIndex}`} fileName={fileName ?? 'init.lua'} lang={lang.toUpperCase()}>{lines as React.ReactNode}</CodeBox>
+            </>
+          )
         }
       }
 
