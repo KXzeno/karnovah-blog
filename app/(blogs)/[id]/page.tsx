@@ -34,8 +34,8 @@ export async function generateMetadata(props: {
 export default async function Blog(props: { params: Params, searchParams: SearchParams }): Promise<React.ReactNode> {
   // let { id } = await props.params;
   return (
-    <>
+    <React.Suspense>
       <Post post={data} />
-    </>
+    </React.Suspense>
   );
 } 
