@@ -65,7 +65,7 @@ function semanticTransform(content: React.ReactNode[] | string): React.ReactNode
  * @returns {React.ReactNode | undefined} string-modified React node or undefined
  * @author Kx
  */
-function semanticMultilineTransform(par: string): React.ReactNode | undefined {
+function semanticMultilineTransform(par: string, options?: { fragmented?: boolean, key?: number | string }): React.ReactNode | undefined {
   let newPar: React.ReactNode | undefined = undefined; 
   if (par.length > 0) {
     let enriched = new SinglyLinkedList<string | React.ReactNode>();
@@ -122,7 +122,11 @@ function semanticMultilineTransform(par: string): React.ReactNode | undefined {
     while (!enriched.isEmpty()) {
       node.push(<>{enriched.removeFirst()}</>);
     }
-    return newPar = (<p>{[...node]}</p>);
+    if (options && options.fragmented) {
+      return newPar = (<>{[...node]}</>);
+    } else {
+      return newPar = (<p key={options && options.key}>{[...node]}</p>);
+    }
   }
   // Undefined
   return newPar;
@@ -166,20 +170,23 @@ function project(sections: unknown[]): React.ReactNode {
 
         semanticTransform(content);
         let newPar = semanticMultilineTransform(par);
-
         return (
           <>
             {newPar ?? <p key={`${hdr}-${i}`}>{par}</p>}
             <div>
               <AddHeader 
+                key={`${i}-${hdr}`}
                 type={asideType}
                 HeaderNote={
                   <HeaderNote>
                     <Warning 
                       type={asideType}/>
                   </HeaderNote>
-                }>
-                {...content as React.ReactNode[]}
+                }
+              >
+                {typeof content !== 'string' ? (content as string[]).map((preNode, i) => {
+                  return semanticMultilineTransform(preNode, { fragmented: true, key: i })
+                }): semanticMultilineTransform(content, { fragmented: true, key: i })}
               </AddHeader>
             </div>
           </>
