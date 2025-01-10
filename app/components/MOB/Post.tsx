@@ -197,7 +197,7 @@ function project(sections: unknown[]): React.ReactNode {
         // FIXME: Uncertain if this will affect load orders that are not aside --> code block.
         // @ts-expect-error
         let codeIndex = sections[i].code[0].split(/(?<=\$)([\d]+)$/)[1];
-        if (codeIndex === index + 1 || (nodeG.length + index + 1)) {
+        if (Number.parseInt(codeIndex) === index + 1) {
           let codeCache: string[] | React.ReactElement[] | React.ReactNode = [];
           let match: RegExp = new RegExp(`(?<=\\$)(${codeIndex})$`);
           // TODO: CREATE FILE NAME API
