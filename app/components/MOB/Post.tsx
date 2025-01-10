@@ -145,7 +145,6 @@ function project(sections: unknown[]): React.ReactNode {
   let nodeG: React.ReactNode[] = [];
   let semanticChanges: number = 0;
   // Iterate through section body
-  let codeCache: string[] = [];
   for (let i = 0; i < sections.length; i++) {
     // Well-define 'header' using nullish coalescence  
     // @ts-expect-error
@@ -199,7 +198,7 @@ function project(sections: unknown[]): React.ReactNode {
         // @ts-expect-error
         let codeIndex = sections[i].code[0].split(/(?<=\$)([\d]+)$/)[1];
         if (codeIndex === index + 1 || (nodeG.length + index + 1)) {
-          let lines: string[] | React.ReactElement[] | React.ReactNode = [];
+          let codeCache: string[] | React.ReactElement[] | React.ReactNode = [];
           let match: RegExp = new RegExp(`(?<=\\$)(${codeIndex})$`);
           // TODO: CREATE FILE NAME API
           let fileName;
@@ -210,9 +209,9 @@ function project(sections: unknown[]): React.ReactNode {
           // @ts-expect-error
           while (sections[i].code[0] && sections[i].code[0].match(match)) {
             // @ts-expect-error
-            lines.push(sections[i].code.shift().replace(/\$[\d]+$/, ''));
+            codeCache.push(sections[i].code.shift().replace(/\$[\d]+$/, ''));
           }
-          lines = (lines as string[]).map((line, lineIndex) => {
+          codeCache = (codeCache as string[]).map((line, lineIndex) => {
             if (line.match(/(?:^\\{1,2})/)) {
               if (line.match(/(?:^\\{2})/)) {
                 return <code key={`${codeIndex}-${lineIndex}`}></code>;
@@ -229,7 +228,7 @@ function project(sections: unknown[]): React.ReactNode {
           return (
             <>
               {newPar}
-              <CodeBox key={`codebox-${codeIndex}`} fileName={fileName ?? 'init.lua'} lang={lang.toUpperCase()}>{lines as React.ReactNode}</CodeBox>
+              <CodeBox key={`codebox-${codeIndex}`} fileName={fileName ?? 'init.lua'} lang={lang.toUpperCase()}>{codeCache as React.ReactNode}</CodeBox>
             </>
           )
         }
