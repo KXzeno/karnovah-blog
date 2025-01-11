@@ -249,6 +249,7 @@ function project(sections: unknown[]): React.ReactNode {
       // Default
       // return semanticMultilineTransform(par);
     });
+    volatileNode = [];
     nodeG.push(<section key={`${hdr}-${i}`}>{[...contents]}</section>);
   }
   /** Return spread of React node array,
