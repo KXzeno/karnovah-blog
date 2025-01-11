@@ -132,6 +132,9 @@ function semanticMultilineTransform(par: string, options?: { fragmented?: boolea
   return newPar;
 }
 
+// TODO: Don't terminate mutation on aside or codeblock, as for now prioritize aside
+let volatileNode: React.ReactElement[] = [];
+
 /**
  * O(n) execution for mapping queried Post data to elements,
  * each iteration handles an array property using flatmap which 
@@ -169,7 +172,7 @@ function project(sections: unknown[]): React.ReactNode {
 
         semanticTransform(content);
         let newPar = semanticMultilineTransform(par);
-        return (
+         volatileNode.push(
           <>
             {newPar ?? <p key={`${hdr}-${i}`}>{par}</p>}
             <div>
@@ -191,13 +194,22 @@ function project(sections: unknown[]): React.ReactNode {
           </>
         )
       }
-
+      console.log(index);
       // @ts-expect-error
       if (sections[i].code.length > 0) {
         // FIXME: Uncertain if this will affect load orders that are not aside --> code block.
         // @ts-expect-error
-        let codeIndex = sections[i].code[0].split(/(?<=\$)([\d]+)$/)[1];
-        if (Number.parseInt(codeIndex) === index + 1) {
+        let codeIndex = Number.parseInt(sections[i].code[0].split(/(?<=\$)([\d]+)$/)[1]);
+        // console.log(`i: ${i}\nCode Index: ${codeIndex}\nIndex: ${index}\nPar: ${par.substring(0, 20)}\n\n`);
+        if (index === codeIndex - 1) {
+          console.log(index);
+          // TODO: 
+          // TARGETS:
+          //   - i:0 - After 1, says ci3 on i0 // Diff - 2
+          //   - i:1 - After 0, says ci1 on i0 // Diff - 1
+          //   - i:1 - After 1, says ci2 on i2 // Diff - 1
+          //   - i:3 - After 4, says ci3 on i3 // Diff - -1
+          //   - Ight so, you only deal with content index (index)
           let codeCache: string[] | React.ReactElement[] | React.ReactNode = [];
           let match: RegExp = new RegExp(`(?<=\\$)(${codeIndex})$`);
           // TODO: CREATE FILE NAME API
@@ -225,7 +237,7 @@ function project(sections: unknown[]): React.ReactNode {
           });
           let newPar = semanticMultilineTransform(par);
           // FIXME: Refer to l97; create dynamic filename...
-          return (
+           volatileNode.push(
             <>
               {newPar}
               <CodeBox key={`codebox-${codeIndex}`} fileName={fileName ?? 'init.lua'} lang={lang.toUpperCase()}>{codeCache as React.ReactNode}</CodeBox>
@@ -233,9 +245,9 @@ function project(sections: unknown[]): React.ReactNode {
           )
         }
       }
-
+      return [...volatileNode];
       // Default
-      return semanticMultilineTransform(par);
+      // return semanticMultilineTransform(par);
     });
     nodeG.push(<section key={`${hdr}-${i}`}>{[...contents]}</section>);
   }
