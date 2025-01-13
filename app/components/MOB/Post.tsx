@@ -131,6 +131,80 @@ function semanticMultilineTransform(par: string, options?: { fragmented?: boolea
   // Undefined
   return newPar;
 }
+
+function insertAside(outerIndex: number, innerIndex: number, sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["sections"], par: string, hdr: string): { sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["sections"], volatileNode: React.ReactNode } {
+  let content: React.ReactNode[] | string = sections[outerIndex].content[innerIndex + 1];
+  let asideType: string = (sections[innerIndex].aside.shift() as string)?.split(/\$/)[0].toLowerCase();
+  sections[innerIndex].content[outerIndex + 1] = '';
+  semanticTransform(content);
+  let newPar = semanticMultilineTransform(par);
+  return { sections, volatileNode: (
+    <>
+      {newPar ?? <p key={`${hdr}-${innerIndex}`}>{par}</p>}
+      <div>
+        <AddHeader 
+          key={`${innerIndex}-${hdr}`}
+          type={asideType}
+          HeaderNote={
+            <HeaderNote>
+              <Warning 
+                type={asideType}/>
+            </HeaderNote>
+          }
+        >
+          {typeof content !== 'string' ? (content as string[]).map((preNode, i) => {
+            return semanticMultilineTransform(preNode, { fragmented: true, key: i })
+          }): semanticMultilineTransform(content, { fragmented: true, key: innerIndex })}
+        </AddHeader>
+      </div>
+    </>
+  )}
+}
+
+function insertCodeBlock(params: Parameters<typeof insertAside>): ReturnType<typeof insertAside> | undefined {
+  let [outerIndex, innerIndex, sections, par] = params;
+  // FIXME: Uncertain if this will affect load orders that are not aside --> code block.
+  let codeIndex = Number.parseInt(sections[outerIndex].code[0].split(/(?<=\$)([\d]+)$/)[1]);
+  // console.log(`i: ${i}\nCode Index: ${codeIndex}\nIndex: ${index}\nPar: ${par.substring(0, 20)}\n\n`);
+  if (innerIndex === codeIndex - 1) {
+    // TODO: 
+    // TARGETS:
+    //   - i:0 - After 1, says ci3 on i0 // Diff - 2
+    //   - i:1 - After 0, says ci1 on i0 // Diff - 1
+    //   - i:1 - After 1, says ci2 on i2 // Diff - 1
+    //   - i:3 - After 4, says ci3 on i3 // Diff - -1
+    //   - Ight so, you only deal with content index (index)
+    let codeCache: string[] | React.ReactElement[] | React.ReactNode = [];
+    let match: RegExp = new RegExp(`(?<=\\$)(${codeIndex})$`);
+    // TODO: CREATE FILE NAME API
+    let fileName;
+    let lang = sections[outerIndex].code[0].match(/(.+(?=\$))/)![0];
+    sections[outerIndex].code.shift();
+    while (sections[outerIndex].code[0] && sections[outerIndex].code[0].match(match)) {
+      (codeCache as string[]).push(sections[outerIndex].code.shift()!.replace(/\$[\d]+$/, ''));
+    }
+    codeCache = (codeCache as string[]).map((line, lineIndex) => {
+      if (line.match(/(?:^\\{1,2})/)) {
+        if (line.match(/(?:^\\{2})/)) {
+          return <code key={`${codeIndex}-${lineIndex}`}></code>;
+        } else if (line.match(/(?:^\\{1}\d+)/)) {
+          let tabs = line.match(/(?<=\\)(\d+)/)![0];
+          let newLine = line.replace(/^([\\]+[\d]+\b)/, '').trimStart();
+          return <code key={`${codeIndex}-${lineIndex}`} data-tab={tabs}>{`${newLine}`}</code>
+        }
+      }
+      return <code key={`${codeIndex}-${lineIndex}`}>{`${line}`}</code>
+    });
+    let newPar = semanticMultilineTransform(par);
+    // FIXME: Refer to l97; create dynamic filename...
+    return {sections, volatileNode: (
+      <>
+        {newPar}
+        <CodeBox key={`codebox-${codeIndex}`} fileName={fileName ?? 'init.lua'} lang={lang.toUpperCase()}>{codeCache as React.ReactNode}</CodeBox>
+      </>
+    )}
+  }
+}
 /**
  * O(n) execution for mapping queried Post data to elements,
  * each iteration handles an array property using flatmap which 
@@ -154,80 +228,32 @@ function project(sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["se
     let contents = sections[i].content.flatMap((par, index) => {
       // TODO: Don't terminate mutation on aside or codeblock, as for now prioritize aside
       let volatileNode: React.ReactElement[] = [];
-
-      // Handle aside-first case
-      if (sections[i].aside[0] && index + 1 === Number.parseInt(sections[i].aside[0].split(/\$/)[1])) {
-        let lfIndex = Number.parseInt(sections[i].code[sections[i].code.length - 1]);
-        let content: React.ReactNode[] | string = sections[i].content[index + 1];
-        let asideType: string = (sections[i].aside.shift() as string).split(/\$/)[0].toLowerCase();
-        sections[i].content[index + 1] = '';
-        semanticTransform(content);
-        let newPar = semanticMultilineTransform(par);
-        volatileNode.push(
-          <>
-            {newPar ?? <p key={`${hdr}-${i}`}>{par}</p>}
-            <div>
-              <AddHeader 
-                key={`${i}-${hdr}`}
-                type={asideType}
-                HeaderNote={
-                  <HeaderNote>
-                    <Warning 
-                      type={asideType}/>
-                  </HeaderNote>
-                }
-              >
-                {typeof content !== 'string' ? (content as string[]).map((preNode, i) => {
-                  return semanticMultilineTransform(preNode, { fragmented: true, key: i })
-                }): semanticMultilineTransform(content, { fragmented: true, key: i })}
-              </AddHeader>
-            </div>
-          </>
-        )
+      let lastCode = sections[i].code[sections[i].code.length - 1];
+      let lfIndex: number = 0;
+      if (lastCode) {
+        lfIndex = Number.parseInt(lastCode.match(/(?<=\$)([\d]+)$/)![1]);
       }
+      console.log(`Index: ${index}`);
+      // Handle aside-first case
+      let asideIndex: number | null = null;
+      if (sections[i].aside[0]) {
+        asideIndex = Number.parseInt(sections[i].aside[0].split(/\$/)[1]) ;
+      }
+
+      if (asideIndex && asideIndex === index + 1/*(lfIndex || index + 1 === asideIndex)*/) {
+        let asideInserter = insertAside(i, index, sections, par, hdr as string);
+        sections = asideInserter.sections;
+        volatileNode.push(asideInserter.volatileNode as React.ReactElement);
+      }
+
       if (sections[i].code.length > 0) {
-        // FIXME: Uncertain if this will affect load orders that are not aside --> code block.
-        let codeIndex = Number.parseInt(sections[i].code[0].split(/(?<=\$)([\d]+)$/)[1]);
-        // console.log(`i: ${i}\nCode Index: ${codeIndex}\nIndex: ${index}\nPar: ${par.substring(0, 20)}\n\n`);
-        if (index === codeIndex - 1) {
-          // TODO: 
-          // TARGETS:
-          //   - i:0 - After 1, says ci3 on i0 // Diff - 2
-          //   - i:1 - After 0, says ci1 on i0 // Diff - 1
-          //   - i:1 - After 1, says ci2 on i2 // Diff - 1
-          //   - i:3 - After 4, says ci3 on i3 // Diff - -1
-          //   - Ight so, you only deal with content index (index)
-          let codeCache: string[] | React.ReactElement[] | React.ReactNode = [];
-          let match: RegExp = new RegExp(`(?<=\\$)(${codeIndex})$`);
-          // TODO: CREATE FILE NAME API
-          let fileName;
-          let lang = sections[i].code[0].match(/(.+(?=\$))/)[0];
-          sections[i].code.shift();
-          while (sections[i].code[0] && sections[i].code[0].match(match)) {
-            codeCache.push(sections[i].code.shift().replace(/\$[\d]+$/, ''));
-          }
-          codeCache = (codeCache as string[]).map((line, lineIndex) => {
-            if (line.match(/(?:^\\{1,2})/)) {
-              if (line.match(/(?:^\\{2})/)) {
-                return <code key={`${codeIndex}-${lineIndex}`}></code>;
-              } else if (line.match(/(?:^\\{1}\d+)/)) {
-                let tabs = line.match(/(?<=\\)(\d+)/)![0];
-                let newLine = line.replace(/^([\\]+[\d]+\b)/, '').trimStart();
-                return <code key={`${codeIndex}-${lineIndex}`} data-tab={tabs}>{`${newLine}`}</code>
-              }
-            }
-            return <code key={`${codeIndex}-${lineIndex}`}>{`${line}`}</code>
-          });
-          let newPar = semanticMultilineTransform(par);
-          // FIXME: Refer to l97; create dynamic filename...
-          volatileNode.push(
-            <>
-              {newPar}
-              <CodeBox key={`codebox-${codeIndex}`} fileName={fileName ?? 'init.lua'} lang={lang.toUpperCase()}>{codeCache as React.ReactNode}</CodeBox>
-            </>
-          )
+        let codeInserter = insertCodeBlock([i, index, sections, par, hdr as string]);
+        if (codeInserter) {
+          sections = codeInserter.sections;
+          volatileNode.push(codeInserter.volatileNode as React.ReactElement);
         }
       }
+
       if (volatileNode.length > 0) {
         return [...volatileNode];
       } else {
