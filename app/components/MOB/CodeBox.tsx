@@ -3,7 +3,7 @@ import React from 'react';
 
 type CodeBoxProps = {
   children: React.ReactNode;
-  lang: Lang;
+  lang: Lang | string;
   fileName: string;
 }
 
