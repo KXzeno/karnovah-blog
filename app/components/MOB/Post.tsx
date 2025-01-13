@@ -132,15 +132,15 @@ function semanticMultilineTransform(par: string, options?: { fragmented?: boolea
   return newPar;
 }
 
-function insertAside(outerIndex: number, innerIndex: number, sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["sections"], par: string, hdr: string): { sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["sections"], volatileNode: React.ReactNode } {
+function insertAside(outerIndex: number, innerIndex: number, sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["sections"], par: string, hdr: string, insertPar?: boolean): { sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["sections"], volatileNode: React.ReactNode } {
   let content: React.ReactNode[] | string = sections[outerIndex].content[innerIndex + 1];
   let asideType: string = (sections[innerIndex].aside.shift() as string)?.split(/\$/)[0].toLowerCase();
-  sections[innerIndex].content[outerIndex + 1] = '';
   semanticTransform(content);
   let newPar = semanticMultilineTransform(par);
+  sections[innerIndex].content[outerIndex + 1] = '';
   return { sections, volatileNode: (
     <>
-      {newPar ?? <p key={`${hdr}-${innerIndex}`}>{par}</p>}
+      {insertPar && (newPar ?? <p key={`${hdr}-${innerIndex}`}>{par}</p>)}
       <div>
         <AddHeader 
           key={`${innerIndex}-${hdr}`}
@@ -162,20 +162,15 @@ function insertAside(outerIndex: number, innerIndex: number, sections: NonNullab
 }
 
 function insertCodeBlock(params: Parameters<typeof insertAside>): ReturnType<typeof insertAside> | undefined {
-  let [outerIndex, innerIndex, sections, par] = params;
-  // FIXME: Uncertain if this will affect load orders that are not aside --> code block.
+  let [outerIndex, innerIndex, sections, par, insertPar] = params;
   let codeIndex = Number.parseInt(sections[outerIndex].code[0].split(/(?<=\$)([\d]+)$/)[1]);
-  // console.log(`i: ${i}\nCode Index: ${codeIndex}\nIndex: ${index}\nPar: ${par.substring(0, 20)}\n\n`);
-  if (innerIndex === codeIndex - 1) {
-    // TODO: 
-    // TARGETS:
-    //   - i:0 - After 1, says ci3 on i0 // Diff - 2
-    //   - i:1 - After 0, says ci1 on i0 // Diff - 1
-    //   - i:1 - After 1, says ci2 on i2 // Diff - 1
-    //   - i:3 - After 4, says ci3 on i3 // Diff - -1
-    //   - Ight so, you only deal with content index (index)
+  // Handle location at end of section
+  let shift = sections[outerIndex].content.length - 1 === innerIndex && codeIndex === sections[outerIndex].content.length + 1 ? --codeIndex : null;
+  console.log(shift);
+  if (innerIndex === codeIndex - 1 || shift) {
     let codeCache: string[] | React.ReactElement[] | React.ReactNode = [];
-    let match: RegExp = new RegExp(`(?<=\\$)(${codeIndex})$`);
+    // Attempt codeIndex recovery after temporary exception handling
+    let match: RegExp = new RegExp(`(?<=\\$)(${shift ? shift + 1 : codeIndex})$`);
     // TODO: CREATE FILE NAME API
     let fileName;
     let lang = sections[outerIndex].code[0].match(/(.+(?=\$))/)![0];
@@ -199,7 +194,7 @@ function insertCodeBlock(params: Parameters<typeof insertAside>): ReturnType<typ
     // FIXME: Refer to l97; create dynamic filename...
     return {sections, volatileNode: (
       <>
-        {newPar}
+        {insertPar && newPar}
         <CodeBox key={`codebox-${codeIndex}`} fileName={fileName ?? 'init.lua'} lang={lang.toUpperCase()}>{codeCache as React.ReactNode}</CodeBox>
       </>
     )}
@@ -231,28 +226,50 @@ function project(sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["se
       let lastCode = sections[i].code[sections[i].code.length - 1];
       let lfIndex: number = 0;
       if (lastCode) {
-        lfIndex = Number.parseInt(lastCode.match(/(?<=\$)([\d]+)$/)![1]);
+        lfIndex = Number.parseInt(lastCode.match(/(?<=\$)([\d]+)$/)![1]) - 1;
+        lfIndex < 0 ? 0 : lfIndex;
       }
-      console.log(`Index: ${index}`);
       // Handle aside-first case
       let asideIndex: number | null = null;
       if (sections[i].aside[0]) {
         asideIndex = Number.parseInt(sections[i].aside[0].split(/\$/)[1]) ;
       }
 
-      if (asideIndex && asideIndex === index + 1/*(lfIndex || index + 1 === asideIndex)*/) {
-        let asideInserter = insertAside(i, index, sections, par, hdr as string);
-        sections = asideInserter.sections;
-        volatileNode.push(asideInserter.volatileNode as React.ReactElement);
+      // console.log(`Index: ${index} as ${typeof index}\nlfIndex: ${lfIndex} as ${typeof lfIndex}\nasideIndex: ${asideIndex} as ${typeof asideIndex}`);
+
+      if (asideIndex && (index === asideIndex - 1)) {
+        let asideInserter; 
+        if (asideIndex < lfIndex || lfIndex === 0 || !lfIndex) {
+          asideInserter = insertAside(i, index, sections, par, hdr as string, true);
+          sections = asideInserter.sections;
+          volatileNode.push(asideInserter.volatileNode as React.ReactElement);
+        } else {
+          asideInserter = insertAside(i, index, sections, par, hdr as string);
+          sections = asideInserter.sections;
+          if (sections[i].code.length > 0) {
+            let codeInserter;
+            if (!asideIndex || (asideIndex && lfIndex > asideIndex)) {
+              codeInserter = insertCodeBlock([i, index, sections, par, hdr as string, true]);
+            } else {
+              codeInserter = insertCodeBlock([i, index, sections, par, hdr as string]);
+            }
+            if (codeInserter) {
+              sections = codeInserter.sections;
+              volatileNode.push(codeInserter.volatileNode as React.ReactElement);
+            }
+            volatileNode.push(asideInserter.volatileNode as React.ReactElement);
+          }
+        }
       }
 
-      if (sections[i].code.length > 0) {
-        let codeInserter = insertCodeBlock([i, index, sections, par, hdr as string]);
+      if (sections[i].code.length > 0 && lfIndex && asideIndex && lfIndex < asideIndex || (lfIndex && !asideIndex)) {
+        let codeInserter = insertCodeBlock([i, index, sections, par, hdr as string, true]);
         if (codeInserter) {
           sections = codeInserter.sections;
           volatileNode.push(codeInserter.volatileNode as React.ReactElement);
         }
       }
+
 
       if (volatileNode.length > 0) {
         return [...volatileNode];
