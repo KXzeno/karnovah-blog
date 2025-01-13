@@ -132,9 +132,6 @@ function semanticMultilineTransform(par: string, options?: { fragmented?: boolea
   return newPar;
 }
 
-// TODO: Don't terminate mutation on aside or codeblock, as for now prioritize aside
-let volatileNode: React.ReactElement[] = [];
-
 /**
  * O(n) execution for mapping queried Post data to elements,
  * each iteration handles an array property using flatmap which 
@@ -160,6 +157,9 @@ function project(sections: unknown[]): React.ReactNode {
     // Flatten all paragraphs and map transform each to React nodes
     // @ts-expect-error
     let contents = sections[i].content.flatMap((par, index) => {
+      // TODO: Don't terminate mutation on aside or codeblock, as for now prioritize aside
+      let volatileNode: React.ReactElement[] = [];
+
       // @ts-expect-error
       // Handle aside-first case
       if (sections[i].aside[0] && index + 1 === Number.parseInt(sections[i].aside[0].split(/\$/)[1])) {
@@ -172,7 +172,7 @@ function project(sections: unknown[]): React.ReactNode {
 
         semanticTransform(content);
         let newPar = semanticMultilineTransform(par);
-         volatileNode.push(
+        volatileNode.push(
           <>
             {newPar ?? <p key={`${hdr}-${i}`}>{par}</p>}
             <div>
@@ -202,7 +202,6 @@ function project(sections: unknown[]): React.ReactNode {
         let codeIndex = Number.parseInt(sections[i].code[0].split(/(?<=\$)([\d]+)$/)[1]);
         // console.log(`i: ${i}\nCode Index: ${codeIndex}\nIndex: ${index}\nPar: ${par.substring(0, 20)}\n\n`);
         if (index === codeIndex - 1) {
-          console.log(index);
           // TODO: 
           // TARGETS:
           //   - i:0 - After 1, says ci3 on i0 // Diff - 2
@@ -237,7 +236,7 @@ function project(sections: unknown[]): React.ReactNode {
           });
           let newPar = semanticMultilineTransform(par);
           // FIXME: Refer to l97; create dynamic filename...
-           volatileNode.push(
+          volatileNode.push(
             <>
               {newPar}
               <CodeBox key={`codebox-${codeIndex}`} fileName={fileName ?? 'init.lua'} lang={lang.toUpperCase()}>{codeCache as React.ReactNode}</CodeBox>
@@ -245,11 +244,13 @@ function project(sections: unknown[]): React.ReactNode {
           )
         }
       }
-      return [...volatileNode];
-      // Default
-      // return semanticMultilineTransform(par);
+      if (volatileNode.length > 0) {
+        return [...volatileNode];
+      } else {
+        // Default
+        return semanticMultilineTransform(par);
+      }
     });
-    volatileNode = [];
     nodeG.push(<section key={`${hdr}-${i}`}>{[...contents]}</section>);
   }
   /** Return spread of React node array,
