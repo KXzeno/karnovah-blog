@@ -61,7 +61,7 @@ function semanticTransform(content: React.ReactNode[] | string): React.ReactNode
 /**
  * Transform consumer paragraph semantics to HTML
  * @param {string} par - paragraph to split into multiple lines for parsing
- * @param {string | number} key - optional attribute for React to identify in virtual DOM
+ * @param {{ boolean?, (number? | string?) }} options - optional attribute for React to identify in virtual DOM
  * @returns {React.ReactNode | undefined} string-modified React node or undefined
  * @author Kx
  */
