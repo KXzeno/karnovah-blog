@@ -131,7 +131,6 @@ function semanticMultilineTransform(par: string, options?: { fragmented?: boolea
   // Undefined
   return newPar;
 }
-
 /**
  * O(n) execution for mapping queried Post data to elements,
  * each iteration handles an array property using flatmap which 
@@ -141,35 +140,27 @@ function semanticMultilineTransform(par: string, options?: { fragmented?: boolea
  * @returns {React.ReactNode} A spreaded array of React nodes
  * @author Kx
  */
-function project(sections: unknown[]): React.ReactNode {
+function project(sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["sections"]): React.ReactNode {
   let nodeG: React.ReactNode[] = [];
-  let semanticChanges: number = 0;
   // Iterate through section body
   for (let i = 0; i < sections.length; i++) {
     // Well-define 'header' using nullish coalescence  
-    // @ts-expect-error
     let hdr = sections[i].header ?? sections[i].subheader;
     // If header, push as RFC; if subheader, push as RFC with prop
-    // @ts-expect-error
     (hdr === sections[i].header) ?
       nodeG.push(<Section>{hdr}</Section>) :
       nodeG.push(<Section as='subsec'>{hdr}</Section>);
     // Flatten all paragraphs and map transform each to React nodes
-    // @ts-expect-error
     let contents = sections[i].content.flatMap((par, index) => {
       // TODO: Don't terminate mutation on aside or codeblock, as for now prioritize aside
       let volatileNode: React.ReactElement[] = [];
 
-      // @ts-expect-error
       // Handle aside-first case
       if (sections[i].aside[0] && index + 1 === Number.parseInt(sections[i].aside[0].split(/\$/)[1])) {
-        // @ts-expect-error
+        let lfIndex = Number.parseInt(sections[i].code[sections[i].code.length - 1]);
         let content: React.ReactNode[] | string = sections[i].content[index + 1];
-        // @ts-expect-error
         let asideType: string = (sections[i].aside.shift() as string).split(/\$/)[0].toLowerCase();
-        // @ts-expect-error
         sections[i].content[index + 1] = '';
-
         semanticTransform(content);
         let newPar = semanticMultilineTransform(par);
         volatileNode.push(
@@ -194,11 +185,8 @@ function project(sections: unknown[]): React.ReactNode {
           </>
         )
       }
-      console.log(index);
-      // @ts-expect-error
       if (sections[i].code.length > 0) {
         // FIXME: Uncertain if this will affect load orders that are not aside --> code block.
-        // @ts-expect-error
         let codeIndex = Number.parseInt(sections[i].code[0].split(/(?<=\$)([\d]+)$/)[1]);
         // console.log(`i: ${i}\nCode Index: ${codeIndex}\nIndex: ${index}\nPar: ${par.substring(0, 20)}\n\n`);
         if (index === codeIndex - 1) {
@@ -213,13 +201,9 @@ function project(sections: unknown[]): React.ReactNode {
           let match: RegExp = new RegExp(`(?<=\\$)(${codeIndex})$`);
           // TODO: CREATE FILE NAME API
           let fileName;
-          // @ts-expect-error
           let lang = sections[i].code[0].match(/(.+(?=\$))/)[0];
-          // @ts-expect-error
           sections[i].code.shift();
-          // @ts-expect-error
           while (sections[i].code[0] && sections[i].code[0].match(match)) {
-            // @ts-expect-error
             codeCache.push(sections[i].code.shift().replace(/\$[\d]+$/, ''));
           }
           codeCache = (codeCache as string[]).map((line, lineIndex) => {
@@ -268,17 +252,12 @@ function project(sections: unknown[]): React.ReactNode {
 
 export default async function Post({ post }: { post: Awaited<ReturnType<typeof readPost>> }): Promise<React.AwaitedReactNode> {
   if (post === null || post === undefined) notFound();
-  // LOCAL: @ts-expect-error
-  let sections: Array<unknown> = post.sections;
+  let sections = post.sections;
   let primAside: { type: string | undefined, content: React.ReactNode[] | string | undefined };
-  // @ts-expect-error
   if (sections[0].aside[0] && sections[0].content[0]) {
-    // @ts-expect-error
-    let content: React.ReactNode[] = semanticTransform(sections[0].content[0]);
-    // @ts-expect-error
+    let content: React.ReactNode[] = semanticTransform(sections[0].content[0]) as React.ReactNode[];
     sections[0].content.shift();
     primAside = {
-      // @ts-expect-error
       type: sections[0].aside.shift(),
       content: [...content], 
     };
@@ -287,9 +266,7 @@ export default async function Post({ post }: { post: Awaited<ReturnType<typeof r
      * Cannot parse pattern ($&) as Number, returns NaN
      * @see {@link {https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace}}
      */
-    // @ts-expect-error
     if (sections[0].aside[0]) {
-      // @ts-expect-error
       sections[0].aside[0] = sections[0].aside[0].replace(/\d$/, `${sections[0].content.length - 1}`);
     }
   } else { 
@@ -315,7 +292,6 @@ export default async function Post({ post }: { post: Awaited<ReturnType<typeof r
           </AddHeader>
         }
       >
-        {/* LOCAL: @ts-expect-error */}
         {post.subtitle}
       </SubHeader>
       <PrimaryContent>
