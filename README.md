@@ -46,6 +46,8 @@
 
 🗡 Implement Java-based websocket server as alternative to dashboard HTTP updates
 
+🗡 Migrate queries to CDN or to a more local module for easier revalidaiton
+
 🗡 Realize [Karnovah](https://github.com/KXzeno/Karnovah)
 
 ---
