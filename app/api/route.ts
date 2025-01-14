@@ -13,5 +13,4 @@ export async function GET(req: NextRequest) {
     }
     console.log(`Query: ${q}\nValue: ${val}\n\n`);
   }
-  return headers; 
 }
