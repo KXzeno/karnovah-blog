@@ -1,7 +1,8 @@
 import React from 'react';
+import { revalidatePath, unstable_cache } from 'next/cache';
+
 import { readPostAll, getInitialId } from '@A/PostActions';
 import Feed from '@F/Feed';
-import { revalidatePath } from 'next/cache';
 
 interface Post {
   post_id: number;
@@ -21,7 +22,19 @@ interface Post {
 // Robust fix: compare updated date and creation date
 
 export default async function Landing() {
-  let initialData: Post[] | null = await readPostAll({ orderBy: { createdAt: 'desc' } }) ?? null;
+  let getCachedPosts = unstable_cache(
+    async () => {
+      return await readPostAll({ orderBy: { createdAt: 'desc' } });
+    }, ['posts'], { tags: ['posts'] }
+  );
+  // let initialData: Post[] | null = await readPostAll({ orderBy: { createdAt: 'desc' } }) ?? null;
+  /** @remarks
+   * Unstable cache will be "use cache" in the future
+   *
+   * Stringify's ISO Dates, thus additional safeguards for 
+   * type mapping logic should be handled from the Feed RFC
+   */
+  let initialData = await getCachedPosts() ?? null;
   let initialCursor: number | null = null;
   // revalidatePath('/');
   if (!initialData || initialData.length <= 0) {
