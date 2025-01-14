@@ -1,18 +1,8 @@
 import React from 'react';
-import { revalidatePath, unstable_cache } from 'next/cache';
+import { unstable_cache } from 'next/cache';
 
-import { readPostAll, getInitialId } from '@A/PostActions';
+import { readPostAll } from '@A/PostActions';
 import Feed from '@F/Feed';
-
-interface Post {
-  post_id: number;
-  title: string;
-  createdAt: Date;
-  published: boolean;
-  subtitle: string;
-  description: string;
-  choice: number | null;
-}
 
 // FOR INITIAL DATA, STOP GETTING CONFUSED FROM COMBINING PAGINATION.
 // DO PAGINATION ASYNCHRONOUSLY IN CLIENT COMPONENT
@@ -30,7 +20,7 @@ interface Post {
 let getCachedPosts = unstable_cache(
   async () => {
     return await readPostAll({ orderBy: { createdAt: 'desc' } });
-  }, ['posts'], { tags: ['posts'] });
+  }, ['posts'], { tags: ['posts'], revalidate: false });
 
   export default async function Landing() {
     // let initialData: Post[] | null = await readPostAll({ orderBy: { createdAt: 'desc' } }) ?? null;
@@ -47,7 +37,7 @@ let getCachedPosts = unstable_cache(
         subtitle: 'No posts have queried',
         description: 'If you see this, either there are no posts to be queried from the database or none of them are marked published.',
         choice: 2 
-      }] as Post[];
+      }] as NonNullable<Awaited<ReturnType<typeof readPostAll>>>;
       console.log('Query for posts failed.');
     } else {
       initialCursor = initialData[initialData.length - 1].post_id;
