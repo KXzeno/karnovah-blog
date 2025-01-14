@@ -231,7 +231,7 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
                   <h1 className='post-title'>{post.title}</h1>
                 </Link>
                 <p className='post-desc'>{post.description}</p>
-                <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
+                <time className='post-date'>{typeof post.createdAt === 'string' ? post.createdAt.split(/T/)[0] : post.createdAt.toISOString().split(/T/)[0]}</time>
               </section>
             );
           } else {
@@ -261,7 +261,7 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
                   <h1 className='post-title'>{post.title}</h1>
                 </Link>
                 <p className='post-desc'>{post.description}</p>
-                <time className='post-date'>{post.createdAt.toISOString().split(/T/)[0]}</time>
+                <time className='post-date'>{typeof post.createdAt === 'string' ? post.createdAt.split(/T/)[0] : post.createdAt.toISOString().split(/T/)[0]}</time>
               </section>
             );
           }
