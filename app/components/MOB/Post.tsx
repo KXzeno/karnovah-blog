@@ -166,7 +166,7 @@ function insertCodeBlock(params: Parameters<typeof insertAside>): ReturnType<typ
   let codeIndex = Number.parseInt(sections[outerIndex].code[0].split(/(?<=\$)([\d]+)$/)[1]);
   // Handle location at end of section
   let shift = sections[outerIndex].content.length - 1 === innerIndex && codeIndex === sections[outerIndex].content.length + 1 ? --codeIndex : null;
-  console.log(shift);
+  // console.log(shift);
   if (innerIndex === codeIndex - 1 || shift) {
     let codeCache: string[] | React.ReactElement[] | React.ReactNode = [];
     // Attempt codeIndex recovery after temporary exception handling
