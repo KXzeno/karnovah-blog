@@ -44,7 +44,9 @@ export async function readPostAll(params?: SortParams): Promise<Post[] | undefin
       });
 
       let tailPost = query[query.length - 1];
-      params.cursor = tailPost.post_id;
+      if (tailPost) {
+        params.cursor = tailPost.post_id;
+      }
       return query;
     } catch (error) {
       console.error(error);
