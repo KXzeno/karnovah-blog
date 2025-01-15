@@ -294,10 +294,15 @@ function project(sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["se
 }
 
 export default async function Post({ post }: { post: Awaited<ReturnType<typeof readPost>> }): Promise<React.AwaitedReactNode> {
+  // console.log('Passed-0');
   if (post === null || post === undefined) notFound();
+  // console.log('Passed-1');
   let sections = post.sections;
   let primAside: { type: string | undefined, content: React.ReactNode[] | string | undefined };
+  console.log(sections[0].aside[0]);
+  console.log(sections[0].content[0]);
   if (sections[0].aside[0] && sections[0].content[0]) {
+    // console.log('Passed-2');
     let content: React.ReactNode[] = semanticTransform(sections[0].content[0]) as React.ReactNode[];
     sections[0].content.shift();
     primAside = {
@@ -313,10 +318,10 @@ export default async function Post({ post }: { post: Awaited<ReturnType<typeof r
       sections[0].aside[0] = sections[0].aside[0].replace(/\d$/, `${sections[0].content.length - 1}`);
     }
   } else { 
-    return;
+    notFound();
   }
 
-  return (
+  let elements = (
     <ArticleProvider>
       <Header>
         {post.title}
@@ -342,6 +347,8 @@ export default async function Post({ post }: { post: Awaited<ReturnType<typeof r
       </PrimaryContent>
     </ArticleProvider>
   );
+
+  return elements;
 }
 
 
