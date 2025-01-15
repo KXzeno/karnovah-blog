@@ -4,6 +4,7 @@ import { Metadata, ResolvingMetadata } from 'next';
 import { Post } from '@/components';
 import { readPost } from '@A/PostActions';
 import './not-found';
+import { scheduler } from 'timers/promises';
 
 type Params = Promise<{ id: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
@@ -32,6 +33,9 @@ export async function generateMetadata(props: {
 };
 
 export default async function Blog(props: { params: Params, searchParams: SearchParams }): Promise<React.ReactNode> {
+  while (!data || !data.sections[0].aside[0]) {
+    await scheduler.wait(10);
+  }
   // let { id } = await props.params;
   return (
     <React.Suspense>
