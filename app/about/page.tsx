@@ -1,6 +1,8 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
+
+import { Loader } from '@M/Icons';
 import './about.css';
 
 interface ReducerState {
@@ -34,7 +36,9 @@ export default function About(): React.ReactNode {
   return (
     <main>
       <picture>
-        <Image id='insert' src='https://i.postimg.cc/fb9svpDC/krab-1-1-zoomed.png'/*'https://i.postimg.cc/fLZb7vHm/2024-08-03-00-40-14.png'*/ alt='author-pfp' width={310} height={310} />
+        <React.Suspense fallback={<Loader />}>
+          <Image id='insert' src='https://i.postimg.cc/fb9svpDC/krab-1-1-zoomed.png'/*'https://i.postimg.cc/fLZb7vHm/2024-08-03-00-40-14.png'*/ alt='author-pfp' width={310} height={310} />
+        </React.Suspense>
         <p>Kx</p>
         <div />
         <p>Aspiring Software Engineer, Science and Progression Fantasy Novelist, Self-help Author, and Fantasist—
