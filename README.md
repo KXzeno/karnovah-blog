@@ -24,7 +24,7 @@
   ⌖ <a href="https://www.latex-project.org/"><font size="3">LaTeX</font></a>
   ⌖ <a href="https://docs.netlify.com/integrations/frameworks/hugo/?_ga=2.190838701.781830800.1674726768-11622627.1674726768"><font size="3">Netlify</font></a>
   ⌖ <a href="https://www.postgresql.org/"><font size="3">Postgres</font></a>
-  ⌖ <a href="https://dbeaver.io/"><font size="3">Dbeaver</font></a>
+  ⌖ <a href="https://dbeaver.io/"><font size="3">DBeaver</font></a>
   ⌖ <a href="https://prisma.io/"><font size="3">Prisma</font></a>
   ⌖ <a href="https://www.framer.com/motion/"><font size="3">Framer-Motion</font></a>
   ⌖ 
