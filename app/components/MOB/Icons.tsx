@@ -11,6 +11,7 @@ interface WarningProps {
   className?: string | undefined;
   type: string | undefined;
 }
+
 export function Warning({ className, type }: WarningProps) {
   switch (type) {
     case '2nd': {
@@ -94,4 +95,34 @@ export function Warning({ className, type }: WarningProps) {
         </div>)
     }
   }
+}
+
+type LoadingProps = {
+  size: string;
+  color: string;
+}
+
+type Sizes = {
+  [key: string]: string
+}
+
+export function Loader({ size = 'md', color = 'text-blue-500' }) {
+  let sizes: Sizes = {
+    sm: 'w-4 h-4',
+    md: 'w-8 h-8',
+    lg: 'w-12 h-12'
+  }
+
+  return (
+    <div className="flex justify-center items-center -translate-y-[8rem]">
+      <div
+        className={`${sizes[size]} ${color} animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]`}
+        role="status"
+      >
+        <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+          Loading...
+        </span>
+      </div>
+    </div>
+  )
 }
