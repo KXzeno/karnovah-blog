@@ -1,25 +1,21 @@
-@tailwind base;
-@tailwind utilities;
-@tailwind components;
+@import "tailwindcss";
 
-@layer utilities {
-  #author-profile {
-    @apply flex relative w-full;
-  }
+#author-profile {
+  @apply flex relative w-full;
+}
 
-  #publish-date {
-    @apply pr-3 self-end;
-  }
+#publish-date {
+  @apply pr-3 self-end;
+}
 
-  #author-name {
-    @apply absolute inline-flex right-0 bottom-0 place-self-end w-max pt-[8px];
-  }
+#author-name {
+  @apply absolute inline-flex right-0 bottom-0 place-self-end w-max pt-[8px];
+}
 
-  #author-name span {
-    @apply inline-block pr-3 align-text-bottom self-end;
-  }
+#author-name span {
+  @apply inline-block pr-3 align-text-bottom self-end;
+}
 
-  #author-name img {
-    @apply float-right;
-  }
+#author-name img {
+  @apply float-right;
 }
