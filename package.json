@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "rectify": "javac -d . utils/RectifySchema.java && java -cp . utils.RectifySchema && prisma format",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@prisma/client": "^5.17.0",
