@@ -13,7 +13,7 @@ async function getFile(filePath: string) {
   }
 }
 
-export default async function Author({ user, date }: { user: string, date: string }): Promise<React.AwaitedReactNode> {
+export default async function Author({ user, date }: { user: string, date: string }): Promise<React.ReactNode> {
   let authors = await getFile('components/FOB/Authors/authorList.json');
   if (!user || !authors) {
     throw new Error('Invalid user');
