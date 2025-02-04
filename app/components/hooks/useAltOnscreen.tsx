@@ -6,7 +6,7 @@ import React from 'react';
  */
 export default function useAltOnscreen(): [boolean, React.MutableRefObject<HTMLElement | undefined>] { // Can instead use elementRef as prop and export only isOnscreen
   const [isOnscreen, setIsOnscreen] = React.useState(false);
-  const elementRef = React.useRef();
+  const elementRef = React.useRef(undefined);
 
   //TODO: Use rect to automate intersection of root/element
   React.useEffect(() => {
