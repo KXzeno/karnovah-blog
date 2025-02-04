@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
-.hover-effect {
-  @apply hover:bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glowA hover:text-transparent;
+@reference "../../globals.css";
+
+@utility hover-effect {
+  @apply hover:bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glow hover:text-transparent;
 }
 
 #nav-box {
@@ -93,5 +95,5 @@ button.absolute.inset-0.text-center.text-inherit {
 }
 
 .hover-effect {
-  @apply hover:bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glowA hover:text-transparent;
+  @apply hover:bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glow hover:text-transparent;
 }

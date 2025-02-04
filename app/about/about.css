@@ -17,7 +17,7 @@ picture > p:nth-child(2) {
 }
 
 .about-desc {
-  @apply font-merriweather text-animate text-center p-4 pt-8 text-sm md:p-32 lg:p-64 text-balance lg:text-lg;
+  @apply font-(--merriweather) text-animate text-center p-4 pt-8 text-sm md:p-32 lg:p-64 text-balance lg:text-lg;
 }
 
 main {
