@@ -27,7 +27,7 @@ export default function SectionWithHeading({
    *  which in this case is IntrinsicElements which includes all HTML
    *  Elements e.g., div, span, section, etc.
    */
-  const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
+  const HeadingTag = `h${level}` as keyof React.JSX.IntrinsicElements;
 
   return (
     <section>
