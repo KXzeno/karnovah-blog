@@ -28,7 +28,7 @@ function semanticTransform(content: React.ReactNode[] | string): React.ReactNode
     let newContent = new SinglyLinkedList<string | React.ReactNode>();
     for (let i = 2; i < frags.length; i += 4) {
       newContent.addLast(frags[i - 2]);
-      let Style = frags[i - 1] as keyof JSX.IntrinsicElements;
+      let Style = frags[i - 1] as keyof React.JSX.IntrinsicElements;
       let optClass: { className: string | undefined } = { className: undefined };
       let optRef: { href: string | undefined, target: string | undefined } = { href: undefined, target: undefined };
       if (Style.search(/(?:\S+[\s])/) !== -1) {
@@ -40,7 +40,7 @@ function semanticTransform(content: React.ReactNode[] | string): React.ReactNode
           let hrefTarget = Style.match(/(?<=target\=\')[\w\s.:/\\\?]+(?=\')/);
           optRef.target = (hrefTarget && hrefTarget[0]) ?? undefined;
         }
-        Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof JSX.IntrinsicElements;
+        Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof React.JSX.IntrinsicElements;
       }
       newContent.addLast(<Style href={optRef.href} target={optRef.target} className={optClass.className}>{frags[i]}</Style>)
       if ((i + 4) > frags.length && i < frags.length - 1) {
@@ -81,7 +81,7 @@ function semanticMultilineTransform(par: string, options?: { fragmented?: boolea
         /** @see {@link https://www.typescriptlang.org/docs/handbook/2/keyof-types.html#handbook-content}
          *  keyof creates a union type of a type's keys
          */
-        let Style = enrich[i - 1] as keyof JSX.IntrinsicElements;
+        let Style = enrich[i - 1] as keyof React.JSX.IntrinsicElements;
         // console.log(Style);
         // Compiler prefers undefined over null?
         let classFields = Style.match(/(?<=className\=\')[\s\w\d\S]+(?=\')/);
@@ -108,7 +108,7 @@ function semanticMultilineTransform(par: string, options?: { fragmented?: boolea
            */
           optClass.className = (classFields && classFields[0]) ?? undefined;
           optRef.href = (hrefField && hrefField[0]) ?? undefined;
-          Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof JSX.IntrinsicElements;
+          Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof React.JSX.IntrinsicElements;
         }
         enriched.addLast(<Style href={optRef.href} target={optRef.target} className={optClass.className}>{enrich[i]}</Style>);
         if ((i + 4) > enrich.length && i < enrich.length - 1) {
