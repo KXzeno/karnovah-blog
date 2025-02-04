@@ -79,9 +79,10 @@ function getRangeDisjoint(marks: Array<VolatileMarks>) {
 function mapChildren(children: React.ReactElement[]): React.ReactNode {
   let termChildren: React.ReactElement[] = [];
   let volatileMarks: VolatileMarks[] = [];
-  for (let i = 0; i < (children as React.ReactElement[]).length; i++) {
-    let { children: content, className: classes }: { children: string, className: string } = children[i].props;
-    let tabs: string | null = children[i].props['data-tab'] || null;
+  for (let i = 0; i < children.length; i++) {
+    let props = children[i].props as unknown as { children: string, className: string, 'data-tab'?: string };
+    let { children: content, className: classes }: { children: string, className: string } = props;
+    let tabs: string | null = props['data-tab'] || null;
     if (tabs) {
       let stop = typeof tabs === 'number' ? tabs : Number.parseInt(tabs) * 4;
       tabs = '';
@@ -109,7 +110,7 @@ function mapChildren(children: React.ReactElement[]): React.ReactNode {
           volatileMarks.push({ mark: id, start: match.index, end: match.index + match['0'].length });
         }
       }
-    }
+    }content
     termChildren.push(<span key={`index-${i + 1}`} className='code-line-index'>{i + 1}</span>);
     if (volatileMarks.length > 0) {
       // console.log(volatileMarks);
@@ -223,9 +224,11 @@ export default function CodeBox({ children, lang, fileName }: CodeBoxProps) {
   React.useEffect(() => {
     // On mount, add code to state for blob + clipboard API
     (children as React.ReactNode as React.ReactElement[]).forEach(child => {
-      let content = child.props.children;
-      if (Object.keys(child.props).includes('data-tab')) {
-        let stop = content.length + Number.parseInt(child.props['data-tab']) * 4;
+      let props = child.props as unknown as { children: string, className: string, 'data-tab'?: string };
+      let content = props.children;
+      if (Object.keys(props).includes('data-tab')) {
+        // Suppress null exception post-predicate
+        let stop = content.length + Number.parseInt(props['data-tab']!) * 4;
         while (content.length !== stop) {
           content = content.replace(/(.*)/, " $1");
         }
