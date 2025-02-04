@@ -9,7 +9,7 @@
 }
 
 .catalog ul li a {
-  @apply hover:bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glowA text-slate-500 hover:text-transparent;
+  @apply hover:bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glow text-slate-500 hover:text-transparent;
 }
 
 .catalog ul li > span:nth-child(2) {
@@ -17,5 +17,5 @@
 }
 
 .catalog ul li > span:nth-child(3) {
-  @apply bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glowA text-transparent;
+  @apply bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glow text-transparent;
 }

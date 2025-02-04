@@ -34,5 +34,5 @@ main > picture:nth-child(1) > div {
 
 
 .text-animate {
-  @apply bg-gradient-to-tl from-slate-200 from-30% via-slate-400 via-30% to-slate-300 to-[37%] bg-clip-text animate-glowA text-transparent;
+  @apply bg-gradient-to-tl from-slate-200 from-30% via-slate-400 via-30% to-slate-300 to-[37%] bg-clip-text animate-glow text-transparent;
 }
