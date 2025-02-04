@@ -293,7 +293,7 @@ function project(sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["se
   return [...nodeG];
 }
 
-export default async function Post({ post }: { post: Awaited<ReturnType<typeof readPost>> }): Promise<React.AwaitedReactNode> {
+export default async function Post({ post }: { post: Awaited<ReturnType<typeof readPost>> }): Promise<React.ReactNode> {
   // console.log('Passed-0');
   if (post === null || post === undefined) notFound();
   // console.log('Passed-1');
