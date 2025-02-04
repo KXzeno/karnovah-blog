@@ -217,7 +217,8 @@ let initialState: ReducerState = {
 };
 
 export default function CodeBox({ children, lang, fileName }: CodeBoxProps) {
-  let [state, dispatch] = React.useReducer<React.Reducer<ReducerState, ReducerAction>>(reducer, initialState);
+  // React reducer hook, as of v19, now returns the types of ReactReducer, except the action is an array
+  let [state, dispatch] = React.useReducer<ReducerState, [ReducerAction]>(reducer, initialState);
 
   React.useEffect(() => {
     // On mount, add code to state for blob + clipboard API

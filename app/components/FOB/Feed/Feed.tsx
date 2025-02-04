@@ -142,7 +142,8 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
     queryParams: queryParams 
   }
 
-  let [state, dispatch] = React.useReducer<React.Reducer<ReducerState, ReducerAction>>(reducer, initialState);
+  // React reducer hook v19 removes nested type and demands action array
+  let [state, dispatch] = React.useReducer<ReducerState, [ReducerAction]>(reducer, initialState);
 
   let termRef = React.useRef<HTMLElement | null>(null);
   let isVisible = useOnscreen(termRef, state.posts);
