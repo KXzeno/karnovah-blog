@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@reference "../../../globals.css";
+
+.home-page {
+  @apply relative flex flex-col justify-items-center max-sm:gap-[1.7rem] sm:gap-[3rem] translate-y-8 mb-[11rem];
+}
+
+.post-ctr {
+  @apply grid min-h-16 max-sm:max-w-[23rem] sm:max-w-[37rem] mx-auto sm:gap-2;
+}
+
+@utility post-title-deco {
+  @apply inline-block justify-self-start text-[#E5E1E6] hover:text-[#7D8ABC] text-2xl min-w-4 max-sm:text-xl underline underline-offset-[7px] decoration-blue-700;
+}
+
+@utility post-title-effect {
+  @apply hover:bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glow hover:text-transparent;
+}
+
+.post-desc {
+  @apply text-[#B6BBC4] px-4 py-2 justify-self-center text-sm max-sm:text-pretty max-sm:w-[23.125rem];
+}
+
+.post-date {
+  @apply inline-block text-[#E6E6E6] justify-self-end max-sm:text-xs text-[#FFAF00];
+}
+
+.post-author {
+  @apply text-[#E6E6E6]
+}
+
+section a {
+  @apply inline-block min-w-[3px] max-w-max;
+}
+
+.section-sym {
+  @apply absolute text-xl translate-x-[-1.1rem] text-[#134B70];
+}
+
+section.post-ctr.choice-3 a h1.post-title {
+  @apply bg-gradient-to-br from-indigo-500 from-30% via-blue-700 via-50% to-yellow-600 to-90% bg-clip-text animate-glow;
+}
+
+section.post-ctr.choice-3 a h1.post-title {
+  @apply text-transparent;
+}
+
+section.post-ctr.choice-2 a h1.post-title {
+  @apply bg-gradient-to-br from-indigo-600 from-30% via-red-700 via-80% to-orange-800 to-100% bg-clip-text animate-glow;
+}
+
+section.post-ctr.choice-2 a h1.post-title {
+  @apply text-transparent;
+}
+
+section.post-ctr.choice-1 a h1.post-title {
+  @apply bg-gradient-to-br from-violet-300 from-30% via-black via-[67%] to-slate-300 to-100% bg-clip-text animate-glow;
+}
+
+section.post-ctr.choice-1 a h1.post-title {
+  @apply text-transparent;
+}
+
+.post-title {
+  @apply post-title-deco post-title-effect;
+}
