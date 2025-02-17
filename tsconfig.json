@@ -39,16 +39,16 @@
         "../utils/*"
       ],
       "@M/*": [
-        "./components/MOB/*"
+        "./components/main/*"
       ],
       "@F/*": [
-        "./components/FOB/*"
+        "./components/forward/*"
       ],
       "@H/*": [
         "./components/hooks/*"
       ],
       "@P/*": [
-        "./components/FOB/Providers/*"
+        "./components/forward/Providers/*"
       ],
       "@A/*": [
         "./components/actions/*"
