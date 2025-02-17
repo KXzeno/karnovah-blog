@@ -91,26 +91,11 @@ function semanticMultilineTransform(par: string, options?: { fragmented?: boolea
         enriched.addLast(enrich[i - 2]);
         // console.log(`${i}: ${enrich[i-2]}\n${i}: ${enrich[i-1]}\n${i}: ${enrich[i]}\n`);
         if (Style.search(/(?:\S+[\s])/) !== -1) {
-          /** @description
-           * (?:...|...) -> non-capturing group doesn't store
-           * matched group to memory; also doesn't "capture" the pattern
-           * which is also non-captured by default without the capture
-           * group syntax (...). Capturing is required to be recognized
-           * in JS operations such as `.split`, where (x) will be stored
-           * in between split elements. I suppose you can insert capture
-           * groups in a non-capture group. Word is the whole regexp is one
-           * capture group, we transform it to matches which boils down to
-           * the part we want to capture or just use the matches for expressions
-           * @see {@link https://www.rexegg.com/regex-style.php}
-           * Do word boundaries only work in character classes?
-           * Second personally made unguided sorta-complex regexp
-           * Wrapping `.+` in capture group causes two matches, is it able to override default? 
-           */
           optClass.className = (classFields && classFields[0]) ?? undefined;
           optRef.href = (hrefField && hrefField[0]) ?? undefined;
           Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof React.JSX.IntrinsicElements;
         }
-        enriched.addLast(<Style href={optRef.href} target={optRef.target} className={optClass.className}>{enrich[i]}</Style>);
+        enriched.addLast(<Style href={optRef.href} key={`${crypto.randomUUID()}`} target={optRef.target} className={optClass.className}>{enrich[i]}</Style>);
         if ((i + 4) > enrich.length && i < enrich.length - 1) {
           enriched.addLast(enrich[enrich.length - 1]);
         }
@@ -299,8 +284,6 @@ export default async function Post({ post }: { post: Awaited<ReturnType<typeof r
   // console.log('Passed-1');
   let sections = post.sections;
   let primAside: { type: string | undefined, content: React.ReactNode[] | string | undefined };
-  console.log(sections[0].aside[0]);
-  console.log(sections[0].content[0]);
   if (sections[0].aside[0] && sections[0].content[0]) {
     // console.log('Passed-2');
     let content: React.ReactNode[] = semanticTransform(sections[0].content[0]) as React.ReactNode[];
