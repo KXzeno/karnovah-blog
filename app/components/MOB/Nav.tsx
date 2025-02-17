@@ -81,18 +81,19 @@ export default function Nav() {
           {LINKS.map(({ slug, label, href }) => ( 
             <Link
               key={slug}
-              href={href}
+              href={slug === 'choice' ? '/' : href}
               onMouseOver={() => setHoveredNavItem(slug)}
               onClick={(e) => {
-                if (slug === 'choice') {
-                  e.preventDefault();
-                  setEndpointAccessed(prev => prev ^ 1);
-                  endpointAccessed === 1 ?
-                    router.replace(`/?choice=${endpointAccessed}`, { scroll: false }) :
-                    router.replace(`/`);
-                } else {
-                  setEndpointAccessed(1);
-                }
+                // TODO: Go to feed RFC and add sorting with cache-dependent data instead of dupe fetching
+                // if (slug === 'choice') {
+                //   e.preventDefault();
+                //   setEndpointAccessed(prev => prev ^ 1);
+                //   endpointAccessed === 1 ?
+                //     router.replace(`/?choice=${endpointAccessed}`, { scroll: false }) :
+                //     router.replace(`/`);
+                // } else {
+                //   setEndpointAccessed(1);
+                // }
               }}
               style={{
                 zIndex: hoveredNavItem === slug ? 1 : 2,
