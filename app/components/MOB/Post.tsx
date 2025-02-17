@@ -125,7 +125,7 @@ function semanticMultilineTransform(par: string, options?: { fragmented?: boolea
     if (options && options.fragmented) {
       return newPar = (<>{[...node]}</>);
     } else {
-      return newPar = (<p key={options && options.key}>{[...node]}</p>);
+      return newPar = (<p key={options ? options.key : `${crypto.randomUUID()}`}>{[...node]}</p>);
     }
   }
   // Undefined
