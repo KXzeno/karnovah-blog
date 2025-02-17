@@ -89,7 +89,7 @@ export default function Nav() {
                   setEndpointAccessed(prev => prev ^ 1);
                   endpointAccessed === 1 ?
                     router.replace(`/?choice=${endpointAccessed}`, { scroll: false }) :
-                    router.replace(`/?choice=${endpointAccessed}`, { scroll: false });
+                    router.replace(`/`);
                 } else {
                   setEndpointAccessed(1);
                 }
