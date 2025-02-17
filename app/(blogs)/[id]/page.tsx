@@ -34,7 +34,7 @@ export async function generateMetadata(props: {
 
 export default async function Blog(props: { params: Params, searchParams: SearchParams }): Promise<React.ReactNode> {
   while (!data || !data.sections[0].aside[0]) {
-    await scheduler.wait(10);
+    await scheduler.wait(300);
   }
   // let { id } = await props.params;
   return (
