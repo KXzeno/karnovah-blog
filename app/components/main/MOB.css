@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+@reference "../../globals.css";
+
+@utility hover-effect {
+  @apply hover:bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glow hover:text-transparent;
+}
+
+#nav-box {
+  @apply flex flex-auto flex-row min-w-max h-[5.3rem] text-center justify-center gap-16 items-center bg-[#18122B] text-green-400 max-md:text-[13px];
+}
+
+nav#nav-box .nav-btn {
+  @apply text-[#44D7A8] hover:text-inherit shadow-lg rounded-lg border-8 border-transparent relative max-sm:mx-auto;
+}
+
+nav#nav-box .nav-btn-posts {
+  @apply text-[#44D7A8] hover:text-inherit;
+}
+
+nav#nav-box #sub-menu {
+  @apply text-[0.7rem] ml-[0.1rem] hover:shadow-green-500/50 hover:animate-bounce rounded-lg border-4 border-transparent absolute inset-y-[0.07rem] left-[3.3rem];
+}
+
+button.absolute.inset-0.text-center.text-inherit {
+  @apply min-[0px]:max-md:invisible;
+}
+
+.footer-ctr {
+  @apply flex flex-row basis-1/6 place-items-center h-32 bg-gradient-to-b from-violet-950 to-indigo-900 basis-0 text-[#3f7300] absolute bottom-0 w-full;
+}
+
+.footer-first-cell {
+  @apply order-none size-full text-center py-2 text-[0.77rem];
+}
+
+.footer-first-cell .copyright {
+  @apply flex size-full place-items-center;
+}
+
+.cr-text {
+  @apply inline-block grow;
+}
+
+.cr-text > span:nth-child(1) {
+  @apply text-[1rem] align-middle;
+}
+
+.kstm-border {
+  @apply grow-0 h-full bg-black bg-gradient-to-r from-violet-950 via-slate-950 to-violet-950 w-2;
+}
+
+.footer-second-cell {
+  @apply flex flex-col size-full text-center justify-center;
+}
+
+.footer-second-cell > div:nth-child(1) {
+  @apply pb-2 hover:underline text-[.83rem] select-none;
+}
+
+.footer-second-cell > div:nth-child(2) {
+  @apply grid grid-rows-none grid-cols-3 gap-x-4 mx-auto w-max text-[0.77rem] items-center;
+}
+
+.footer-second-cell > div:nth-child(2) > a:nth-child(3) {
+  @apply translate-x-[-5px];
+}
+
+.footer-second-cell > div:nth-child(2) > a:nth-child(1) {
+  @apply col-span-3 hover-effect;
+}
+
+.footer-second-cell > div:nth-child(2) a {
+  @apply hover:text-[#69c000];
+}
+
+.cat-wrapper {
+  @apply flex flex-col w-screen items-center translate-y-[7rem];
+}
+
+.cat-wrapper section {
+  @apply grid grid-cols-1;
+}
+
+.cat-wrapper section ul li span {
+  @apply px-2 text-red-500;
+}
+
+.cat-wrapper section ul li a {
+  @apply hover-effect text-slate-500;
+}
+
+.cat-wrapper section ul li time {
+  @apply text-[#FFAF00];
+}
+
+.hover-effect {
+  @apply hover:bg-gradient-to-br from-slate-200 from-30% via-black via-30% to-slate-300 to-[37%] bg-clip-text animate-glow hover:text-transparent;
+}
