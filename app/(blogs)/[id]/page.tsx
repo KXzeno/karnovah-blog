@@ -9,8 +9,6 @@ import { scheduler } from 'timers/promises';
 type Params = Promise<{ id: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
 
-let data: Awaited<ReturnType<typeof readPost>>;
-
 export async function generateMetadata(props: {
   params: Params,
   searchParams: SearchParams,
@@ -18,10 +16,7 @@ export async function generateMetadata(props: {
   let params = await props.params;
   let id = params.id;
 
-  // Is it odd that data is queried during metadata 
-  // definition instead of the dynamic route?
   let postData = await readPost(id);
-  data = postData;
 
   return {
     title: `${postData ? postData.title : ''}`,
@@ -33,10 +28,9 @@ export async function generateMetadata(props: {
 };
 
 export default async function Blog(props: { params: Params, searchParams: SearchParams }): Promise<React.ReactNode> {
-  while (!data || !data.sections[0].aside[0]) {
-    await scheduler.wait(300);
-  }
-  // let { id } = await props.params;
+  const { id } = await props.params;
+  // TODO: Find out if this duplicates queries
+  const data = await readPost(id)
   return (
     <React.Suspense>
       <Post post={data} />
