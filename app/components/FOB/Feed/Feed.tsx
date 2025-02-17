@@ -127,7 +127,10 @@ export default React.memo(function Feed({ initialData, initialCursor }: FeedProp
       }
     });
     try {
-      initialCursor = initialData[initialData.length - 1].post_id;
+      initialCursor = initialData[initialData.length - 1].post_id ? initialData[initialData.length - 1].post_id : 0;
+      if (initialCursor !== undefined) {
+        throw new Error('Initial cursor undefined.');
+      }
     } catch (x) {
       console.error(x);
       router.replace('/');
