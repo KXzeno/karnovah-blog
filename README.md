@@ -34,6 +34,8 @@
 ---
 
 #### Hitlist
+🗡 Nest dynamic post route to utilize context providers to avoid unnecessary queries
+
 🗡 Implement authentication → users can interact with posts
 
 🗡 Redo functionality to navigation bar
