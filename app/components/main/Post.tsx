@@ -204,8 +204,14 @@ function project(sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["se
     (hdr === sections[i].header) ?
       nodeG.push(<Section>{hdr}</Section>) :
       nodeG.push(<Section as='subsec'>{hdr}</Section>);
+    // Initialize aside insertion to skip next content
+    let previouslyAside = false;
     // Flatten all paragraphs and map transform each to React nodes
     let contents = sections[i].content.flatMap((par, index) => {
+      if (previouslyAside) {
+        previouslyAside = false;
+        return null;
+      }
       // TODO: Don't terminate mutation on aside or codeblock, as for now prioritize aside
       let volatileNode: React.ReactElement[] = [];
       let lastCode = sections[i].code[sections[i].code.length - 1];
@@ -223,6 +229,7 @@ function project(sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["se
       // console.log(`Index: ${index} as ${typeof index}\nlfIndex: ${lfIndex} as ${typeof lfIndex}\nasideIndex: ${asideIndex} as ${typeof asideIndex}`);
 
       if (asideIndex && (index === asideIndex - 1)) {
+        previouslyAside = true;
         let asideInserter; 
         if (asideIndex < lfIndex || lfIndex === 0 || !lfIndex) {
           asideInserter = insertAside(i, index, sections, par, hdr as string, true);
@@ -263,7 +270,7 @@ function project(sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["se
         return semanticMultilineTransform(par);
       }
     });
-    nodeG.push(<section key={`${hdr}-${i}`}>{[...contents]}</section>);
+    nodeG.push(<section key={`${hdr}-${i}`}>{[...(contents.filter(content => content !== null))]}</section>);
   }
   /** Return spread of React node array,
    * @privateRemarks
