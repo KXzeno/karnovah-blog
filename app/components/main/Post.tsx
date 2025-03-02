@@ -20,7 +20,7 @@ import CodeBox from './CodeBox';
  * @returns {React.ReactNode[] | void} compiled ReactNodes or content transformation
  * @author Kx
  */
-function semanticTransform(content: React.ReactNode[] | string): React.ReactNode[] | void {
+function semanticTransform(content: React.ReactNode[] | string, reactKey: string): React.ReactNode[] | void {
   let frags = (content as string).split(/(?:\<([\w\s]+\W['"][\S\s]+?['"]|\S+)\>)/);
   // console.log(frags);
   // Implement lesser ver. of styling algorithm below
@@ -42,7 +42,7 @@ function semanticTransform(content: React.ReactNode[] | string): React.ReactNode
         }
         Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof React.JSX.IntrinsicElements;
       }
-      newContent.addLast(<Style href={optRef.href} target={optRef.target} className={optClass.className}>{frags[i]}</Style>)
+      newContent.addLast(<Style key={`${Style}-${i}`} href={optRef.href} target={optRef.target} className={optClass.className}>{frags[i]}</Style>)
       if ((i + 4) > frags.length && i < frags.length - 1) {
         newContent.addLast(frags[frags.length - 1]);
       }
@@ -54,7 +54,7 @@ function semanticTransform(content: React.ReactNode[] | string): React.ReactNode
     }
     return content = cache;
   } else {
-    return content = [<>{content}</>];
+    return content = [<React.Fragment key={reactKey}>{content}</React.Fragment>];
   }
 }
 
@@ -65,7 +65,7 @@ function semanticTransform(content: React.ReactNode[] | string): React.ReactNode
  * @returns {React.ReactNode | undefined} string-modified React node or undefined
  * @author Kx
  */
-function semanticMultilineTransform(par: string, options?: { fragmented?: boolean, key?: number | string }): React.ReactNode | undefined {
+function semanticMultilineTransform(par: string, reactKey: string, options?: { fragmented?: boolean, key?: number | string }): React.ReactNode | undefined {
   let newPar: React.ReactNode | undefined = undefined; 
   if (par.length > 0) {
     let enriched = new SinglyLinkedList<string | React.ReactNode>();
@@ -95,7 +95,7 @@ function semanticMultilineTransform(par: string, options?: { fragmented?: boolea
           optRef.href = (hrefField && hrefField[0]) ?? undefined;
           Style = Style.replace(Style.substring(Style.search(/\s/)), '') as keyof React.JSX.IntrinsicElements;
         }
-        enriched.addLast(<Style href={optRef.href} key={`${crypto.randomUUID()}`} target={optRef.target} className={optClass.className}>{enrich[i]}</Style>);
+        enriched.addLast(<Style href={optRef.href} key={`${Style}-${i}`} target={optRef.target} className={optClass.className}>{enrich[i]}</Style>);
         if ((i + 4) > enrich.length && i < enrich.length - 1) {
           enriched.addLast(enrich[enrich.length - 1]);
         }
@@ -105,12 +105,12 @@ function semanticMultilineTransform(par: string, options?: { fragmented?: boolea
     }
     let node: React.ReactNode[] = [];
     while (!enriched.isEmpty()) {
-      node.push(<>{enriched.removeFirst()}</>);
+      node.push(<React.Fragment key={`${reactKey}-${node.length}`}>{enriched.removeFirst()}</React.Fragment>);
     }
     if (options && options.fragmented) {
-      return newPar = (<>{[...node]}</>);
+      return newPar = (<React.Fragment key={reactKey}>{[...node]}</React.Fragment>);
     } else {
-      return newPar = (<p key={options ? options.key : `${crypto.randomUUID()}`}>{[...node]}</p>);
+      return newPar = (<p key={options ? options.key : reactKey}>{[...node]}</p>);
     }
   }
   // Undefined
@@ -119,10 +119,11 @@ function semanticMultilineTransform(par: string, options?: { fragmented?: boolea
 
 function insertAside(outerIndex: number, innerIndex: number, sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["sections"], par: string, hdr: string, insertPar?: boolean): { sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["sections"], volatileNode: React.ReactNode } {
   let content: React.ReactNode[] | string = sections[outerIndex].content[innerIndex + 1];
-  let asideType: string = (sections[innerIndex].aside.shift() as string)?.split(/\$/)[0].toLowerCase();
-  semanticTransform(content);
-  let newPar = semanticMultilineTransform(par);
-  sections[innerIndex].content[outerIndex + 1] = '';
+  let asideType: string = (sections[outerIndex].aside.shift() as string)?.split(/\$/)[0].toLowerCase();
+  // TODO: Investigate inutility
+  // semanticTransform(content, `${outerIndex}-${innerIndex}`);
+  let newPar = semanticMultilineTransform(par, `hdr-${outerIndex}-${innerIndex}`);
+  sections[outerIndex].content[innerIndex + 1] = '';
   return { sections, volatileNode: (
     <>
       {insertPar && (newPar ?? <p key={`${hdr}-${innerIndex}`}>{par}</p>)}
@@ -138,8 +139,8 @@ function insertAside(outerIndex: number, innerIndex: number, sections: NonNullab
           }
         >
           {typeof content !== 'string' ? (content as string[]).map((preNode, i) => {
-            return semanticMultilineTransform(preNode, { fragmented: true, key: i })
-          }): semanticMultilineTransform(content, { fragmented: true, key: innerIndex })}
+            return semanticMultilineTransform(preNode, `${outerIndex}-${innerIndex}-${i}`, { fragmented: true, key: i })
+          }): semanticMultilineTransform(content, `${outerIndex}-${innerIndex}`, { fragmented: true, key: innerIndex })}
         </AddHeader>
       </div>
     </>
@@ -166,21 +167,21 @@ function insertCodeBlock(params: Parameters<typeof insertAside>): ReturnType<typ
     codeCache = (codeCache as string[]).map((line, lineIndex) => {
       if (line.match(/(?:^\\{1,2})/)) {
         if (line.match(/(?:^\\{2})/)) {
-          return <code key={`${codeIndex}-${lineIndex}`}></code>;
+          return <code key={`code-line:${codeIndex}-${lineIndex}:${outerIndex}:${innerIndex}`}></code>;
         } else if (line.match(/(?:^\\{1}\d+)/)) {
           let tabs = line.match(/(?<=\\)(\d+)/)![0];
           let newLine = line.replace(/^([\\]+[\d]+\b)/, '').trimStart();
-          return <code key={`${codeIndex}-${lineIndex}`} data-tab={tabs}>{`${newLine}`}</code>
+          return <code key={`code-line:${codeIndex}-${lineIndex}:${outerIndex}:${innerIndex}`} data-tab={tabs}>{`${newLine}`}</code>
         }
       }
-      return <code key={`${codeIndex}-${lineIndex}`}>{`${line}`}</code>
+      return <code key={`${codeIndex}-${lineIndex}:${outerIndex}:${innerIndex}`}>{`${line}`}</code>
     });
-    let newPar = semanticMultilineTransform(par);
+    let newPar = semanticMultilineTransform(par, `${outerIndex}-${innerIndex}-${codeIndex}:${outerIndex}:${innerIndex}`);
     // FIXME: Refer to l97; create dynamic filename...
     return {sections, volatileNode: (
       <>
         {insertPar && newPar}
-        <CodeBox key={`codebox-${codeIndex}`} fileName={fileName ?? 'init.lua'} lang={lang.toUpperCase()}>{codeCache as React.ReactNode}</CodeBox>
+        <CodeBox key={`codebox-${codeIndex}:${codeIndex}:${innerIndex}`} fileName={fileName ?? 'init.lua'} lang={lang.toUpperCase()}>{codeCache as React.ReactNode}</CodeBox>
       </>
     )}
   }
@@ -267,7 +268,7 @@ function project(sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["se
         return [...volatileNode];
       } else {
         // Default
-        return semanticMultilineTransform(par);
+        return semanticMultilineTransform(par, `D-${i}-${index}`);
       }
     });
     nodeG.push(<section key={`${hdr}-${i}`}>{[...(contents.filter(content => content !== null))]}</section>);
@@ -293,7 +294,7 @@ export default async function Post({ post }: { post: Awaited<ReturnType<typeof r
   let primAside: { type: string | undefined, content: React.ReactNode[] | string | undefined };
   if (sections[0].aside[0] && sections[0].content[0]) {
     // console.log('Passed-2');
-    let content: React.ReactNode[] = semanticTransform(sections[0].content[0]) as React.ReactNode[];
+    let content: React.ReactNode[] = semanticTransform(sections[0].content[0], "0-0") as React.ReactNode[];
     sections[0].content.shift();
     primAside = {
       type: sections[0].aside.shift(),
@@ -305,7 +306,9 @@ export default async function Post({ post }: { post: Awaited<ReturnType<typeof r
      * @see {@link {https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace}}
      */
     if (sections[0].aside[0]) {
-      sections[0].aside[0] = sections[0].aside[0].replace(/\d$/, `${sections[0].content.length - 1}`);
+      const asideIndexPattern = /(\d)$/;
+      const match: RegExpMatchArray = sections[0].aside[0].match(asideIndexPattern) as RegExpMatchArray;
+      sections[0].aside[0] = sections[0].aside[0].replace(/(\d)$/, `${Number.parseInt(match[0]) - 1}`);
     }
   } else { 
     notFound();
