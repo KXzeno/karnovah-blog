@@ -29,7 +29,7 @@ export async function readPost(title: string) {
     }
   }
 
-  /** @description
+  /** @ascription
    * Inception for tedious logic-reversing URL validation. 
    *
    * @type {Match} - an object holding "apostrophy possibilities"
@@ -59,7 +59,11 @@ export async function readPost(title: string) {
     let queriedPost;
     queriedPost = await prisma.post.findUnique({ 
       include: {
-        sections: true,
+        sections: {
+          orderBy: {
+            section_id: 'asc',
+          }
+        },
       },
       where: {
         title: title
@@ -67,7 +71,7 @@ export async function readPost(title: string) {
     });
     if (!(queriedPost === null)) {
       return queriedPost;
-      /** @description
+      /** @ascription
        * For optimal query indexing, a unique ID is preferred. Though, 
        * this is highly susceptible to tedious logic as it requires to 
        * predict, or decrypt rather, the original form of the post title because:
@@ -93,7 +97,11 @@ export async function readPost(title: string) {
         let nextQuery = title.split(/\s/).fill(match.renewed as string, match.position, match.position + 1).join(' ');
         queriedPost = await prisma.post.findUnique({ 
           include: {
-            sections: true,
+            sections: {
+              orderBy: {
+                section_id: 'asc',
+              }
+            },
           },
           where: {
             title: nextQuery,
@@ -105,7 +113,11 @@ export async function readPost(title: string) {
         } else {
           queriedPost = await prisma.post.findUnique({ 
             include: {
-              sections: true,
+              sections: {
+                orderBy: {
+                  section_id: 'asc',
+                }
+              },
             },
             where: {
               title: (nextQuery ?? title).split(/\s/).join(', '),
@@ -136,7 +148,12 @@ export async function readPost(title: string) {
         if (i === titleFrags.length - 2) {
           queriedPost = await prisma.post.findMany({ 
             include: {
-              sections: true,
+              sections: {
+                orderBy: {
+                  section_id: 'asc',
+                }
+              },
+
             },
             where: {
               title: {
