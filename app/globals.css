@@ -72,7 +72,7 @@
 }
 
 .right-margin {
-  @apply max-md:collapse grid sticky justify-self-center self-start top-0 w-full grid-cols-1 place-items-center md:max-lg:text-base lg:text-[1.07rem] text-[#53565A];
+  @apply max-lg:collapse grid sticky justify-self-center self-start top-0 w-full grid-cols-1 place-items-center md:max-lg:text-base lg:text-[1.07rem] text-[#53565A];
 }
 
 .body-augmented {
@@ -124,7 +124,7 @@ article.post h1 {
 }
 
 .siege * {
-  @apply border-[#C80036] text-[#C80036];
+  @apply border-[#C80036] text-[#ff432a];
 }
 
 .add-header.siege > p > a {
@@ -189,6 +189,10 @@ hgroup > div:nth-child(2) > div:nth-child(2).header-note {
 
 #toc-list {
   @apply grid grid-cols-1;
+}
+
+#toc-list > span {
+  @apply text-ellipsis overflow-hidden text-nowrap;
 }
 
 section div section p {
