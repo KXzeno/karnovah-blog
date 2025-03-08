@@ -157,11 +157,14 @@ function insertCodeBlock(params: Parameters<typeof insertAside>): ReturnType<typ
     let codeCache: string[] | React.ReactElement[] | React.ReactNode = [];
     // Attempt codeIndex recovery after temporary exception handling
     let match: RegExp = new RegExp(`(?<=\\$)(${shift ? shift + 1 : codeIndex})$`);
-    // TODO: CREATE FILE NAME API
-    let fileName;
-    let lang = sections[outerIndex].code[0].match(/(.+(?=\$))/)![0];
-    sections[outerIndex].code.shift();
+    let fileName = sections[outerIndex].code.shift();
+    if (fileName === undefined) {
+      throw new Error('File name not found.');
+    }
+    let lang = fileName.match(/(?<=\.)(\w+(?=\$))/)![0];
+    fileName = fileName.replace(/(?=\$).+/, '');
     while (sections[outerIndex].code[0] && sections[outerIndex].code[0].match(match)) {
+      // console.log(sections[outerIndex].code[0]);
       (codeCache as string[]).push(sections[outerIndex].code.shift()!.replace(/\$[\d]+$/, ''));
     }
     codeCache = (codeCache as string[]).map((line, lineIndex) => {
@@ -203,8 +206,8 @@ function project(sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["se
     let hdr = sections[i].header ?? sections[i].subheader;
     // If header, push as RFC; if subheader, push as RFC with prop
     (hdr === sections[i].header) ?
-      nodeG.push(<Section>{hdr}</Section>) :
-      nodeG.push(<Section as='subsec'>{hdr}</Section>);
+      nodeG.push(<Section key={hdr}>{hdr}</Section>) :
+      nodeG.push(<Section key={hdr} as='subsec'>{hdr}</Section>);
     // Initialize aside insertion to skip next content
     let previouslyAside = false;
     // Flatten all paragraphs and map transform each to React nodes
