@@ -35,6 +35,30 @@ type VolatileMarks = {
   end: number;
 };
 
+const RgxPatterns: {
+  [key: string]: LuaRgx
+} = {
+  [Lang.LUA]: {
+    Reserved: /\blocal\b|\bif\b|\bthen\b|function\b|end(?=\,|$)/g,
+    Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)/g,
+    BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B/g,
+    Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)$/g,
+    // String: /(?<=\').+(?=\')/g,
+    String: /(?:\'|\").+(?:\'|\")/g,
+    Braces: /[\{\}\[\]]/g,
+    Delimiter: /\.|\,/g
+  }
+}
+
+function getLangPatterns(lang: Lang | keyof typeof Lang) {
+  const langOrNull = lang in Lang ? Lang[lang as keyof typeof Lang] : null;
+  if (langOrNull === null) {
+    throw new Error('Lang isn\'t an enum member.');
+  }
+  return Object.entries(RgxPatterns[langOrNull]);
+  // return Object.entries(RgxPatterns[lang]);
+}
+
 const LuaRgx: LuaRgx = {
   Reserved: /\blocal\b|\bif\b|\bthen\b|function\b|end(?=\,|$)/g,
   Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)/g,
@@ -78,7 +102,7 @@ function getRangeDisjoint(marks: Array<VolatileMarks>) {
   return disjoints;
 }
 
-function mapChildren(children: React.ReactElement[]): React.ReactNode {
+function mapChildren(children: React.ReactElement[], lang: Lang): React.ReactNode {
   let termChildren: React.ReactElement[] = [];
   let volatileMarks: VolatileMarks[] = [];
   for (let i = 0; i < children.length; i++) {
@@ -93,8 +117,9 @@ function mapChildren(children: React.ReactElement[]): React.ReactNode {
       }
     }
 
-    let luaRgxProps = Object.entries(LuaRgx);
-    for (let [id, rgx] of luaRgxProps) {
+    const patterns = getLangPatterns(lang);
+
+    for (let [id, rgx] of patterns) {
       // if (rgx !== LuaRgx.Reserved) {
       //   continue;
       // }
@@ -112,7 +137,8 @@ function mapChildren(children: React.ReactElement[]): React.ReactNode {
           volatileMarks.push({ mark: id, start: match.index, end: match.index + match['0'].length });
         }
       }
-    }content
+    }
+
     termChildren.push(<span key={`index-${i + 1}`} className='code-line-index'>{i + 1}</span>);
     if (volatileMarks.length > 0) {
       // console.log(volatileMarks);
@@ -220,7 +246,6 @@ let initialState: ReducerState = {
 };
 
 export default function CodeBox({ children, lang, fileName }: CodeBoxProps) {
-  console.log(lang);
   // React reducer hook, as of v19, now returns the types of ReactReducer, except the action is an array
   let [state, dispatch] = React.useReducer<ReducerState, [ReducerAction]>(reducer, initialState);
 
@@ -262,7 +287,7 @@ export default function CodeBox({ children, lang, fileName }: CodeBoxProps) {
           </span>
         </div>
         <div className='code-multiline'>
-          {mapChildren(children as React.ReactElement[])}
+          {mapChildren(children as React.ReactElement[], lang as Lang)}
         </div>
       </div>
   )
