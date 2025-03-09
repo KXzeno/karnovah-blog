@@ -8,9 +8,11 @@ type CodeBoxProps = {
 }
 
 export enum Lang {
-  Vimscript = "VIMSCRIPT",
-  Lua = "LUA",
-  Powershell = "POWERSHELL",
+  VIM = "Vimscript",
+  LUA = "Lua",
+  PWSH = "Powershell",
+  TS = "TypeScript",
+  TSX = "TypeScriptReact",
 }
 
 type LuaRgx = {
@@ -45,7 +47,7 @@ const LuaRgx: LuaRgx = {
 }
 
 function getRangeDisjoint(marks: Array<VolatileMarks>) {
-  // Sort marks to avoid reference-based initializition cohflict
+  // Sort marks to avoid reference-based initializition conflict
   marks = marks.sort((mark1, mark2) => mark1.start - mark2.start);
   // console.log(marks);
   let disjoints: Array<[number, number]> = [];
@@ -218,6 +220,7 @@ let initialState: ReducerState = {
 };
 
 export default function CodeBox({ children, lang, fileName }: CodeBoxProps) {
+  console.log(lang);
   // React reducer hook, as of v19, now returns the types of ReactReducer, except the action is an array
   let [state, dispatch] = React.useReducer<ReducerState, [ReducerAction]>(reducer, initialState);
 
@@ -243,7 +246,7 @@ export default function CodeBox({ children, lang, fileName }: CodeBoxProps) {
   }, []);
 
   return (
-    lang === Lang.Lua && 
+    lang in Lang && 
       <div className='code-box'>
         <div className='file-type'>
           <span>{fileName}</span>
