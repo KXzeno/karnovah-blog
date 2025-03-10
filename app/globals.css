@@ -200,7 +200,7 @@ section div section p {
 }
 
 .code-box {
-  @apply text-green-300 text-xs bg-[#000000] w-full border-2;
+  @apply text-[#AEEA94] text-xs bg-[#000000] w-full border-2 border-[#5CB338];
 }
 
 .code-box > .file-type {
@@ -231,11 +231,19 @@ section div section p {
   @apply text-[#FF9D23];
 }
 
+.code-box > .code-multiline > code > span.function {
+  @apply text-[#FF9D23];
+}
+
 .code-box > .code-multiline > code > span.identifier {
   @apply text-[#F8FAFC];
 }
 
 .code-box > .code-multiline > code > span.binaryop {
+  @apply text-[#FF6500];
+}
+
+.code-box > .code-multiline > code > span.arrowexp {
   @apply text-[#FF6500];
 }
 
@@ -248,11 +256,23 @@ section div section p {
 }
 
 .code-multiline > code > span.string {
-  @apply text-[#608BC1]
+  @apply text-[#F8ED8C]
 }
 
 .code-multiline > code > span.delimiter {
   @apply text-[#F8FAFC];
+}
+
+.code-multiline > code > span.import {
+  @apply text-[#AA60C8];
+}
+
+.code-multiline > code > span.variable {
+  @apply text-[#A294F9];
+}
+
+.code-box > .code-multiline > code > span.keywords {
+  @apply text-[#8B5DFF];
 }
 
 .text-balance {
