@@ -195,6 +195,10 @@ hgroup > div:nth-child(2) > div:nth-child(2).header-note {
   @apply text-ellipsis overflow-hidden text-nowrap;
 }
 
+#toc-list > span.subheader {
+  @apply pl-4 text-[13.12px];
+}
+
 section div section p {
   @apply group-[.curr-head]:curr-head;
 }
