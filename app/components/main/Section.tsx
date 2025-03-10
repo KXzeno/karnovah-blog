@@ -65,7 +65,7 @@ export default React.memo(function Section({
     if (secRef.current && secRef.current.outerText) {
       return (Section === 'section') 
         ? null
-        : secRef.current?.outerText.toLowerCase().split(' ').join('-');
+        : secRef.current?.outerText.toLowerCase().split(/[\s\:]/).join('-');
     }
     return null;
   }, [Section, secRef]);
@@ -201,30 +201,59 @@ export default React.memo(function Section({
 
               // Toggles highlight on all toc items
               for (let i = 0; i < this.collection.length; i++) {
-                let e = this.collection.item(i);
-                e === target && e.setAttribute('class', 'curr-head');
+                const e = this.collection.item(i);
+                const targetClasses = target.getAttribute('class');
+
+                if (e === target) {
+                  // Transform classes to retain previous ones
+                  const classes = e.getAttribute('class');
+                  const newClasses = classes ? `${classes} curr-head` : 'curr-head';
+
+                  e.setAttribute('class', newClasses);
+                }
                 // Toggle attribute on observer dismissal, ensures end e removal
                 !onScreen && Number(target.getAttribute('data-index')) !== 0
-                && target.getAttribute('data-name') && target.toggleAttribute('class');
-                e.getAttribute('class') && this.activeStack.push(e); 
+                && target.getAttribute('data-name') 
+                && target.setAttribute('class', targetClasses ? targetClasses.replace(/\s?curr-head/, '') : '');
+                let attrContainsHeader: string | null | boolean = e.getAttribute('class');
+                attrContainsHeader = attrContainsHeader ? (attrContainsHeader as string).includes('curr-head') : null;
+                attrContainsHeader === true && this.activeStack.push(e); 
               }
 
               // Detoggles previous node's classes
               for (let i = 0; i < this.collection.length; i++) {
                 let node = this.collection.item(i);
+                // Transform classes to retain previous ones
+                const classes = node.getAttribute('class');
+                const newClasses = classes ? classes.replace(/\s?curr-head/, '') : '';
+
                 if (this.activeStack.length > 1) {
+                  let attrContainsHeader: string | null | boolean = node.getAttribute('class');
+                  attrContainsHeader = attrContainsHeader ? (attrContainsHeader as string).includes('curr-head') : null;
                   this.activeStack.length != 1 
-                  && node.getAttribute('class')
+                  && attrContainsHeader === true
                   && this.activeStack.pop() 
-                  && node.removeAttribute('class', 'curr-head');
+                  && node.setAttribute('class', newClasses);
                 }
 
                 // Highlights previous node when escaping last node
                 let targetElem = elemCollection.getList;
-                let index = this.activeStack.length === 0
-                && `${secRef.current.id}-*` === node.getAttribute('data-name')
-                && node.getAttribute('data-index');
-                index && targetElem && targetElem[index - 1]?.setAttribute('class', 'curr-head');
+
+                const dataId = `${secRef.current.id}-*`;
+                const dataName = node.getAttribute('data-name');
+                const dataIndex = node.getAttribute('data-index');
+
+                let index = this.activeStack.length === 0 
+                && dataId == dataName 
+                && dataIndex;
+
+                if (targetElem && targetElem[index - 1]) {
+                  let targetElemClasses: string | null | undefined = targetElem[index - 1].getAttribute('class');
+
+                  targetElemClasses = targetElemClasses ? `${targetElemClasses} curr-head` : 'curr-head';
+                  targetElem[index - 1].setAttribute('class', targetElemClasses);
+                }
+
               }
             }
           },
@@ -333,9 +362,12 @@ export default React.memo(function Section({
     isMobileLandscape && 
       +(() => {
       nodes.forEach((node, i, list) => {
-        (node.getAttribute('class') === 'curr-head') 
+        let classes: string | null | boolean = node.getAttribute('class');
+        classes = classes ? classes.includes('curr-head') : null;
+        classes !== null
+        && classes === true 
         && (i === list.length - 1) 
-        && list[0].setAttribute('class', 'curr-head');
+        && list[0].setAttribute('class', `${node.getAttribute('class')} curr-head`);
       });
     })();
   }, [isMobileLandscape]);
