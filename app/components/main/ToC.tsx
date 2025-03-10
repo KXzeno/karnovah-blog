@@ -29,14 +29,13 @@ export default function TableOfContents(): React.ReactNode {
     if (!element.id || !element.outerText) { return };
     // Could also work with Object.assign()
     Object.defineProperties(tempObj, {
-      [element.id]: { 
+      [`${element.id}-${element.tagName}`]: { 
         value: element.outerText,
         writable: false,
         enumerable: true,
         configurable: false,
       },
     });
-
     return tempObj;
   };
 
@@ -63,7 +62,6 @@ export default function TableOfContents(): React.ReactNode {
       setElemNodes(erst => ({ ...erst, ...elemNodesProxy }));
       //console.log(elemNodes);
       let elems = new ObjectArray(Object.values(elemNodesProxy));
-
       for (const value of elems) {
         let altered: object | undefined = newTocList(value);
         // console.log("Altered:", altered)
@@ -111,14 +109,19 @@ export default function TableOfContents(): React.ReactNode {
     return (
       //console.log(arrData),
       arrData./*splice(Object.keys(tocList).length).*/map((prop) => {
+        const id = prop[0].slice(0, prop[0].length - 3);
+        const tag = prop[0].slice(prop[0].length - 2)
+
         return (
           <span 
             key={`#${prop[1]}-${prop[0]}`} 
             data-index={prop[1].substring(prop[1].indexOf('\n')).trimStart()} 
-            data-name={`${prop[0]}-*`}>
+            data-name={`${id}-*`}
+            className={tag === 'H4' ? 'subheader' : undefined}
+          >
             {/*<Link></Link>*/}
             <a 
-              href={`#${prop[0]}`} 
+              href={`#${id}`} 
               rel="noreferrer"
             > {/*target="_blank"*/}
               {`${prop[1].substring(0, prop[1].indexOf('\n'))}`}
