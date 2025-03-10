@@ -63,7 +63,7 @@
   }
 
   h4 {
-    @apply group-[.curr-head]:curr-head font-quicksand text-xl text-[#E6E6E6] pt-[1rem] pb-[0.2rem] max-md:text-lg max-sm:text-xl;
+    @apply group-[.curr-head]:curr-head font-quicksand text-[18px] pt-[1rem] pb-[0.2rem] max-md:text-[14ppx] max-sm:text-[18px] text-[#D6CFB4];
   }
 
   h5 {
