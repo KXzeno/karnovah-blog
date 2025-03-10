@@ -29,6 +29,10 @@ type LuaRgx = {
   Identifier: RegExp;
 }
 
+type TypeScriptRgx = {
+
+}
+
 type VolatileMarks = {
   mark: string;
   start: number;
@@ -36,7 +40,7 @@ type VolatileMarks = {
 };
 
 const RgxPatterns: {
-  [key: string]: LuaRgx
+  [key: string]: LuaRgx | TypeScriptRgx
 } = {
   [Lang.LUA]: {
     Reserved: /\blocal\b|\bif\b|\bthen\b|function\b|end(?=\,|$)/g,
@@ -47,7 +51,21 @@ const RgxPatterns: {
     String: /(?:\'|\").+(?:\'|\")/g,
     Braces: /[\{\}\[\]]/g,
     Delimiter: /\.|\,/g
-  }
+  },
+  [Lang.TSX]: {
+    Import: /import\b|export\b|from\b/g,
+    KeywordOp: /\bin\b/g,
+    Keywords: /new\b|await\b|async\b/g,
+    ArrowExp: /(?<=\)\s|\w\s)(\=\>)/g,
+    Variable: /const\b|let\b/g,
+    Function: /function\b/g,
+    Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)/g,
+    BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B[^\>]/g,
+    Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)|((?<=\})\))$/g,
+    String: /(?:\'|\").+(?:\'|\")/g,
+    Braces: /[\{\}\[\]]/g,
+    Delimiter: /\.|\,/g
+  },
 }
 
 function getLangPatterns(lang: Lang | keyof typeof Lang) {
@@ -56,18 +74,6 @@ function getLangPatterns(lang: Lang | keyof typeof Lang) {
     throw new Error('Lang isn\'t an enum member.');
   }
   return Object.entries(RgxPatterns[langOrNull]);
-  // return Object.entries(RgxPatterns[lang]);
-}
-
-const LuaRgx: LuaRgx = {
-  Reserved: /\blocal\b|\bif\b|\bthen\b|function\b|end(?=\,|$)/g,
-  Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)/g,
-  BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B/g,
-  Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)$/g,
-  // String: /(?<=\').+(?=\')/g,
-  String: /(?:\'|\").+(?:\'|\")/g,
-  Braces: /[\{\}\[\]]/g,
-  Delimiter: /\.|\,/g
 }
 
 function getRangeDisjoint(marks: Array<VolatileMarks>) {
