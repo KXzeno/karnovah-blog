@@ -41,6 +41,8 @@ export default React.memo(function Section({
 
   let [isListening, setIsListening] = React.useState(false);
 
+  const [mounted, setMounted] = React.useState<boolean>(false);
+
   /** Check if valid type
    * @deprecated
    */
@@ -85,6 +87,43 @@ export default React.memo(function Section({
   //   screen.breakPoint];
 
   let isMobileLandscape = React.useMemo(() => !isBreak, [isBreak]);
+
+  React.useEffect(() => {
+    let getElements = new Promise<HTMLCollection>((resolve,) => {
+      let intervalId = setInterval(() => {
+        let [targetElem, children]: [HTMLElement | null, HTMLCollection | undefined] = [document.getElementById('toc-list'), undefined];
+        if (targetElem) {
+          children = targetElem.children;
+        }
+        if (children && children.length > 0) {
+          clearInterval(intervalId);
+          resolve(children);
+        }
+      }, 100);
+    });
+
+    getElements.then((elements) => {
+      let child = elements.item(0);
+      child && child.setAttribute('class', 'curr-head');
+    }).catch((e) => {
+      console.error(e);
+    }).finally(() => {
+      if (mounted === false) {
+        setMounted(true);
+      }
+    });
+  }, []);
+
+  React.useEffect(() => {
+    if (mounted) {
+      const lastIndex = elementStack.length - 1;
+      const tocList = document.getElementById('toc-list');
+      if (secRef.current === elementStack[lastIndex] && onScreen && tocList !== null) {
+        tocList.children.item(0)!.classList.remove('curr-head');
+        tocList.children.item(lastIndex)!.classList.add('curr-head');
+      }
+    }
+  }, [mounted]);
 
   React.useEffect(() => {
     //let start = performance.now()
@@ -198,7 +237,6 @@ export default React.memo(function Section({
 
             // Executes only when observing element id exists
             if (/*onScreen && */secRef.current && secRef.current.id) {
-
               // Toggles highlight on all toc items
               for (let i = 0; i < this.collection.length; i++) {
                 const e = this.collection.item(i);
@@ -226,14 +264,25 @@ export default React.memo(function Section({
                 // Transform classes to retain previous ones
                 const classes = node.getAttribute('class');
                 const newClasses = classes ? classes.replace(/\s?curr-head/, '') : '';
+                  this.activeStack.sort((
+                    p: {
+                      dataset: {
+                        index: string 
+                      } 
+                    }, 
+                    n: { 
+                      dataset: {
+                        index: string 
+                      }
+                    }) =>  Number.parseInt(p.dataset.index) < Number.parseInt(n.dataset.index));
 
                 if (this.activeStack.length > 1) {
-                  let attrContainsHeader: string | null | boolean = node.getAttribute('class');
-                  attrContainsHeader = attrContainsHeader ? (attrContainsHeader as string).includes('curr-head') : null;
-                  this.activeStack.length != 1 
-                  && attrContainsHeader === true
-                  && this.activeStack.pop() 
-                  && node.setAttribute('class', newClasses);
+                    let attrContainsHeader: string | null | boolean = node.getAttribute('class');
+                    attrContainsHeader = attrContainsHeader ? (attrContainsHeader as string).includes('curr-head') : null;
+                    this.activeStack.length != 1 
+                    && attrContainsHeader === true
+                    && this.activeStack.pop() 
+                    && node.setAttribute('class', newClasses);
                 }
 
                 // Highlights previous node when escaping last node
@@ -310,33 +359,10 @@ export default React.memo(function Section({
   }, [isListening, onScreen, isMobileLandscape, secRef]);
 
   React.useEffect(() => {
-    let getElements = new Promise<HTMLCollection>((resolve,) => {
-      let intervalId = setInterval(() => {
-        let [targetElem, children]: [HTMLElement | null, HTMLCollection | undefined] = [document.getElementById('toc-list'), undefined];
-        if (targetElem) {
-          children = targetElem.children;
-        }
-        if (children && children.length > 0) {
-          clearInterval(intervalId);
-          resolve(children);
-        }
-      }, 100);
-    });
-
-    getElements.then((elements) => {
-      let child = elements.item(0);
-      child && child.setAttribute('class', 'curr-head');
-    }).catch((e) => {
-      console.error(e);
-    }).finally(() => {
-    });
-  }, []);
-
-  React.useEffect(() => {
     let getElements = new Promise<NodeList>((resolve,) => {
       let elements = document.querySelectorAll('h3, h4');
       if (elements.length > 0) {
-        resolve(elements) 
+        resolve(elements);
       }
     });
 
