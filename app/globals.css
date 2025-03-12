@@ -279,6 +279,18 @@ section div section p {
   @apply text-[#8B5DFF];
 }
 
+.list {
+  @apply py-1 pr-4 pl-6;
+}
+
+.list > .list-item {
+  @apply grid grid-cols-[3%_97%];
+}
+
+.list > .list-item > span {
+  @apply text-[#818C78]
+}
+
 .text-balance {
   text-wrap: balance;
 }
