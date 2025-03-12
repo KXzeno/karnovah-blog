@@ -219,7 +219,7 @@ function insertList(params: Parameters<typeof insertAside>): ReturnType<typeof i
           key={`${insertIndex}-${lineIndex}:${outerIndex}:${innerIndex}`}
           className='list-item'
         >
-          <span>{lineIndex + 1}.</span>
+          <span>{lineIndex + 1}. </span>
           <li>{`${line}`}</li>
         </div>
       );
