@@ -13,6 +13,7 @@ import Section from '@M/Section';
 import { readPost } from '@A/PostActions';
 import { SinglyLinkedList } from '@U/SinglyLinkedList';
 import CodeBox from './CodeBox';
+import ListBox from './ListBox';
 
 /**
  * Transform consumer semantics to HTML
@@ -184,11 +185,59 @@ function insertCodeBlock(params: Parameters<typeof insertAside>): ReturnType<typ
     return {sections, volatileNode: (
       <>
         {insertPar && newPar}
-        <CodeBox key={`codebox-${codeIndex}:${codeIndex}:${innerIndex}`} fileName={fileName ?? 'init.lua'} lang={lang.toUpperCase()}>{codeCache as React.ReactNode}</CodeBox>
+        <CodeBox 
+          key={`codebox-${codeIndex}:${codeIndex}:${innerIndex}`} 
+          fileName={fileName ?? 'init.lua'}
+          lang={lang.toUpperCase()}
+        >
+          {codeCache as React.ReactNode}
+        </CodeBox>
       </>
     )}
   }
 }
+
+function insertList(params: Parameters<typeof insertAside>): ReturnType<typeof insertAside> | undefined {
+  let [outerIndex, innerIndex, sections, par, insertPar] = params;
+  let insertIndex = Number.parseInt(sections[outerIndex].list[0].split(/(?<=\$)([\d]+)$/)[1]);
+  // Handle location at end of section
+  let shift = sections[outerIndex].content.length - 1 === innerIndex && insertIndex === sections[outerIndex].content.length + 1 ? --insertIndex : null;
+  console.log(shift);
+  if (innerIndex === insertIndex - 1 || shift) {
+    let listCache: string[] | React.ReactElement[] | React.ReactNode = [];
+    // Attempt insertIndex recovery after temporary exception handling
+    let match: RegExp = new RegExp(`(?<=\\$)(${shift ? shift + 1 : insertIndex})$`);
+
+    while (sections[outerIndex].list[0] && sections[outerIndex].list[0].match(match)) {
+      // console.log(sections[outerIndex].list[0]);
+      (listCache as string[]).push(sections[outerIndex].list.shift()!.replace(/\$[\d]+$/, ''));
+    }
+
+    listCache = (listCache as string[]).map((line, lineIndex) => {
+      return (
+        <div 
+          key={`${insertIndex}-${lineIndex}:${outerIndex}:${innerIndex}`}
+          className='list-item'
+        >
+          <span>{lineIndex + 1}.</span>
+          <li>{`${line}`}</li>
+        </div>
+      );
+    });
+    let newPar = semanticMultilineTransform(par, `${outerIndex}-${innerIndex}-${insertIndex}:${outerIndex}:${innerIndex}`);
+    console.log(newPar, listCache);
+    // FIXME: Refer to l97; create dynamic filename...
+    return {sections, volatileNode: (
+      <>
+        {insertPar && newPar}
+        <ListBox>
+          {listCache}
+        </ListBox>
+      </>
+    )}
+  }
+}
+
 /**
  * O(n) execution for mapping queried Post data to elements,
  * each iteration handles an array property using flatmap which 
@@ -266,6 +315,13 @@ function project(sections: NonNullable<Awaited<ReturnType<typeof readPost>>>["se
         }
       }
 
+      if (sections[i].list.length > 0) {
+        const listInserter = insertList([i, index, sections, par, hdr as string]);
+        if (listInserter) {
+          sections = listInserter.sections;
+          volatileNode.push(listInserter.volatileNode as React.ReactElement);
+        }
+      }
 
       if (volatileNode.length > 0) {
         return [...volatileNode];
