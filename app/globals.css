@@ -284,7 +284,7 @@ section div section p {
 }
 
 .list > .list-item {
-  @apply grid grid-cols-[3%_97%];
+  @apply grid grid-cols-[3%_97%] py-[0.3rem];
 }
 
 .list > .list-item > span {
