@@ -275,6 +275,26 @@ section div section p {
   @apply text-[#A294F9];
 }
 
+.code-multiline > code > span.comment {
+  @apply text-[#A9A9A9];
+}
+
+.code-multiline > code > span.jsxtags {
+  @apply text-[#57B4BA];
+}
+
+.code-multiline > code > span.jsxidentifier {
+  @apply text-[#FF2DF1];
+}
+
+.code-multiline > code > span.jsxattribute {
+  @apply text-[#4D55CC];
+}
+
+.code-box > .code-multiline > code > span.jsxrefval {
+  @apply text-[#F8FAFC];
+}
+
 .code-box > .code-multiline > code > span.keywords {
   @apply text-[#8B5DFF];
 }
