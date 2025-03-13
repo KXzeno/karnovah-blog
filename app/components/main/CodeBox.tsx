@@ -37,6 +37,10 @@ interface TypeScriptRgx {
   ArrowExp: RegExp,
   Variable: RegExp,
   Function: RegExp,
+  JSXTags: RegExp,
+  JSXIdentifier: RegExp,
+  JSXAttribute: RegExp,
+  JSXRefVal: RegExp,
 } 
 
 type VolatileMarks = {
@@ -49,29 +53,33 @@ const RgxPatterns: {
   [key: string]: LuaRgx | TypeScriptRgx
 } = {
   [Lang.LUA]: {
-    Reserved: /\blocal\b|\bif\b|\bthen\b|function\b|end(?=\,|$)/g,
-    Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)/g,
-    BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B/g,
-    Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)$/g,
-    // String: /(?<=\').+(?=\')/g,
-    String: /(?:\'|\").+(?:\'|\")/g,
-    Braces: /[\{\}\[\]]/g,
-    Delimiter: /\.|\,/g,
+      Reserved: /\blocal\b|\bif\b|\bthen\b|function\b|end(?=\,|$)/g,
+      Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)/g,
+      BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B/g,
+      Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)$/g,
+      // String: /(?<=\').+(?=\')/g,
+      String: /(?:\'|\").+(?:\'|\")/g,
+      Braces: /[\{\}\[\]]/g,
+      Delimiter: /\.|\,/g,
     },
   [Lang.TSX]: {
-    Comment: /(\/\/\s.+)|(\/\*\*)|(\*\s.+)|(\*\/)/g,
-    Import: /import\b|export\b|from\b/g,
-    KeywordOp: /\bin\b/g,
-    Keywords: /new\b|await\b|async\b/g,
-    ArrowExp: /(?<=\)\s|\w\s)(\=\>)/g,
-    Variable: /const\b|let\b/g,
-    Function: /function\b/g,
-    Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)|(?<=\()([\w]+)(?=\))/g,
-    BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B[^\>]/g,
-    Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)|((?<=\})\))$/g,
-    String: /(?:\'|\").+(?:\'|\")/g,
-    Braces: /[\{\}\[\]]/g,
-    Delimiter: /\.|\,/g
+      Comment: /(\/\/\s.+)|(\/\*\*)|(\*\s.+)|(\*\/)/g,
+      Import: /import\b|export\b|from\b/g,
+      KeywordOp: /\bin\b/g,
+      Keywords: /new\b|await\b|async\b/g,
+      ArrowExp: /(?<=\)\s|\w\s)(\=\>)/g,
+      Variable: /const\b|let\b/g,
+      Function: /function\b/g,
+      Identifier: /\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)|(?<=\(|\{)([\w]+?)(?=\)|\})/g,
+      BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B[^\>]|(?<=\w)\=(?=\(|\{|\'|\")/g,
+      Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)|((?<=\})\))$/g,
+      String: /(?:\'|\").+(?:\'|\")/g,
+      Braces: /[\{\}\[\]]/g,
+      Delimiter: /\.|\,/g,
+      JSXTags: /\<(?=\w|\/)|\>$|(?<=\<)\/|\/\>$/g,
+      JSXIdentifier: /(?<=\<|\<\/)[\w]+(?=\>|\s)/g,
+      JSXAttribute: /(?<=\s)[\w]+(?=\=)(?!\>)/g,
+      JSXRefVal: /(?<=\=\(|\=\{)[\w\s\,]+?(?=\)|\})/g
     },
   }
 
@@ -143,6 +151,12 @@ const RgxPatterns: {
         } else {
           // Create RegExp array of matches if valid
           matches = content.matchAll(rgx);
+        }
+
+        if (id === 'Identifier' && content && content.length > 0) {
+          if (content.trimStart().at(0) === '\<') {
+            continue;
+          }
         }
 
         if (content && matches) {
