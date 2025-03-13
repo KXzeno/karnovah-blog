@@ -15,7 +15,7 @@ export enum Lang {
   TSX = "TypeScriptReact",
 }
 
-type LuaRgx = {
+interface LuaRgx {
   Reserved: RegExp;
   Escaped?: RegExp;
   MethodInvocation?: RegExp;
@@ -29,9 +29,15 @@ type LuaRgx = {
   Identifier: RegExp;
 }
 
-type TypeScriptRgx = {
-
-}
+interface TypeScriptRgx {
+  Comment: RegExp,
+  Import: RegExp,
+  KeywordOp: RegExp,
+  Keywords: RegExp,
+  ArrowExp: RegExp,
+  Variable: RegExp,
+  Function: RegExp,
+} 
 
 type VolatileMarks = {
   mark: string;
@@ -47,25 +53,25 @@ const RgxPatterns: {
     Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)/g,
     BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B/g,
     Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)$/g,
-      // String: /(?<=\').+(?=\')/g,
-      String: /(?:\'|\").+(?:\'|\")/g,
-      Braces: /[\{\}\[\]]/g,
-      Delimiter: /\.|\,/g
+    // String: /(?<=\').+(?=\')/g,
+    String: /(?:\'|\").+(?:\'|\")/g,
+    Braces: /[\{\}\[\]]/g,
+    Delimiter: /\.|\,/g,
     },
-    [Lang.TSX]: {
-      Comment: /(\/\/\s.+)|(\/\*\*)|(\*\s.+)|(\*\/)/g,
-      Import: /import\b|export\b|from\b/g,
-      KeywordOp: /\bin\b/g,
-      Keywords: /new\b|await\b|async\b/g,
-      ArrowExp: /(?<=\)\s|\w\s)(\=\>)/g,
-      Variable: /const\b|let\b/g,
-      Function: /function\b/g,
-      Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)/g,
-      BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B[^\>]/g,
-      Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)|((?<=\})\))$/g,
-      String: /(?:\'|\").+(?:\'|\")/g,
-      Braces: /[\{\}\[\]]/g,
-      Delimiter: /\.|\,/g
+  [Lang.TSX]: {
+    Comment: /(\/\/\s.+)|(\/\*\*)|(\*\s.+)|(\*\/)/g,
+    Import: /import\b|export\b|from\b/g,
+    KeywordOp: /\bin\b/g,
+    Keywords: /new\b|await\b|async\b/g,
+    ArrowExp: /(?<=\)\s|\w\s)(\=\>)/g,
+    Variable: /const\b|let\b/g,
+    Function: /function\b/g,
+    Identifier: /(?<=\blocal\s)([\w]+\b)|\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)|(?<=\()([\w]+)(?=\))/g,
+    BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B[^\>]/g,
+    Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)|((?<=\})\))$/g,
+    String: /(?:\'|\").+(?:\'|\")/g,
+    Braces: /[\{\}\[\]]/g,
+    Delimiter: /\.|\,/g
     },
   }
 
