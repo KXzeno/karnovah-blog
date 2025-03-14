@@ -287,6 +287,10 @@ section div section p {
   @apply text-[#F8FAFC];
 }
 
+.code-multiline > code > span.askeyword {
+  @apply text-[#F72C5B];
+}
+
 .code-multiline > code > span.inlinetypeclass {
   @apply text-[#4DA1A9];
 }
