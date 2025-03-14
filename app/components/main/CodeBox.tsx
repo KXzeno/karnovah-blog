@@ -48,6 +48,7 @@ interface TypeScriptRgx {
   InlinePredefinedType: RegExp,
   ParameterizedType: RegExp,
   TypeUnion: RegExp,
+  AsKeyword: RegExp,
 } 
 
 type VolatileMarks = {
@@ -81,10 +82,11 @@ const RgxPatterns: {
       Import: /import\b|export\b|from\b/g,
       KeywordOp: /\bin\b/g,
       Keywords: /new\b|await\b|async\b/g,
+      AsKeyword: /(?<=\{|\(|\=)(?:\s?[\w]+?\s)(as)(?=\s\w)/g,
       ArrowExp: /(?<=\)\s|\w\s)(\=\>)/g,
       Variable: /const\b|let\b/g,
       Function: /function\b/g,
-      Identifier: /\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)|(?<=\(|\{)([\w]+?)(?=\)|\})/g,
+      Identifier: /\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)|(?<=\(\s*|\{\s*)([\w]+?)(?=\sas|\s*\)\|\s*\})|(?<=as\s)([\w^\'\"\s]+)(?=\;|\s*\}|\s*\))/g,
       BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B[^\>]|(?<=\w)\=(?=\(|\{|\'|\")/g,
       Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)|((?<=\})\))$/g,
       String: /(?:\'|\").+(?:\'|\")/g,
@@ -185,7 +187,12 @@ const RgxPatterns: {
               continue;
             }
 
-            volatileMarks.push({ mark: id, start: match.index, end: match.index + match['0'].length });
+            // Adjust index when matches include non-capturing groups
+            if (match[0] && match[1] && match[0].length !== match[1].length) {
+              volatileMarks.push({ mark: id, start: match.index + (match[0].length - match[1].length), end: match.index + match['0'].length });
+            } else {
+              volatileMarks.push({ mark: id, start: match.index, end: match.index + match['0'].length });
+            }
           }
         }
       }
