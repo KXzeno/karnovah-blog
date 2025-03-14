@@ -291,7 +291,23 @@ section div section p {
   @apply text-[#4DA1A9];
 }
 
+.code-multiline > code > span.inlinepredefinedtype {
+  @apply text-[#FB4141];
+}
+
+.code-multiline > code > span.null {
+  @apply text-[#D39D55];
+}
+
 .code-multiline > code > span.inlinetype {
+  @apply text-[#FF69B4];
+}
+
+.code-multiline > code > span.parameterizedtype {
+  @apply text-[#FF69B4];
+}
+
+.code-multiline > code > span.typeunion {
   @apply text-[#FF69B4];
 }
 
