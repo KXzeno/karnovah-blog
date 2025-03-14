@@ -219,6 +219,10 @@ section div section p {
   @apply text-right pr-2;
 }
 
+.file-type > span:nth-child(2) > button {
+  @apply hover:cursor-pointer;
+}
+
 .code-box > .code-multiline {
   @apply grid grid-cols-[max-content_1fr] p-0 text-[0.61rem];
 }
@@ -277,6 +281,18 @@ section div section p {
 
 .code-multiline > code > span.comment {
   @apply text-[#A9A9A9];
+}
+
+.code-multiline > code > span.destructured {
+  @apply text-[#F8FAFC];
+}
+
+.code-multiline > code > span.inlinetypeclass {
+  @apply text-[#4DA1A9];
+}
+
+.code-multiline > code > span.inlinetype {
+  @apply text-[#FF69B4];
 }
 
 .code-multiline > code > span.jsxtags {
