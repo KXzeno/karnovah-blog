@@ -37,10 +37,13 @@ interface TypeScriptRgx {
   ArrowExp: RegExp,
   Variable: RegExp,
   Function: RegExp,
+  Destructured: RegExp,
   JSXTags: RegExp,
   JSXIdentifier: RegExp,
   JSXAttribute: RegExp,
   JSXRefVal: RegExp,
+  InlineTypeClass: RegExp,
+  InlineType: RegExp,
 } 
 
 type VolatileMarks = {
@@ -64,6 +67,9 @@ const RgxPatterns: {
     },
   [Lang.TSX]: {
       Comment: /(\/\/\s.+)|(\/\*\*)|(\*\s.+)|(\*\/)/g,
+      Destructured: /(?<=\{)[\s\,]+?(\w)+[\s\,]+?(?=\}\s\=|\}\:)/g,
+      InlineTypeClass: /(?<=\:\s)[\w]+/g,
+      InlineType: /(?<=\:\s[\w]+\.)[\w]+/g,
       Import: /import\b|export\b|from\b/g,
       KeywordOp: /\bin\b/g,
       Keywords: /new\b|await\b|async\b/g,
@@ -141,9 +147,6 @@ const RgxPatterns: {
       const patterns = getLangPatterns(lang);
 
       for (let [id, rgx] of patterns) {
-        // if (rgx !== LuaRgx.Reserved) {
-        //   continue;
-        // }
         let matches: RegExpStringIterator<RegExpExecArray> | null;
         // New line
         if (content == null) {
@@ -153,14 +156,19 @@ const RgxPatterns: {
           matches = content.matchAll(rgx);
         }
 
-        if (id === 'Identifier' && content && content.length > 0) {
-          if (content.trimStart().at(0) === '\<') {
-            continue;
+        if (id ==='Identifier') {
+          if (content && content.length > 0) {
+            if (content.trimStart().at(0) === '\<') {
+              continue;
+            }
           }
         }
 
         if (content && matches) {
           for (let match of matches) {
+            if (content.at(match?.index - 2) === '\:') {
+              continue;
+            }
             volatileMarks.push({ mark: id, start: match.index, end: match.index + match['0'].length });
           }
         }
