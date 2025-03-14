@@ -30,6 +30,7 @@ interface LuaRgx {
 }
 
 interface TypeScriptRgx {
+  Null: RegExp,
   Comment: RegExp,
   Import: RegExp,
   KeywordOp: RegExp,
@@ -44,6 +45,9 @@ interface TypeScriptRgx {
   JSXRefVal: RegExp,
   InlineTypeClass: RegExp,
   InlineType: RegExp,
+  InlinePredefinedType: RegExp,
+  ParameterizedType: RegExp,
+  TypeUnion: RegExp,
 } 
 
 type VolatileMarks = {
@@ -66,10 +70,14 @@ const RgxPatterns: {
       Delimiter: /\.|\,/g,
     },
   [Lang.TSX]: {
+      Null: /(?<=\(|\=\s)null(?=\)?)/g,
       Comment: /(\/\/\s.+)|(\/\*\*)|(\*\s.+)|(\*\/)/g,
       Destructured: /(?<=\{)[\s\,]+?(\w)+[\s\,]+?(?=\}\s\=|\}\:)/g,
       InlineTypeClass: /(?<=\:\s)[\w]+/g,
+      InlinePredefinedType: /(?<=\<(?:[\w\s\|]+)?)(null)(?=(?:[\w\s\|]+)?\>)/g,
       InlineType: /(?<=\:\s[\w]+\.)[\w]+/g,
+      ParameterizedType: /(?<=\w\<)([A-Z]{1}[\w]+)/g,
+      TypeUnion: /(?<=\w\<[\w\s]+?)(\|)(?=(?:[\w\s]+?)\>)/g,
       Import: /import\b|export\b|from\b/g,
       KeywordOp: /\bin\b/g,
       Keywords: /new\b|await\b|async\b/g,
@@ -83,7 +91,7 @@ const RgxPatterns: {
       Braces: /[\{\}\[\]]/g,
       Delimiter: /\.|\,/g,
       JSXTags: /\<(?=\w|\/)|\>$|(?<=\<)\/|\/\>$/g,
-      JSXIdentifier: /(?<=\<|\<\/)[\w]+(?=\>|\s)/g,
+      JSXIdentifier: /(?<=\<|\<\/)[\w]+(?=\>|\s[^\|])/g,
       JSXAttribute: /(?<=\s)[\w]+(?=\=)(?!\>)/g,
       JSXRefVal: /(?<=\=\(|\=\{)[\w\s\,]+?(?=\)|\})/g
     },
@@ -158,6 +166,7 @@ const RgxPatterns: {
 
         if (id ==='Identifier') {
           if (content && content.length > 0) {
+            // Dont repeat on JSX
             if (content.trimStart().at(0) === '\<') {
               continue;
             }
@@ -166,9 +175,16 @@ const RgxPatterns: {
 
         if (content && matches) {
           for (let match of matches) {
-            if (content.at(match?.index - 2) === '\:') {
+            // Don't repeat on type annotations
+            if (content.at(match.index - 2) === '\:') {
               continue;
             }
+
+            // Don't repeat on predefined values (null)
+            if (match[0].includes('null') && id === 'Identifier') {
+              continue;
+            }
+
             volatileMarks.push({ mark: id, start: match.index, end: match.index + match['0'].length });
           }
         }
