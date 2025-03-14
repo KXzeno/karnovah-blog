@@ -73,7 +73,7 @@ const RgxPatterns: {
   [Lang.TSX]: {
       Null: /(?<=\(|\=\s)null(?=\)?)/g,
       Comment: /(\/\/\s.+)|(\/\*\*)|(\*\s.+)|(\*\/)/g,
-      Destructured: /(?<=\{)[\s\,]+?(\w)+[\s\,]+?(?=\}\s\=|\}\:)/g,
+      Destructured: /(?<=\{)[\s\,]+?(\w)+[\s\,]+?(?=\}\s\=|\}\:)|(?<=\(\s*|\{\s*)([\w]+?)(?=\sas|\s*\)\|\s*\})|(?<=as\s)([\w^\'\"\s]+)(?=\;|\s*\}|\s*\))/g,
       InlineTypeClass: /(?<=\:\s)[\w]+/g,
       InlinePredefinedType: /(?<=\<(?:[\w\s\|]+)?)(null)(?=(?:[\w\s\|]+)?\>)/g,
       InlineType: /(?<=\:\s[\w]+\.)[\w]+/g,
@@ -86,7 +86,7 @@ const RgxPatterns: {
       ArrowExp: /(?<=\)\s|\w\s)(\=\>)/g,
       Variable: /const\b|let\b/g,
       Function: /function\b/g,
-      Identifier: /\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)|(?<=\(\s*|\{\s*)([\w]+?)(?=\sas|\s*\)\|\s*\})|(?<=as\s)([\w^\'\"\s]+)(?=\;|\s*\}|\s*\))/g,
+      Identifier: /\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)|(?<=\(|\{)([\w]+?)(?=\)|\})/g,
       BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B[^\>]|(?<=\w)\=(?=\(|\{|\'|\")/g,
       Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)|((?<=\})\))$/g,
       String: /(?:\'|\").+(?:\'|\")/g,
