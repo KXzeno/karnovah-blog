@@ -30,14 +30,17 @@ interface LuaRgx {
 }
 
 interface TypeScriptRgx {
+  // Add return, if, and other keywords
   Null: RegExp,
   Comment: RegExp,
   Import: RegExp,
+  TypeImport: RegExp,
   KeywordOp: RegExp,
   Keywords: RegExp,
   ArrowExp: RegExp,
   Variable: RegExp,
   Function: RegExp,
+  Promise: RegExp,
   Destructured: RegExp,
   JSXTags: RegExp,
   JSXIdentifier: RegExp,
@@ -49,6 +52,8 @@ interface TypeScriptRgx {
   ParameterizedType: RegExp,
   TypeUnion: RegExp,
   AsKeyword: RegExp,
+  Interface: RegExp,
+  InterfaceIdentifier: RegExp,
 } 
 
 type VolatileMarks = {
@@ -71,27 +76,31 @@ const RgxPatterns: {
       Delimiter: /\.|\,/g,
     },
   [Lang.TSX]: {
-      Null: /(?<=\(|\=\s)null(?=\)?)/g,
+      Null: /(?<=\(|\=\s|\s\:\s)null(?=\)?)/g,
+      Promise: /Promise(?=\<)/g,
       Comment: /(\/\/\s.+)|(\/\*\*)|(\*\s.+)|(\*\/)/g,
-      Destructured: /(?<=\{)[\s\,]+?(\w)+[\s\,]+?(?=\}\s\=|\}\:)|(?<=\(\s*|\{\s*)([\w]+?)(?=\sas|\s*\)\|\s*\})|(?<=as\s)([\w^\'\"\s]+)(?=\;|\s*\}|\s*\))/g,
-      InlineTypeClass: /(?<=\:\s)[\w]+/g,
+      Interface: /^[\s]*interface\b/g,
+      InterfaceIdentifier: /^[\s]*(?:interface\s)([\w]+)/g,
+      Destructured: /(?<=\{)[\s\,]+?(\w)+[\s\,]+?(?=\}\s\=|\}\:)|(?<=\(\s*|\{\s*)([\w]+?)(?=\sas|\s*\)\|\s*\})|(?<=as\s)([\w^\'\"\s]+)(?=\;|\s*\}|\s*\))|(?<=(?:const|let)\s[\w]+\s\{\s|(?:\=\s)\{\s[\w\s\,]+?)[\w]+(?=\,)*/g,
+      InlineTypeClass: /(?<=\w\:\s)[\w]+|(?<=(?:type\s)\{\s)[\w]+(?=\,)*|(?<=\,\s)[\w]+(?=[\w\,\s^\"\']+?\})|(?<=\)\:\s)([\w]+)(?=\.*)/g,
       InlinePredefinedType: /(?<=\<(?:[\w\s\|]+)?)(null)(?=(?:[\w\s\|]+)?\>)/g,
-      InlineType: /(?<=\:\s[\w]+\.)[\w]+/g,
+      InlineType: /(?<=\:\s[\w]+\.)[\w]+(?!\;)/g,
       ParameterizedType: /(?<=\w\<)([A-Z]{1}[\w]+)/g,
       TypeUnion: /(?<=\w\<[\w\s]+?)(\|)(?=(?:[\w\s]+?)\>)/g,
       Import: /import\b|export\b|from\b/g,
       KeywordOp: /\bin\b/g,
-      Keywords: /new\b|await\b|async\b/g,
+      Keywords: /new\b|await\b|async\b|typeof\b/g,
       AsKeyword: /(?<=\{|\(|\=)(?:\s?[\w]+?\s)(as)(?=\s\w)/g,
       ArrowExp: /(?<=\)\s|\w\s)(\=\>)/g,
       Variable: /const\b|let\b/g,
       Function: /function\b/g,
-      Identifier: /\b[\w]+\d?(?=\.)|[\w]+(?=[\s]*\=)|(?<=\(|\{)([\w]+?)(?=\)|\})/g,
-      BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B[^\>]|(?<=\w)\=(?=\(|\{|\'|\")/g,
+      String: /(?:\'|\").+?(?:\'|\")/g,
+      Identifier: /(?<!\/|\:\s)\b[\w]+\d?(?!\.\")(?=\.)|[\w]+(?=[\s]*\=)|(?<=\(|\{)([\w]+?)(?=\)|\})|([\w]+)(?=\:\s\w)|(?<=import\s)([\w]+)(?=\sfrom)|(?<=typeof\s)[\w]+|(?<=\()([\w]+)(?=\s\!\=\=)|(?<=\!\=\=\s)([\w]+)(?=\))/g,
+      BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B[^\>]|(?<=\w)\=(?=\(|\{|\'|\")|(?<=\s)\:|\?(?=\s|$)|!!|\!(?=\.)|\!\=\=/g,
       Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)|((?<=\})\))$/g,
-      String: /(?:\'|\").+(?:\'|\")/g,
       Braces: /[\{\}\[\]]/g,
-      Delimiter: /\.|\,/g,
+      Delimiter: /(?<=\w|\)|\])(?<!\")(\.)(?![\w]+\"|\")|\,/g,
+      TypeImport: /(?<=import\s)(type)/g,
       JSXTags: /\<(?=\w|\/)|\>$|(?<=\<)\/|\/\>$/g,
       JSXIdentifier: /(?<=\<|\<\/)[\w]+(?=\>|\s[^\|])/g,
       JSXAttribute: /(?<=\s)[\w]+(?=\=)(?!\>)/g,
@@ -156,6 +165,8 @@ const RgxPatterns: {
 
       const patterns = getLangPatterns(lang);
 
+      let recentIndex = 0;
+      let recentId;
       for (let [id, rgx] of patterns) {
         let matches: RegExpStringIterator<RegExpExecArray> | null;
         // New line
@@ -177,13 +188,25 @@ const RgxPatterns: {
 
         if (content && matches) {
           for (let match of matches) {
-            // Don't repeat on type annotations
             if (content.at(match.index - 2) === '\:') {
-              continue;
+              switch (match[0]) {
+                // Don't repeat on type annotations
+                case 'Promise': {
+                  if (id === 'InlineTypeClass') {
+                    continue;
+                  }
+                }
+                break;
+              }
             }
 
             // Don't repeat on predefined values (null)
             if (match[0].includes('null') && id === 'Identifier') {
+              continue;
+            }
+
+            // Don't repeat on keywords in parameterized types
+            if (match[0].includes('typeof') && id === 'JSXIdentifier') {
               continue;
             }
 
@@ -193,6 +216,8 @@ const RgxPatterns: {
             } else {
               volatileMarks.push({ mark: id, start: match.index, end: match.index + match['0'].length });
             }
+            recentIndex = volatileMarks[volatileMarks.length - 1].end;
+            recentId = volatileMarks[volatileMarks.length - 1].mark;
           }
         }
       }
