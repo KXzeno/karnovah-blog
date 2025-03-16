@@ -224,15 +224,15 @@ section div section p {
 }
 
 .code-box > .code-multiline {
-  @apply grid grid-cols-[max-content_1fr] p-0 text-[0.61rem];
+  @apply grid grid-cols-[max-content_1fr] p-0 text-[13.7px] max-sm:text-[11px] sm:max-md:text-[13px];
 }
 
 .code-box > .code-multiline > .code-line-index {
-  @apply px-2 select-none
+  @apply px-2 select-none;
 }
 
 .code-box > .code-multiline > code {
-  @apply text-inherit font-dosis whitespace-pre;
+  @apply font-dosis whitespace-pre-wrap;
 }
 
 .code-box > .code-multiline > code > span.reserved {
@@ -241,6 +241,10 @@ section div section p {
 
 .code-box > .code-multiline > code > span.function {
   @apply text-[#FF9D23];
+}
+
+.code-box > .code-multiline > code > span.promise {
+  @apply text-[#FF69B4];
 }
 
 .code-box > .code-multiline > code > span.identifier {
@@ -273,6 +277,10 @@ section div section p {
 
 .code-multiline > code > span.import {
   @apply text-[#AA60C8];
+}
+
+.code-multiline > code > span.typeimport {
+  @apply text-[#FF9D23];
 }
 
 .code-multiline > code > span.variable {
@@ -313,6 +321,14 @@ section div section p {
 
 .code-multiline > code > span.typeunion {
   @apply text-[#FF69B4];
+}
+
+.code-multiline > code > span.interfaceidentifier {
+  @apply text-[#FF69B4];
+}
+
+.code-multiline > code > span.interface {
+  @apply text-[#FF9D23];
 }
 
 .code-multiline > code > span.jsxtags {
