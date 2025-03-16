@@ -106,6 +106,37 @@ const RgxPatterns: {
       JSXAttribute: /(?<=\s)[\w]+(?=\=)(?!\>)/g,
       JSXRefVal: /(?<=\=\(|\=\{)[\w\s\,]+?(?=\)|\})/g
     },
+    [Lang.TS]: {
+      Null: /(?<=\(|\=\s|\s\:\s)null(?=\)?)/g,
+      Promise: /Promise(?=\<)/g,
+      Comment: /(\/\/\s.+)|(\/\*\*)|(\*\s.+)|(\*\/)/g,
+      Interface: /^[\s]*interface\b/g,
+      InterfaceIdentifier: /^[\s]*(?:interface\s)([\w]+)/g,
+      Destructured: /(?<=\{)[\s\,]+?(\w)+[\s\,]+?(?=\}\s\=|\}\:)|(?<=\(\s*|\{\s*)([\w]+?)(?=\sas|\s*\)\|\s*\})|(?<=as\s)([\w^\'\"\s]+)(?=\;|\s*\}|\s*\))|(?<=(?:const|let)\s[\w]+\s\{\s|(?:\=\s)\{\s[\w\s\,]+?)[\w]+(?=\,)*/g,
+      InlineTypeClass: /(?<=\w\:\s)[\w]+|(?<=(?:type\s)\{\s)[\w]+(?=\,)*|(?<=\,\s)[\w]+(?=[\w\,\s^\"\']+?\})|(?<=\)\:\s)([\w]+)(?=\.*)/g,
+      InlinePredefinedType: /(?<=\<(?:[\w\s\|]+)?)(null)(?=(?:[\w\s\|]+)?\>)/g,
+      InlineType: /(?<=\:\s[\w]+\.)[\w]+(?!\;)/g,
+      ParameterizedType: /(?<=\w\<)([A-Z]{1}[\w]+)/g,
+      TypeUnion: /(?<=\w\<[\w\s]+?)(\|)(?=(?:[\w\s]+?)\>)/g,
+      Import: /import\b|export\b|from\b/g,
+      KeywordOp: /\bin\b/g,
+      Keywords: /new\b|await\b|async\b|typeof\b/g,
+      AsKeyword: /(?<=\{|\(|\=)(?:\s?[\w]+?\s)(as)(?=\s\w)/g,
+      ArrowExp: /(?<=\)\s|\w\s)(\=\>)/g,
+      Variable: /const\b|let\b/g,
+      Function: /function\b/g,
+      String: /(?:\'|\").+?(?:\'|\")/g,
+      Identifier: /(?<!\/|\:\s)\b[\w]+\d?(?!\.\")(?=\.)|[\w]+(?=[\s]*\=)|(?<=\(|\{)([\w]+?)(?=\)|\})|([\w]+)(?=\:\s\w)|(?<=import\s)([\w]+)(?=\sfrom)|(?<=typeof\s)[\w]+|(?<=\()([\w]+)(?=\s\!\=\=)|(?<=\!\=\=\s)([\w]+)(?=\))/g,
+      BinaryOp: /\B\+\B|\d\+\+|\+\+\d|\B\=\B[^\>]|(?<=\w)\=(?=\(|\{|\'|\")|(?<=\s)\:|\?(?=\s|$)|!!|\!(?=\.)|\!\=\=/g,
+      Paren: /(\()(\))|((?=.*\))\()|((?<=\(.*)\))|\($|^\)|\((?=\{)|\)|((?<=\})\))$/g,
+      Braces: /[\{\}\[\]]/g,
+      Delimiter: /(?<=\w|\)|\])(?<!\")(\.)(?![\w]+\"|\")|\,/g,
+      TypeImport: /(?<=import\s)(type)/g,
+      JSXTags: /\<(?=\w|\/)|\>$|(?<=\<)\/|\/\>$/g,
+      JSXIdentifier: /(?<=\<|\<\/)[\w]+(?=\>|\s[^\|])/g,
+      JSXAttribute: /(?<=\s)[\w]+(?=\=)(?!\>)/g,
+      JSXRefVal: /(?<=\=\(|\=\{)[\w\s\,]+?(?=\)|\})/g
+    }
   }
 
   function getLangPatterns(lang: Lang | keyof typeof Lang) {
