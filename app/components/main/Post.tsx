@@ -162,7 +162,7 @@ function insertCodeBlock(params: Parameters<typeof insertAside>): ReturnType<typ
     if (fileName === undefined) {
       throw new Error('File name not found.');
     }
-    let lang = fileName.match(/(?<=\.)(\w+(?=\$))/)![0];
+    let lang = fileName.match(/(?<=\.)([\w\/\s\[\]\(\)]+(?=\$))/)![0];
     fileName = fileName.replace(/(?=\$).+/, '');
     while (sections[outerIndex].code[0] && sections[outerIndex].code[0].match(match)) {
       // console.log(sections[outerIndex].code[0]);
