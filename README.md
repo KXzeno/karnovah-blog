@@ -38,17 +38,7 @@
 
 🗡 Implement authentication → users can interact with posts
 
-🗡 Redo functionality to navigation bar
-
-🗡 Refactor whole module system using class wrappers
-
 🗡 Add polling or some dynamic query upon database change only (perhaps dashboard related)
-
-🗡 Recreate dashboard to be more intuitive
-
-🗡 Implement Java-based websocket server as alternative to dashboard HTTP updates
-
-🗡 Migrate queries to CDN or to a more local module for easier revalidaiton
 
 🗡 Realize [Karnovah](https://github.com/KXzeno/Karnovah)
 
