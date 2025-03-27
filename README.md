@@ -17,9 +17,9 @@
 
 #### Background
 
-During freshman year of college, I wanted to create a blog site without needing to learn much and thus was recommended [Hugo](https://gohugo.io/), a markdown-based static site generator. The setup, maintenance, and *limited* feature creation being very intuitive allowed site buildings in just a few days. After a while scrutinizing the details I cannot change, I've later committed experimenting with tech for more control, like using Express, JavaScript, and HTML.
+During freshman year of college, I wanted to create a [blog site](https://github.com/KXzeno/WorKx) without needing to learn much and thus was recommended [Hugo](https://gohugo.io/), a markdown-based static site generator. The setup, maintenance, and *limited* feature creation being very intuitive allowed building sites within days. After a while scrutinizing the details I cannot change, I've later committed experimenting with tech for more control, like using Express, JavaScript, and HTML.
 
-Come to now, I've built my own blogsite from the ground up with the tools below. This is officially my first complex and somewhat stable full-stack app to ship to production. If you're an experienced developer yourself, you will find peculiar approaches, nonconventions, and scattered documentation. For better technical assessments, veer toward my other projects; I value the vestiges of my growth's nascency.
+Come to now, I've built my own blogsite from the ground up with the tools below. This is officially my first complex and somewhat stable full-stack app to ship to production. If you're an experienced developer, you will find peculiar approaches, non-conventions, and scattered documentation, so for better technical assessments, veer toward my other projects, otherwise, welcome to the vestiges of my growth's nascency.
 
 ---
 
