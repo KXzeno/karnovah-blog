@@ -75,23 +75,27 @@ button.absolute.inset-0.text-center.text-inherit {
 }
 
 .cat-wrapper {
-  @apply flex flex-col w-screen items-center translate-y-[7rem];
+  @apply flex flex-col w-screen items-center translate-y-[7rem] text-center;
 }
 
 .cat-wrapper section {
-  @apply grid grid-cols-1;
+  @apply grid grid-cols-1 max-sm:px-4;
+}
+
+.cat-wrapper section ul li {
+  @apply grid grid-cols-[27%_7%_100%] max-sm:text-sm max-sm:grid-cols-[25%_5%_70%]; 
 }
 
 .cat-wrapper section ul li span {
-  @apply px-2 text-red-500;
+  @apply text-red-500;
 }
 
 .cat-wrapper section ul li a {
-  @apply hover-effect text-slate-500;
+  @apply hover-effect text-slate-500 text-wrap text-left;
 }
 
 .cat-wrapper section ul li time {
-  @apply text-[#FFAF00];
+  @apply text-[#FFAF00] text-nowrap;
 }
 
 .hover-effect {
