@@ -363,6 +363,14 @@ section div section p {
   @apply text-[#818C78]
 }
 
+.static-text-red {
+  @apply text-[#F75A5A];
+}
+
+.static-text-green {
+  @apply text-[#AEEA94];
+}
+
 .text-balance {
   text-wrap: balance;
 }
