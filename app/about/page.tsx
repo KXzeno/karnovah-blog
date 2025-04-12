@@ -41,7 +41,7 @@ export default function About(): React.ReactNode {
         </React.Suspense>
         <p>Kx</p>
         <div />
-        <p>Aspiring Software Engineer, Science and Progression Fantasy Novelist, Self-help Author, and Fantasist—
+        <p>Full stack engineer, writer, and fantasist—
           <button 
             type="button"
             onClick={(e) => dispatch({ type: 'phrase', courier: { phrase: (e.target as HTMLButtonElement).outerText } })}
